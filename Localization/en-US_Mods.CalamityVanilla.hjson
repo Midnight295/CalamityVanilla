@@ -77,6 +77,16 @@ Items: {
 		DisplayName: Perforators Mask
 		Tooltip: ""
 	}
+
+	HoarfrostBow: {
+		DisplayName: Hoarfrost Bow
+		Tooltip: Converts wooden arrows into mist arrows
+	}
+
+	CatastropheClaymore: {
+		DisplayName: Catastrophe Claymore
+		Tooltip: Launches a spread of elemental flames
+	}
 }
 
 Projectiles: {
@@ -99,4 +109,6 @@ Projectiles: {
 	IchorBlob.DisplayName: Ichor Blob
 	CloudArrow.DisplayName: Cloud Arrow
 	GothicTooth.DisplayName: Gothic Tooth
+	MistArrow.DisplayName: Mist Arrow
+	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Ball
 }
