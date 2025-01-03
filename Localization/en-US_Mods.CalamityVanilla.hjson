@@ -90,12 +90,12 @@ Items: {
 
 	EleumSoul: {
 		DisplayName: Soul of White
-		Tooltip: ""
+		Tooltip: "'The essence of frosty creatures'"
 	}
 
 	HavocSoul: {
 		DisplayName: Soul of Spite
-		Tooltip: ""
+		Tooltip: "'The essence of hellish creatures'"
 	}
 }
 
@@ -121,4 +121,5 @@ Projectiles: {
 	GothicTooth.DisplayName: Gothic Tooth
 	MistArrow.DisplayName: Mist Arrow
 	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Ball
+	Icicles.DisplayName: Icicles
 }
