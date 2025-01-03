@@ -4,7 +4,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items
+namespace CalamityVanilla.Content.Items.Material
 {
     public class CryogenSummonMold : ModItem
     {

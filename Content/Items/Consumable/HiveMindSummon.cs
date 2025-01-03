@@ -1,12 +1,12 @@
-﻿using CalamityVanilla.Content.NPCs.Bosses.Cryogen;
-using Terraria;
+﻿using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityVanilla.Content.NPCs.Bosses.HiveMind;
 
-namespace CalamityVanilla.Content.Items
+namespace CalamityVanilla.Content.Items.Consumable
 {
-    public class CryogenSummon : ModItem
+    public class HiveMindSummon : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -21,11 +21,11 @@ namespace CalamityVanilla.Content.Items
 
         public override void SetDefaults()
         {
-            Item.width = 36;
-            Item.height = 32;
+            Item.width = 38;
+            Item.height = 36;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
-            Item.rare = ItemRarityID.Pink;
+            Item.rare = ItemRarityID.LightPurple;
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
@@ -42,7 +42,7 @@ namespace CalamityVanilla.Content.Items
             // If you decide to use the below UseItem code, you have to include !NPC.AnyNPCs(id), as this is also the check the server does when receiving MessageID.SpawnBoss.
             // If you want more constraints for the summon item, combine them as boolean expressions:
             //    return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<MinionBossBody>()); would mean "not daytime and no MinionBossBody currently alive"
-            return !NPC.AnyNPCs(ModContent.NPCType<Cryogen>());
+            return !NPC.AnyNPCs(ModContent.NPCType<HiveMind>());
         }
 
         public override bool? UseItem(Player player)
@@ -53,7 +53,7 @@ namespace CalamityVanilla.Content.Items
                 // (explicitly excluded serverside here)
                 SoundEngine.PlaySound(SoundID.Roar, player.position);
 
-                int type = ModContent.NPCType<Cryogen>();
+                int type = ModContent.NPCType<HiveMind>();
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -75,19 +75,10 @@ namespace CalamityVanilla.Content.Items
         public override void AddRecipes()
         {
             CreateRecipe()
-
-                .AddIngredient(ModContent.ItemType<CryogenSummonMold>())
-                .AddIngredient(ItemID.IceBlock, 10)
-                .AddIngredient(ItemID.SoulofLight, 3)
-                .AddIngredient(ItemID.SoulofMight, 3)
-                .AddConsumeItemCallback((Recipe recipe, int type, ref int amount) =>
-                {
-                    if (type == ModContent.ItemType<CryogenSummonMold>())
-                    {
-                        amount = 0;
-                    }
-                })
-                .AddTile(TileID.MythrilAnvil)
+                .AddIngredient(ItemID.VileMushroom, 3)
+                .AddIngredient(ItemID.ShadowScale, 15)
+                .AddIngredient(ItemID.SoulofNight, 5)
+                .AddTile(TileID.DemonAltar)
                 .Register();
         }
     }

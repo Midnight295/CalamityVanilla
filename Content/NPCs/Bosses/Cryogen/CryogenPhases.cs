@@ -224,9 +224,19 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             NPC.ai[0]++;
             NPC.velocity += NPC.Center.DirectionTo(target.Center + new Vector2(0, 300 + (100 * MathF.Sin(NPC.ai[0] * 0.01f))).RotatedBy(NPC.ai[0] * 0.03f)) * 0.8f;
             NPC.velocity = NPC.velocity.LengthClamp(12);
+            if (NPC.ai[0] > 60 * 2)
+            {
+                phase = 5;
+                NPC.ai[0] = 0;
+            }
         }
         private void Phase2Icicles_5()
         {
+            NPC.ai[0]++;
+
+            NPC.velocity += NPC.Center.DirectionTo(target.Center + new Vector2(0,-300)) * (NPC.Center.Distance(target.Center) > 1600? new Vector2(1, 1) : new Vector2(0.1f, 0.7f));
+            NPC.velocity.Y = MathHelper.Clamp(NPC.velocity.Y, -5, 5);
+            NPC.velocity = NPC.velocity.LengthClamp(16);
 
         }
     }

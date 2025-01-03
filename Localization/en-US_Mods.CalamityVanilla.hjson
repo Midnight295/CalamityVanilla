@@ -87,6 +87,16 @@ Items: {
 		DisplayName: Catastrophe Claymore
 		Tooltip: Launches a spread of elemental flames
 	}
+
+	EleumSoul: {
+		DisplayName: Soul of White
+		Tooltip: ""
+	}
+
+	HavocSoul: {
+		DisplayName: Soul of Spite
+		Tooltip: ""
+	}
 }
 
 Projectiles: {

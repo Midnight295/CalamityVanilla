@@ -1,4 +1,4 @@
-﻿using CalamityVanilla.Content.Items;
+﻿using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
