@@ -19,23 +19,22 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 Projectile.ai[1] = value == null ? 0 : value.whoAmI + 1;
             }
         }
-        private ref float DelayTimer => ref Projectile.ai[2];
 
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
-            ProjectileID.Sets.WindPhysicsImmunity[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(ProjectileID.WaterBolt);
-            Projectile.width = 24;
-            Projectile.height = 24;
-            Projectile.aiStyle = -1;
-            Projectile.timeLeft = 60;
+            Projectile.width = 16;
+            Projectile.height = 16;
+            Projectile.friendly = true;
+            Projectile.timeLeft = 120;
             Projectile.extraUpdates = 1;
+            Projectile.alpha = 255;
             Projectile.penetrate = 5;
+            Projectile.DamageType = DamageClass.Magic;
             Projectile.coldDamage = true;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
@@ -43,8 +42,6 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, new Vector3(0.90f, 0.95f, 1f) * (Projectile.timeLeft / 320));
-
             for (int i = 0; i < 2; i++)
             {
                 Vector2 velocity = new Vector2(Main.rand.NextFloat(0.5f, 1.5f), 0).RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi));
@@ -61,7 +58,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             {
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
-                    DustID.DungeonSpirit,
+                    DustID.FrostHydra,
                     -Projectile.velocity.RotatedByRandom(0.4),
                     0,
                     default,
@@ -103,7 +100,12 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.Frostburn2, 120);
+            target.AddBuff(BuffID.Frostburn2, 180);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.Frostburn2, 180, false, false);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -140,20 +142,19 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }, Projectile.Center);
             for (int k = 0; k < 4; k++)
             {
-                Vector2 velocity = new Vector2(5, 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = new Vector2(Main.rand.NextFloat(4f, 5f), 0).RotatedByRandom(MathHelper.TwoPi);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
-                    DustID.DungeonSpirit,
+                    ModContent.DustType<MagicIceDust>(),
                     velocity,
                     0,
                     Color.White,
                     Main.rand.NextFloat(1.25f, 1.75f)
                 );
-                dust.noGravity = true;
             }
             for (int k = 0; k < 8; k++)
             {
-                Vector2 velocity = new Vector2(5, 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = new Vector2(Main.rand.NextFloat(3f, 6f), 0).RotatedByRandom(MathHelper.TwoPi);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     DustID.FrostHydra,

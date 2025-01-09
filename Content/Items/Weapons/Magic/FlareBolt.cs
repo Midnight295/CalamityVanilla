@@ -10,49 +10,40 @@ using Terraria.ModLoader;
 
 namespace CalamityVanilla.Content.Items.Weapons.Magic
 {
-    public class FrostBolt : ModItem
+    public class FlareBolt : ModItem
     {
         public override void SetDefaults()
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 19;
+            Item.damage = 65;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 21;
-            Item.useTime = 7;
-            Item.useAnimation = 7;
+            Item.mana = 35;
+            Item.useTime = 35;
+            Item.useAnimation = 35;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
-            Item.UseSound = SoundID.Item20 with
+            Item.UseSound = SoundID.Item73 with
             {
-                Pitch = 1f,
+                Pitch = 0.1f,
                 PitchVariance = 0.1f,
-                Volume = 0.7f,
                 MaxInstances = 0,
             };
             Item.autoReuse = true;
             Item.shootSpeed = 4f;
-            Item.shoot = ModContent.ProjectileType<FrostBoltProjectile>();
+            Item.shoot = ModContent.ProjectileType<FlareBoltProjectile>();
 
             Item.rare = ItemRarityID.LightRed;
             Item.value = Item.sellPrice(0, 4);
-        }
-
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.4), type, damage, knockback, player.whoAmI,
-                ai0: Main.rand.NextFloat(0.01f, 2f));
-
-            return false;
         }
 
         public override void AddRecipes()
         {
             CreateRecipe().AddTile(TileID.Bookcases)
                 .AddIngredient(ItemID.SpellTome, 1)
-                .AddRecipeGroup("CalamityVanillaAnyIceBlock", 20)
-                .AddIngredient<EleumSoul>(15)
+                .AddIngredient(ItemID.LivingFireBlock, 20)
+                .AddIngredient<HavocSoul>(15)
                 .Register();
         }
     }

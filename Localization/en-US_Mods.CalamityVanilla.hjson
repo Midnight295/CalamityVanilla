@@ -102,6 +102,11 @@ Items: {
 		DisplayName: Frost Blitz
 		Tooltip: Casts a slurry of ice bolts
 	}
+
+	FlareBolt: {
+		DisplayName: Flare Beam
+		Tooltip: Casts a piercing fire bolt
+	}
 }
 
 Projectiles: {
@@ -128,4 +133,6 @@ Projectiles: {
 	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Ball
 	Icicles.DisplayName: Icicles
 	FrostBoltProjectile.DisplayName: Frost Bolt
+	FlareBoltProjectile.DisplayName: Flare Bolt
+	FlareBlastProjectile.DisplayName: Flare Blast
 }

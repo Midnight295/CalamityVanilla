@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace CalamityVanilla.Content.Dusts
 {
-    public class MagicIceDust : ModDust
+    public class MagicFireDust : ModDust
     {
         public override void OnSpawn(Dust dust)
         {
@@ -17,8 +18,8 @@ namespace CalamityVanilla.Content.Dusts
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {
-            Color blue = new Color(0, 0, 100, 0);
-            Color newColor = Color.Lerp(Color.White, blue, CVUtils.InverseLerp(0, 15, dust.alpha));
+            Color gray = new Color(25, 25, 25);
+            Color newColor = Color.Lerp(Color.Lerp(Color.White, Color.Orange, dust.alpha / 15f), gray, dust.alpha / 25f);
             float alpha = 1 - dust.alpha / 15f;
             alpha = MathF.Sqrt(MathF.Sin(alpha * MathHelper.Pi));
             return newColor * alpha * 1.2f;
@@ -26,9 +27,9 @@ namespace CalamityVanilla.Content.Dusts
 
         public override bool Update(Dust dust)
         {
-            Lighting.AddLight(dust.position, Color.RoyalBlue.ToVector3() * ((15 - dust.alpha) / 15f));
+            Lighting.AddLight(dust.position, Color.Red.ToVector3() * 1.2f * ((30 - dust.alpha) / 30f));
 
-            dust.velocity *= 0.95f;
+            dust.velocity *= 0.98f;
             if (!dust.noGravity)
             {
                 dust.velocity.Y += 0.1f;
@@ -38,7 +39,7 @@ namespace CalamityVanilla.Content.Dusts
             dust.scale *= 0.97f;
 
             dust.alpha++;
-            if (dust.alpha > 15)
+            if (dust.alpha > 30)
             {
                 dust.active = false;
             }
