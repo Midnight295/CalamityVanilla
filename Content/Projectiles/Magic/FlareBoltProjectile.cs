@@ -31,11 +31,13 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void AI()
         {
+            if (Projectile.timeLeft > 230)
+                return;
             for (int i = 0; i < 4; i++)
             {
                 Dust dust = Dust.NewDustDirect(
-                    Projectile.position + new Vector2(4),
-                    Projectile.width - 4, Projectile.height - 4,
+                    Projectile.position,
+                    Projectile.width, Projectile.height,
                     ModContent.DustType<MagicFireDust>(),
                     0, 0,
                     0,

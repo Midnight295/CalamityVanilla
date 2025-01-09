@@ -42,6 +42,8 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void AI()
         {
+            if (Projectile.timeLeft > 110)
+                return;
             for (int i = 0; i < 2; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.5f, 1.5f);
