@@ -1,11 +1,6 @@
 ﻿using CalamityVanilla.Common;
 using CalamityVanilla.Content.Tiles;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -40,26 +35,20 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                switch (Projectile.ai[2])
+                int squaresize = Main.rand.Next(1, 3);
+
+                for (int x = -squaresize; x <= squaresize; x++)
                 {
-                    case 0:
-
-                        int squaresize = Main.rand.Next(1, 3);
-
-                        for (int x = -squaresize; x <= squaresize; x++)
+                    for (int y = -squaresize; y <= squaresize; y++)
+                    {
+                        if (!Main.rand.NextBool(16))
                         {
-                            for (int y = -squaresize; y <= squaresize; y++)
-                            {
-                                if (!Main.rand.NextBool(16))
-                                {
-                                    WorldGen.PlaceTile(placePos.X + x, placePos.Y + y, ModContent.TileType<CryogenIceTile>(), plr: Main.myPlayer);
-                                    CryogenIceBlockSystem.CryogenIceBlocks.Add(new Vector3(placePos.X + x, placePos.Y + y, (CryogenIceBlockSystem.DEFAULT_ICE_TIMER * 4) + Main.rand.Next(0, 60)));
-                                }
-                            }
+                            WorldGen.PlaceTile(placePos.X + x, placePos.Y + y, ModContent.TileType<CryogenIceTile>(), plr: Main.myPlayer);
+                            CryogenIceBlockSystem.CryogenIceBlocks.Add(new Vector3(placePos.X + x, placePos.Y + y, (int)Projectile.ai[2] + Main.rand.Next(0, 60)));
                         }
-                        NetMessage.SendTileSquare(-squaresize, placePos.X - squaresize, placePos.Y - 1, (squaresize * 2) + 1, (squaresize * 2) + 1);
-                        break;
+                    }
                 }
+                NetMessage.SendTileSquare(-squaresize, placePos.X - squaresize, placePos.Y - 1, (squaresize * 2) + 1, (squaresize * 2) + 1);
             }
         }
     }

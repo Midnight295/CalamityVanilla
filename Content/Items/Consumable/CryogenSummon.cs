@@ -78,9 +78,8 @@ namespace CalamityVanilla.Content.Items.Consumable
             CreateRecipe()
 
                 .AddIngredient(ModContent.ItemType<CryogenSummonMold>())
+                .AddIngredient(ModContent.ItemType<EleumSoul>(), 6)
                 .AddIngredient(ItemID.IceBlock, 10)
-                .AddIngredient(ItemID.SoulofLight, 3)
-                .AddIngredient(ItemID.SoulofMight, 3)
                 .AddConsumeItemCallback((Recipe recipe, int type, ref int amount) =>
                 {
                     if (type == ModContent.ItemType<CryogenSummonMold>())

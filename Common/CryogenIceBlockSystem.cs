@@ -16,7 +16,7 @@ namespace CalamityVanilla.Common
 {
     public class CryogenIceBlockSystem : ModSystem
     {
-        public const int DEFAULT_ICE_TIMER = 600;
+        public const int DEFAULT_ICE_TIMER = 2400;
         public static List<Vector3> CryogenIceBlocks = new List<Vector3>();
         public override void OnWorldUnload()
         {
@@ -57,6 +57,17 @@ namespace CalamityVanilla.Common
                     NetMessage.SendTileSquare(-1, (int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y);
                     CryogenIceBlocks.RemoveAt(i);
                 }
+            }
+        }
+        public override void SaveWorldData(TagCompound tag)
+        {
+            tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;
+        }
+        public override void LoadWorldData(TagCompound tag)
+        {
+            if (tag.ContainsKey("CalamityVanilla:IceBlocks"))
+            {
+                CryogenIceBlocks = tag.Get<List<Vector3>>("CalamityVanilla:IceBlocks");
             }
         }
     }
