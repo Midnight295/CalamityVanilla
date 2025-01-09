@@ -188,6 +188,9 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                 case 5:
                     Phase2Icicles_5();
                     break;
+                case 6:
+                    Phase2IceBreaker_6();
+                    break;
             }
         }
     }

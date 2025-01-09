@@ -16,7 +16,7 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         {
             Projectile.QuickDefaults(true, 16);
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 60 * 3;
+            Projectile.timeLeft = 60 * 9;
         }
         public override Color? GetAlpha(Color lightColor)
         {
