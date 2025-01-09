@@ -31,6 +31,10 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void AI()
         {
+            float creatorY = Projectile.ai[1];
+
+            Projectile.tileCollide = (Projectile.position.Y > creatorY) ? true : false;
+
             target = CVUtils.FindClosestNPC(700f, Projectile.Center);
 
             if (Projectile.velocity.Y > 0f && target == null) Projectile.velocity.X = (float)Math.Sin(Projectile.ai[0] / 15) * 1f;
