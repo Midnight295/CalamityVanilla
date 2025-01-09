@@ -227,5 +227,14 @@ namespace CalamityVanilla
             byte[] output = hash.ComputeHash(input);
             return output;
         }
+
+        public static float InverseLerp(float from, float to, float x, bool clamped = true)
+        {
+            float inverse = (x - from) / (to - from);
+            if (!clamped)
+                return inverse;
+
+            return MathHelper.Clamp(inverse, 0f, 1f);
+        }
     }
 }

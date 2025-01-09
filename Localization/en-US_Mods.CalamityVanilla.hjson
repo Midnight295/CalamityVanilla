@@ -97,6 +97,11 @@ Items: {
 		DisplayName: Soul of Spite
 		Tooltip: "'The essence of hellish creatures'"
 	}
+
+	FrostBolt: {
+		DisplayName: Frost Bolt
+		Tooltip: "Casts a bolt of ice"
+	}
 }
 
 Projectiles: {
@@ -122,4 +127,5 @@ Projectiles: {
 	MistArrow.DisplayName: Mist Arrow
 	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Ball
 	Icicles.DisplayName: Icicles
+	FrostBoltProjectile.DisplayName: Frost Bolt
 }
