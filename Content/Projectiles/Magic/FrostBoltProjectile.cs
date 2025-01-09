@@ -10,10 +10,20 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 {
     public class FrostBoltProjectile : ModProjectile
     {
-        public ref float VelocityRotationAngle => ref Projectile.ai[0];
+        private ref float HomingStrength => ref Projectile.ai[0];
+        private NPC HomingTarget
+        {
+            get => Projectile.ai[1] == 0 ? null : Main.npc[(int)Projectile.ai[1] - 1];
+            set
+            {
+                Projectile.ai[1] = value == null ? 0 : value.whoAmI + 1;
+            }
+        }
+        private ref float DelayTimer => ref Projectile.ai[2];
 
         public override void SetStaticDefaults()
         {
+            ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
             ProjectileID.Sets.WindPhysicsImmunity[Projectile.type] = true;
         }
 
@@ -23,7 +33,8 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.width = 24;
             Projectile.height = 24;
             Projectile.aiStyle = -1;
-            Projectile.timeLeft = 120;
+            Projectile.timeLeft = 60;
+            Projectile.extraUpdates = 1;
             Projectile.penetrate = 5;
             Projectile.coldDamage = true;
             Projectile.usesLocalNPCImmunity = true;
@@ -34,8 +45,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         {
             Lighting.AddLight(Projectile.Center, new Vector3(0.90f, 0.95f, 1f) * (Projectile.timeLeft / 320));
 
-            Projectile.velocity = Projectile.velocity.RotatedBy(VelocityRotationAngle);
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Vector2 velocity = new Vector2(Main.rand.NextFloat(0.5f, 1.5f), 0).RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi));
                 Dust dust = Dust.NewDustPerfect(
@@ -47,7 +57,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                     Main.rand.NextFloat(1f, 1.5f));
                 dust.noGravity = true;
             }
-            if (Main.rand.Next(4) == 0)
+            if (Main.rand.Next(6) == 0)
             {
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
@@ -59,11 +69,41 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 );
                 dust.noGravity = true;
             }
+
+            float maxRange = 400f;
+
+            if (HomingTarget != null &&
+                (
+                HomingTarget.CanBeChasedBy(Projectile, false) ||
+                Projectile.DistanceSQ(HomingTarget.Center) < maxRange*maxRange ||
+                Collision.CanHit(Projectile.Center, 1, 1, HomingTarget.position, HomingTarget.width, HomingTarget.height
+                )
+            ))
+            {
+                HomingTarget = null;
+            }
+
+            if (HomingTarget == null)
+            {
+                int target = Projectile.FindTargetWithLineOfSight(maxRange);
+                if (target >= 0)
+                {
+                    HomingTarget = Main.npc[target];
+                }
+            }
+
+            if (HomingTarget == null)
+                return;
+
+            float length = Projectile.velocity.Length();
+            float targetAngle = Projectile.AngleTo(HomingTarget.Center);
+            Projectile.velocity = Projectile.velocity.ToRotation().AngleTowards(targetAngle, MathHelper.ToRadians(HomingStrength)).ToRotationVector2() * length;
+            Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.Frostburn, 60);
+            target.AddBuff(BuffID.Frostburn2, 120);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -90,18 +130,33 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item100 with
+            SoundEngine.PlaySound(SoundID.Item89 with
             {
                 Pitch = 1f,
                 PitchVariance = 0.1f,
+                Volume = 0.4f,
+                
                 MaxInstances = 0,
             }, Projectile.Center);
-            for (int k = 0; k < 12; k++)
+            for (int k = 0; k < 4; k++)
             {
                 Vector2 velocity = new Vector2(5, 0).RotatedByRandom(MathHelper.TwoPi);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     DustID.DungeonSpirit,
+                    velocity,
+                    0,
+                    Color.White,
+                    Main.rand.NextFloat(1.25f, 1.75f)
+                );
+                dust.noGravity = true;
+            }
+            for (int k = 0; k < 8; k++)
+            {
+                Vector2 velocity = new Vector2(5, 0).RotatedByRandom(MathHelper.TwoPi);
+                Dust dust = Dust.NewDustPerfect(
+                    Projectile.Center,
+                    DustID.FrostHydra,
                     velocity,
                     0,
                     Color.White,

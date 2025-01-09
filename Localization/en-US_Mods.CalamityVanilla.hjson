@@ -99,8 +99,8 @@ Items: {
 	}
 
 	FrostBolt: {
-		DisplayName: Frost Bolt
-		Tooltip: "Casts a bolt of ice"
+		DisplayName: Frost Blitz
+		Tooltip: Casts a slurry of ice bolts
 	}
 }
 
