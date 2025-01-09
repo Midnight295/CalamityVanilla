@@ -44,7 +44,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 dust.velocity = dust.velocity * 0.2f + Projectile.velocity.RotatedByRandom(0.5) * Main.rand.NextFloat(0.1f, 0.3f);
                 dust.noGravity = true;
             }
-            if (Main.rand.Next(4) == 0)
+            if (Main.rand.NextBool(4))
             {
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
@@ -98,7 +98,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }, Projectile.Center);
             for (int k = 0; k < 128; k++)
             {
-                Vector2 velocity = new Vector2(Main.rand.NextFloat(4f, 8f), 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f, 8f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     ModContent.DustType<MagicFireDust>(),
@@ -110,7 +110,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }
             for (int k = 0; k < 64; k++)
             {
-                Vector2 velocity = new Vector2(Main.rand.NextFloat(2f, 12f), 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2f, 12f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     DustID.InfernoFork,

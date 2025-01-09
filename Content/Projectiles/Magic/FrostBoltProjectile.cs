@@ -44,7 +44,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         {
             for (int i = 0; i < 2; i++)
             {
-                Vector2 velocity = new Vector2(Main.rand.NextFloat(0.5f, 1.5f), 0).RotatedBy(Main.rand.NextFloat(MathHelper.TwoPi));
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.5f, 1.5f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center - velocity,
                     ModContent.DustType<MagicIceDust>(),
@@ -54,7 +54,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                     Main.rand.NextFloat(1f, 1.5f));
                 dust.noGravity = true;
             }
-            if (Main.rand.Next(6) == 0)
+            if (Main.rand.NextBool(6))
             {
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
@@ -142,7 +142,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }, Projectile.Center);
             for (int k = 0; k < 4; k++)
             {
-                Vector2 velocity = new Vector2(Main.rand.NextFloat(4f, 5f), 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f, 5f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     ModContent.DustType<MagicIceDust>(),
@@ -154,7 +154,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }
             for (int k = 0; k < 8; k++)
             {
-                Vector2 velocity = new Vector2(Main.rand.NextFloat(3f, 6f), 0).RotatedByRandom(MathHelper.TwoPi);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(3f, 6f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     DustID.FrostHydra,
