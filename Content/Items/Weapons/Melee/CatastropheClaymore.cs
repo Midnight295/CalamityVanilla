@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Projectiles.Melee;
+﻿using CalamityVanilla.Content.Items.Material;
+using CalamityVanilla.Content.Projectiles.Melee;
 using Microsoft.Build.Framework;
 using Microsoft.Xna.Framework;
 using System;
@@ -26,8 +27,23 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
 
         public override void AddRecipes()
         {
-            CreateRecipe().AddTile(TileID.MythrilAnvil).AddIngredient(ItemID.HallowedBar, 10).AddIngredient(ItemID.CursedFlame, 10).AddIngredient(ItemID.SoulofFright, 5).AddIngredient(ItemID.SoulofMight, 5).AddIngredient(ItemID.SoulofSight, 5).AddIngredient(ItemID.SoulofNight, 5).AddIngredient(ItemID.SoulofLight, 5).Register();
-            CreateRecipe().AddTile(TileID.MythrilAnvil).AddIngredient(ItemID.HallowedBar, 10).AddIngredient(ItemID.Ichor, 10).AddIngredient(ItemID.SoulofFright, 5).AddIngredient(ItemID.SoulofMight, 5).AddIngredient(ItemID.SoulofSight, 5).AddIngredient(ItemID.SoulofNight, 5).AddIngredient(ItemID.SoulofLight, 5).Register();
+            CreateRecipe().AddTile(TileID.MythrilAnvil)
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddIngredient(ItemID.CursedFlame, 10)
+                .AddIngredient(ItemID.SoulofFright, 5)
+                .AddIngredient(ItemID.SoulofMight, 5)
+                .AddIngredient(ItemID.SoulofSight, 5)
+                .AddIngredient(ModContent.ItemType<EleumSoul>(), 5)
+                .AddIngredient(ModContent.ItemType<HavocSoul>(), 5).Register();
+
+            CreateRecipe().AddTile(TileID.MythrilAnvil)
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddIngredient(ItemID.Ichor, 10)
+                .AddIngredient(ItemID.SoulofFright, 5)
+                .AddIngredient(ItemID.SoulofMight, 5)
+                .AddIngredient(ItemID.SoulofSight, 5)
+                .AddIngredient(ModContent.ItemType<EleumSoul>(), 5)
+                .AddIngredient(ModContent.ItemType<HavocSoul>(), 5).Register();
         }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
