@@ -16,8 +16,8 @@ namespace CalamityVanilla.Content.Projectiles.Magic
     {
         public override void SetDefaults()
         {
-            Projectile.width = 128;
-            Projectile.height = 128;
+            Projectile.width = 200;
+            Projectile.height = 200;
             Projectile.friendly = true;
             Projectile.timeLeft = 3;
             Projectile.alpha = 255;
