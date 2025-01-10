@@ -16,18 +16,18 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 6;
+            Item.damage = 13;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 5;
-            Item.useTime = 50;
-            Item.useAnimation = 50;
+            Item.mana = 7;
+            Item.useTime = 25;
+            Item.useAnimation = 25;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
             Item.UseSound = SoundID.Item94 with
             {
                 Pitch = 1f,
-                PitchVariance = 0.2f,
+                PitchVariance = 0.3f,
                 MaxInstances = 0,
             };
             Item.autoReuse = true;
@@ -40,7 +40,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.4), type, damage, knockback, player.whoAmI);
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.2), type, damage, knockback, player.whoAmI);
 
             return false;
         }

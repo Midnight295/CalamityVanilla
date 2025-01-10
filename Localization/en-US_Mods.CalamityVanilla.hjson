@@ -114,7 +114,7 @@ Items: {
 	}
 
 	GraniteTome: {
-		DisplayName: Granite Shock
+		DisplayName: Granite Surge
 		Tooltip: Casts lightning barrages
 	}
 }
