@@ -7,6 +7,12 @@
 	<PropertyGroup>
 		
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Content\Dusts\SuperMagicFireDust.png" />
+	  <None Remove="Content\Dusts\SuperMagicIceDust.png" />
+	  <None Remove="Content\Projectiles\Magic\FrigidflashColdBoltProjectile.png" />
+	  <None Remove="Content\Projectiles\Magic\FrigidflashHotBoltProjectile.png" />
+	</ItemGroup>
 
 	<!-- References -->
 
