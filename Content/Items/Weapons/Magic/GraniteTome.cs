@@ -16,11 +16,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 13;
+            Item.damage = 16;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 7;
-            Item.useTime = 25;
-            Item.useAnimation = 25;
+            Item.useTime = 28;
+            Item.useAnimation = 28;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
