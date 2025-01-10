@@ -34,6 +34,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.extraUpdates = 3;
             Projectile.alpha = 255;
             Projectile.penetrate = 10;
+            Projectile.ignoreWater = false;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
@@ -139,7 +140,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         {
             SoundEngine.PlaySound(SoundID.Item89 with
             {
-                Pitch = 0.8f,
+                Pitch = 0.5f,
                 PitchVariance = 0.2f,
                 Volume = 0.6f,
 

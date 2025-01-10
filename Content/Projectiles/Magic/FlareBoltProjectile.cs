@@ -93,14 +93,14 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         {
             SoundEngine.PlaySound(SoundID.Item88 with
             {
-                Pitch = -0.2f,
+                Pitch = 0.5f,
                 PitchVariance = 0.1f,
 
                 MaxInstances = 0,
             }, Projectile.Center);
-            for (int k = 0; k < 128; k++)
+            for (int k = 0; k < 64; k++)
             {
-                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f, 8f);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(3f, 6f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     ModContent.DustType<MagicFireDust>(),
@@ -110,9 +110,9 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                     Main.rand.NextFloat(0.6f, 1.2f)
                 );
             }
-            for (int k = 0; k < 64; k++)
+            for (int k = 0; k < 32; k++)
             {
-                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2f, 12f);
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2f, 8f);
                 Dust dust = Dust.NewDustPerfect(
                     Projectile.Center,
                     DustID.InfernoFork,
@@ -122,11 +122,6 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                     Main.rand.NextFloat(1.25f, 1.75f)
                 );
                 dust.noGravity = true;
-            }
-
-            if (Projectile.owner == Main.myPlayer)
-            {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FlareBlastProjectile>(), Projectile.damage, 0f, Projectile.owner);
             }
         }
     }

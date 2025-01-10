@@ -23,7 +23,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             Item.useAnimation = 35;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.knockBack = 5f;
+            Item.knockBack = 3.5f;
             Item.UseSound = SoundID.Item73 with
             {
                 Pitch = 0.1f,

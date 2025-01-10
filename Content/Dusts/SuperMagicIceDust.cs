@@ -18,7 +18,7 @@ namespace CalamityVanilla.Content.Dusts
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {
             Color blue = new Color(0, 0, 150, 0);
-            Color newColor = Color.Lerp(Color.Azure, blue, CVUtils.InverseLerp(0, 15, dust.alpha));
+            Color newColor = Color.Lerp(Color.Azure, blue, Utils.GetLerpValue(0, 15, dust.alpha, true));
             float alpha = 1 - dust.alpha / 15f;
             alpha = MathF.Sqrt(MathF.Sin(alpha * MathHelper.Pi));
             return newColor * alpha * 1.2f;

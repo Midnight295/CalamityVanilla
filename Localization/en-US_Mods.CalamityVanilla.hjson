@@ -104,13 +104,18 @@ Items: {
 	}
 
 	FlareBolt: {
-		DisplayName: Flare Beam
+		DisplayName: Flare Blast
 		Tooltip: Casts a piercing fire bolt
 	}
 
 	FrigidflashBolt: {
 		DisplayName: Frigidflash Missiles
 		Tooltip: Casts swift bolts of cold and heat
+	}
+
+	GraniteTome: {
+		DisplayName: Granite Shock
+		Tooltip: Casts lightning barrages
 	}
 }
 
@@ -142,4 +147,5 @@ Projectiles: {
 	FlareBlastProjectile.DisplayName: Flare Blast
 	FrigidflashColdBoltProjectile.DisplayName: Frigidflash Cold Bolt
 	FrigidflashHotBoltProjectile.DisplayName: Frigidflash Hot Bolt
+	GraniteTomeBolt.DisplayName: Granite Tome Bolt
 }
