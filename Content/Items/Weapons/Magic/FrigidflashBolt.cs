@@ -54,7 +54,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override void AddRecipes()
         {
-            CreateRecipe().AddTile(TileID.Bookcases)
+            CreateRecipe().AddTile(TileID.DemonAltar)
                 .AddIngredient<FrostBolt>()
                 .AddIngredient<FlareBolt>()
                 .AddIngredient(ItemID.Ectoplasm, 5)
