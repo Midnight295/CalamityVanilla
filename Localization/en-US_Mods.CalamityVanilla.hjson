@@ -109,7 +109,7 @@ Items: {
 	}
 
 	FrigidflashBolt: {
-		DisplayName: Frigidflash Missiles
+		DisplayName: Flarefrost Missiles
 		Tooltip: Casts swift bolts of cold and heat
 	}
 
