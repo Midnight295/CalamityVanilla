@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Dusts;
+﻿using CalamityVanilla.Common;
+using CalamityVanilla.Content.Dusts;
 using Microsoft.Xna.Framework;
 using ReLogic.Content;
 using System;
@@ -8,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.Drawing;
 using Terraria.Graphics;
+using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -50,7 +53,6 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.coldDamage = true;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
         }
@@ -60,8 +62,6 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             if (Projectile.timeLeft < TotalTimeLeft)
             {
                 Projectile.friendly = false;
-                Projectile.velocity = Vector2.Zero;
-                Projectile.extraUpdates = 7;
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             {
                 Projectile.velocity = Projectile.velocity.RotatedByRandom(0.2);
             }
-            else if (Projectile.timeLeft % 14 == 0 && CanSpawnMoreBolts)
+            else if (Projectile.timeLeft % 14 == 0 && !CanSpawnMoreBolts)
             {
                 Projectile.velocity = Projectile.velocity.RotatedByRandom(0.8);
             }
@@ -122,13 +122,59 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         {
             Projectile.ai[0] = 2;
             Projectile.velocity = Vector2.Zero;
+
+            if (Projectile.timeLeft < TotalTimeLeft)
+                return false;
+
+            for (int i = 0; i < 7 * Projectile.timeLeft / (float)TotalTimeLeft; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Electric, oldVelocity.X * 0.5f, oldVelocity.Y * 0.5f, 0, default, 0.5f);
+                if (Main.rand.NextBool(2, 3))
+                {
+                    dust.noGravity = true;
+                    dust.scale *= 1.5f;
+                    dust.velocity *= 0.5f;
+                }
+            }
+
             return false;
+        }
+
+        private void SpawnParticles(Vector2 position)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1f, 2f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Electric, velocity.X, velocity.Y, 0, default, 0.5f);
+                if (Main.rand.NextBool(2, 3))
+                {
+                    dust.noGravity = true;
+                    dust.scale *= 1.5f;
+                    dust.velocity *= 0.5f;
+                }
+            }
+
+            if (Main.netMode != NetmodeID.Server)
+            {
+                //PrettySparkleParticle particle = CVParticleOrchestrator.RequestPrettySparkleParticle();
+                //particle.
+            }
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            SpawnParticles(target.Center);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            SpawnParticles(target.Center);
         }
 
         public override void PostDraw(Color lightColor)
         {
-            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * (1 - p*p*p);
-            float StripWidth(float p) => 32f * MathF.Cbrt(p);
+            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * MathF.Sin(p*p*p * MathF.PI);
+            float StripWidth(float p) => 32f;
 
             MiscShaderData miscShaderData = GameShaders.Misc["GraniteTome"];
             miscShaderData.UseSaturation(-2.8f);

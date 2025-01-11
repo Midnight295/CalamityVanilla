@@ -120,11 +120,16 @@ Items: {
 
 	FleshLauncher: {
 		DisplayName: Flesh Launcher
-		Tooltip: 
-		'''
-		Consumes grenades
-		'Yes, even Beenades!'
-		'''
+		Tooltip:
+			'''
+			Consumes grenades
+			'Yes, even Beenades!'
+			'''
+	}
+
+	MarbleTome: {
+		DisplayName: Marble Tome
+		Tooltip: ""
 	}
 }
 
@@ -161,4 +166,5 @@ Projectiles: {
 	BouncyFleshnade.DisplayName: Bouncy Fleshnade
 	StickyFleshnade.DisplayName: Sticky Fleshnade
 	Honeycombnade.DisplayName: Honeycombnade
+	MarbleTomeShield.DisplayName: Marble Tome Shield
 }

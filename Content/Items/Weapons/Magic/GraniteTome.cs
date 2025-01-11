@@ -12,22 +12,25 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 {
     public class GraniteTome : ModItem
     {
+        public static readonly SoundStyle UseSound = new("CalamityVanilla/Assets/Sounds/ItemElectricZap");
+
         public override void SetDefaults()
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 16;
+            Item.damage = 15;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 7;
-            Item.useTime = 28;
-            Item.useAnimation = 28;
+            Item.mana = 9;
+            Item.useTime = 12;
+            Item.useAnimation = 12;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
-            Item.UseSound = SoundID.Item94 with
+            Item.UseSound = UseSound with
             {
-                Pitch = 1f,
-                PitchVariance = 0.3f,
+                Pitch = -0.3f,
+                PitchVariance = 0.2f,
+                Volume = 0.1f,
                 MaxInstances = 0,
             };
             Item.autoReuse = true;
