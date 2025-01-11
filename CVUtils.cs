@@ -91,6 +91,7 @@ namespace CalamityVanilla
             projectile.penetrate = -1;
             projectile.Resize(Diameter, Diameter);
             projectile.Damage();
+            //projectile.localNPCImmunity[0] = 100;
         }
 
         public static int TypeCountNPC(int type)

@@ -117,6 +117,15 @@ Items: {
 		DisplayName: Granite Surge
 		Tooltip: Casts lightning barrages
 	}
+
+	FleshLauncher: {
+		DisplayName: Flesh Launcher
+		Tooltip: 
+		'''
+		Consumes grenades
+		'Yes, even Beenades!'
+		'''
+	}
 }
 
 Projectiles: {
@@ -148,4 +157,8 @@ Projectiles: {
 	FrigidflashColdBoltProjectile.DisplayName: Frigidflash Cold Bolt
 	FrigidflashHotBoltProjectile.DisplayName: Frigidflash Hot Bolt
 	GraniteTomeBolt.DisplayName: Granite Tome Bolt
+	Fleshnade.DisplayName: Fleshnade
+	BouncyFleshnade.DisplayName: Bouncy Fleshnade
+	StickyFleshnade.DisplayName: Sticky Fleshnade
+	Honeycombnade.DisplayName: Honeycombnade
 }
