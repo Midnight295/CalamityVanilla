@@ -1,15 +1,7 @@
 ﻿using CalamityVanilla.Common;
-using CalamityVanilla.Content.Dusts;
 using Microsoft.Xna.Framework;
-using ReLogic.Content;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent.Drawing;
 using Terraria.Graphics;
 using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
@@ -25,7 +17,12 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         // to ensure that the trail mesh fades out smoothly, the projectile lives twice as long and after its timeLeft goes below TotalTimeLeft the mesh length starts to shrink
         private int ActualTotalTimeleft => ProjectileID.Sets.TrailCacheLength[Projectile.type] * 2;
         private int TotalTimeLeft => ProjectileID.Sets.TrailCacheLength[Projectile.type];
-        private bool CanSpawnMoreBolts => Projectile.ai[0] < 2;
+
+        private ref float SpawningAge => ref Projectile.ai[0];
+        private bool CanSpawnMoreBolts => SpawningAge < 2;
+        private ref float RandomAngleChange => ref Projectile.localAI[0];
+        private ref float RandomAngleDirection => ref Projectile.ai[1];
+        private ref float BoltSpawningTimeOffset => ref Projectile.ai[2];
 
         public override void Load()
         {
@@ -40,7 +37,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Projectile.type] = -1; // caching positions is done manually for control
-            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 128;
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 64;
         }
 
         public override void SetDefaults()
@@ -49,7 +46,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.timeLeft = ActualTotalTimeleft;
-            Projectile.extraUpdates = 31;
+            Projectile.extraUpdates = 15;
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Magic;
@@ -65,13 +62,14 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 return;
             }
 
-            if (Projectile.timeLeft % 7 == 0)
+            int randomTimeInterval = CanSpawnMoreBolts ? 5 : 15;
+            if (Projectile.timeLeft % randomTimeInterval == 0)
             {
-                Projectile.velocity = Projectile.velocity.RotatedByRandom(0.2);
-            }
-            else if (Projectile.timeLeft % 14 == 0 && !CanSpawnMoreBolts)
-            {
-                Projectile.velocity = Projectile.velocity.RotatedByRandom(0.8);
+                if (RandomAngleChange == 0)
+                    RandomAngleChange = 0.2f;
+                RandomAngleChange *= RandomAngleDirection;
+                RandomAngleDirection *= -1;
+                Projectile.velocity = Projectile.velocity.RotatedBy(RandomAngleChange);
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -85,15 +83,14 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
             if (Projectile.owner == Main.myPlayer)
             {
-                if (CanSpawnMoreBolts && (
-                    (Projectile.timeLeft == 80 + TotalTimeLeft && Main.rand.NextBool(2, 3)) ||
-                    (Projectile.timeLeft == 48 + TotalTimeLeft && Main.rand.NextBool(5))
-                    ))
+                if (
+                    (Projectile.timeLeft == 48 + BoltSpawningTimeOffset + TotalTimeLeft && Main.rand.NextBool(2, 3)) ||
+                    (Projectile.timeLeft == 8 + BoltSpawningTimeOffset + TotalTimeLeft && Main.rand.NextBool(5))
+                    )
                 {
-                    Projectile.ai[0]++;
-                    double rotationRadians = Main.rand.NextFloat(0.3f, 0.6f) * (Main.rand.NextBool() ? 1 : -1);
+                    double rotationRadians = Main.rand.NextFloat(0.2f, 0.6f) * (Main.rand.NextBool() ? 1 : -1);
                     Vector2 velocity = Projectile.velocity.RotatedBy(rotationRadians);
-                    Projectile newProj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center - velocity, velocity, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.ai[0]);
+                    Projectile newProj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center - velocity, velocity, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0, Main.rand.NextBool() ? 1 : -1, Main.rand.Next(-7, 8));
                     newProj.timeLeft = Projectile.timeLeft - 1;
                     newProj.netUpdate = true;
                 }
@@ -120,7 +117,7 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.ai[0] = 2;
+            SpawningAge = 2;
             Projectile.velocity = Vector2.Zero;
 
             if (Projectile.timeLeft < TotalTimeLeft)
@@ -140,12 +137,12 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             return false;
         }
 
-        private void SpawnParticles(Vector2 position)
+        public static void SpawnParticles(Vector2 position)
         {
             for (int i = 0; i < 5; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1f, 2f);
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Electric, velocity.X, velocity.Y, 0, default, 0.5f);
+                Dust dust = Dust.NewDustPerfect(position, DustID.Electric, velocity, 0, default, 0.5f);
                 if (Main.rand.NextBool(2, 3))
                 {
                     dust.noGravity = true;
@@ -154,21 +151,46 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 }
             }
 
-            if (Main.netMode != NetmodeID.Server)
-            {
-                //PrettySparkleParticle particle = CVParticleOrchestrator.RequestPrettySparkleParticle();
-                //particle.
-            }
+            PrettySparkleParticle prettySparkleParticle = CVParticleOrchestrator.RequestPrettySparkleParticle();
+            float rotation = MathHelper.PiOver2;
+            Vector2 scale = new Vector2(Main.rand.NextFloat() * 0.2f + 0.4f);
+            Vector2 offset = Main.rand.NextVector2Circular(4f, 4f) * scale;
+            prettySparkleParticle.ColorTint = new Color(0.3f, 1f, 1f, 0.3f);
+            prettySparkleParticle.LocalPosition = position + offset;
+            prettySparkleParticle.Rotation = rotation;
+            prettySparkleParticle.Scale = scale;
+            prettySparkleParticle.FadeInNormalizedTime = 0.05f;
+            prettySparkleParticle.FadeOutNormalizedTime = 0.95f;
+            prettySparkleParticle.FadeInEnd = 10f;
+            prettySparkleParticle.FadeOutStart = 20f;
+            prettySparkleParticle.FadeOutEnd = 30f;
+            prettySparkleParticle.TimeToLive = 30f;
+            Main.ParticleSystem_World_OverPlayers.Add(prettySparkleParticle);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            SpawnParticles(target.Center);
+            SpawnParticles(Projectile.position);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = Mod.GetPacket();
+                packet.Write((byte)CalamityVanilla.PacketType.SpawnGraniteTomeBoltSparks);
+                packet.WriteVector2(Projectile.Center);
+                packet.Send();
+            }
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            SpawnParticles(target.Center);
+            SpawnParticles(Projectile.position);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = Mod.GetPacket();
+                packet.Write((byte)CalamityVanilla.PacketType.SpawnGraniteTomeBoltSparks);
+                packet.Write(Main.myPlayer);
+                packet.WriteVector2(Projectile.Center);
+                packet.Send();
+            }
         }
 
         public override void PostDraw(Color lightColor)

@@ -18,11 +18,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 15;
+            Item.damage = 4;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 9;
-            Item.useTime = 12;
-            Item.useAnimation = 12;
+            Item.mana = 5;
+            Item.useTime = 7;
+            Item.useAnimation = 7;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
@@ -34,7 +34,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
                 MaxInstances = 0,
             };
             Item.autoReuse = true;
-            Item.shootSpeed = 4f;
+            Item.shootSpeed = 8f;
             Item.shoot = ModContent.ProjectileType<GraniteTomeBolt>();
 
             Item.rare = ItemRarityID.Blue;
@@ -43,7 +43,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.2), type, damage, knockback, player.whoAmI);
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.1), type, damage, knockback, player.whoAmI, 0, Main.rand.NextBool() ? 1 : -1, Main.rand.Next(-7, 8));
 
             return false;
         }
