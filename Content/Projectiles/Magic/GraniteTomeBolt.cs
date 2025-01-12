@@ -108,9 +108,20 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             {
                 Rotate();
                 TimeUntilRotate = 0;
+
                 Projectile.damage += 2;
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            if (Main.rand.NextBool(8))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Electric, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 0, default, 0.5f);
+                if (Main.rand.NextBool(3))
+                {
+                    dust.scale *= 1.5f;
+                    dust.velocity *= 0.5f;
+                }
+            }
 
             for (int i = Projectile.oldPos.Length - 1; i > 0; i--)
             {
@@ -234,12 +245,12 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void PostDraw(Color lightColor)
         {
-            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * MathF.Min(1f, p * 2);// * (1f - MathF.Abs(p - 0.5f) * 2f);
+            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * MathF.Min(1f, p * 4);// * (1f - MathF.Abs(p - 0.5f) * 2f);
             float StripWidth(float p) => 16f;
 
             MiscShaderData miscShaderData = GameShaders.Misc["GraniteTome"];
             miscShaderData.UseSaturation(-2.8f);
-            miscShaderData.UseOpacity(MathF.Min(2f, 3f * Projectile.timeLeft / TotalTimeLeft));
+            miscShaderData.UseOpacity(MathF.Min(2f, 4f * Projectile.timeLeft / TotalTimeLeft));
             miscShaderData.Apply(null);
             _vertexStrip.PrepareStrip(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, (Projectile.timeLeft > TotalTimeLeft) ? (ActualTotalTimeleft - Projectile.timeLeft) : Projectile.timeLeft);
             _vertexStrip.DrawTrail();
