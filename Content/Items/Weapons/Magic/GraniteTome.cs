@@ -21,8 +21,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             Item.damage = 4;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 5;
-            Item.useTime = 7;
-            Item.useAnimation = 7;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 5f;
@@ -43,7 +43,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.1), type, damage, knockback, player.whoAmI, 0, Main.rand.NextBool() ? 1 : -1, Main.rand.Next(-7, 8));
+            Projectile.NewProjectile(source, position, velocity.RotatedByRandom(0.1), type, damage, knockback, player.whoAmI, 0, Main.rand.NextBool() ? 1 : -1);
 
             return false;
         }

@@ -1,12 +1,15 @@
 ﻿using CalamityVanilla.Common;
 using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Graphics;
 using Terraria.Graphics.Renderers;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace CalamityVanilla.Content.Projectiles.Magic
 {
@@ -18,11 +21,14 @@ namespace CalamityVanilla.Content.Projectiles.Magic
         private int ActualTotalTimeleft => ProjectileID.Sets.TrailCacheLength[Projectile.type] * 2;
         private int TotalTimeLeft => ProjectileID.Sets.TrailCacheLength[Projectile.type];
 
-        private ref float SpawningAge => ref Projectile.ai[0];
-        private bool CanSpawnMoreBolts => SpawningAge < 2;
-        private ref float RandomAngleChange => ref Projectile.localAI[0];
-        private ref float RandomAngleDirection => ref Projectile.ai[1];
-        private ref float BoltSpawningTimeOffset => ref Projectile.ai[2];
+        private ref float SplittingLikelihood => ref Projectile.ai[0];
+
+        private int _randomSeed;
+        private UnifiedRandom _random;
+        private ref float TimeUntilRotate => ref Projectile.localAI[0];
+        private ref float CurrentDirection => ref Projectile.ai[1];
+        private ref float TotalAngle => ref Projectile.localAI[1];
+        private ref float TimeUntiSplit => ref Projectile.localAI[2];
 
         public override void Load()
         {
@@ -46,12 +52,47 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.timeLeft = ActualTotalTimeleft;
-            Projectile.extraUpdates = 15;
+            Projectile.extraUpdates = 7;
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            _randomSeed = Main.rand.Next(int.MaxValue);
+            _random = new UnifiedRandom(_randomSeed);
+        }
+
+        private void Rotate()
+        {
+            float angle = _random.NextFloat(0.1f, 0.2f) * CurrentDirection;
+            TotalAngle += angle;
+            if (MathF.Abs(TotalAngle) > 0.4f)
+            {
+                TotalAngle -= angle;
+                angle = -angle * 2;
+                TotalAngle += angle;
+            }
+            CurrentDirection *= -1;
+            Projectile.velocity = Projectile.velocity.RotatedBy(angle);
+        }
+
+        private void Split()
+        {
+            SplittingLikelihood += 2;
+            if (SplittingLikelihood > 4)
+            {
+                SplittingLikelihood = -1;
+                return;
+            }
+            double rotationRadians = Main.rand.NextFloat(0.2f, 0.6f) * (Main.rand.NextBool() ? 1 : -1);
+            Vector2 velocity = Projectile.velocity.RotatedBy(rotationRadians);
+            Projectile newProj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center - velocity, velocity, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, SplittingLikelihood * 2, Main.rand.NextBool() ? 1 : -1);
+            newProj.timeLeft = Projectile.timeLeft - 1;
+            newProj.netUpdate = true;
         }
 
         public override void AI()
@@ -62,14 +103,12 @@ namespace CalamityVanilla.Content.Projectiles.Magic
                 return;
             }
 
-            int randomTimeInterval = CanSpawnMoreBolts ? 5 : 15;
-            if (Projectile.timeLeft % randomTimeInterval == 0)
+            TimeUntilRotate++;
+            if (TimeUntilRotate > 8 && (TimeUntilRotate > 32 || _random.NextBool((int)TimeUntilRotate, 32)))
             {
-                if (RandomAngleChange == 0)
-                    RandomAngleChange = 0.2f;
-                RandomAngleChange *= RandomAngleDirection;
-                RandomAngleDirection *= -1;
-                Projectile.velocity = Projectile.velocity.RotatedBy(RandomAngleChange);
+                Rotate();
+                TimeUntilRotate = 0;
+                Projectile.damage += 2;
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -81,43 +120,28 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.oldPos[0] = Projectile.position;
             Projectile.oldRot[0] = Projectile.rotation;
 
-            if (Projectile.owner == Main.myPlayer)
+            TimeUntiSplit++;
+            int splitChance = (int)(32 + 6 * SplittingLikelihood);
+            if (
+                Projectile.owner == Main.myPlayer && 
+                TimeUntiSplit > 16 &&
+                (!(SplittingLikelihood < 0 || SplittingLikelihood > 2)) &&
+                (TimeUntiSplit > splitChance || Main.rand.NextBool((int)TimeUntiSplit, splitChance))
+            )
             {
-                if (
-                    (Projectile.timeLeft == 48 + BoltSpawningTimeOffset + TotalTimeLeft && Main.rand.NextBool(2, 3)) ||
-                    (Projectile.timeLeft == 8 + BoltSpawningTimeOffset + TotalTimeLeft && Main.rand.NextBool(5))
-                    )
+                Split();
+                TimeUntiSplit = 0;
+
+                if (Main.rand.NextBool(2))
                 {
-                    double rotationRadians = Main.rand.NextFloat(0.2f, 0.6f) * (Main.rand.NextBool() ? 1 : -1);
-                    Vector2 velocity = Projectile.velocity.RotatedBy(rotationRadians);
-                    Projectile newProj = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center - velocity, velocity, Projectile.type, Projectile.damage, Projectile.knockBack, Projectile.owner, 0, Main.rand.NextBool() ? 1 : -1, Main.rand.Next(-7, 8));
-                    newProj.timeLeft = Projectile.timeLeft - 1;
-                    newProj.netUpdate = true;
+                    Rotate();
                 }
             }
-
-            /*
-            float colorLerpValue = (96 - Projectile.timeLeft) / 96f - 0.1f;
-            float alpha = ((96 - Projectile.timeLeft) / 80f) + 0.2f;
-            float scale = ((Projectile.timeLeft) / 96f) + 0.2f;
-            for (int i = 0; i < 3; i++)
-            {
-                Dust dust = Dust.NewDustPerfect(
-                    Projectile.Center,
-                    ModContent.DustType<GraniteLightningDust>(),
-                    Projectile.velocity.RotatedByRandom(0.2) * 0.2f + Main.rand.NextVector2Unit() * 0.2f,
-                    0,
-                    Color.Lerp(Color.White, Color.Lerp(Color.Cyan, Color.SlateBlue, colorLerpValue), colorLerpValue) * alpha,
-                    Main.rand.NextFloat(2f, 3f) * scale
-                );
-                dust.noGravity = true;
-            }
-            */
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SpawningAge = 2;
+            SplittingLikelihood = -1;
             Projectile.velocity = Vector2.Zero;
 
             if (Projectile.timeLeft < TotalTimeLeft)
@@ -135,6 +159,21 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             }
 
             return false;
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            _randomSeed = Main.rand.Next(int.MaxValue);
+            _random = new UnifiedRandom(_randomSeed);
+
+            writer.Write(_randomSeed);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            _randomSeed = reader.ReadInt32();
+
+            _random = new(_randomSeed);
         }
 
         public static void SpawnParticles(Vector2 position)
@@ -195,14 +234,14 @@ namespace CalamityVanilla.Content.Projectiles.Magic
 
         public override void PostDraw(Color lightColor)
         {
-            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * MathF.Sin(p*p*p * MathF.PI);
-            float StripWidth(float p) => 32f;
+            Color StripColors(float p) => new Color(0.4f, 0.85f, 1f, 0f) * MathF.Min(1f, p * 2);// * (1f - MathF.Abs(p - 0.5f) * 2f);
+            float StripWidth(float p) => 16f;
 
             MiscShaderData miscShaderData = GameShaders.Misc["GraniteTome"];
             miscShaderData.UseSaturation(-2.8f);
-            miscShaderData.UseOpacity(Projectile.timeLeft / (float)TotalTimeLeft);
+            miscShaderData.UseOpacity(MathF.Min(2f, 3f * Projectile.timeLeft / TotalTimeLeft));
             miscShaderData.Apply(null);
-            _vertexStrip.PrepareStrip(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, (Projectile.timeLeft > TotalTimeLeft) ? Projectile.oldPos.Length : Projectile.timeLeft);
+            _vertexStrip.PrepareStrip(Projectile.oldPos, Projectile.oldRot, StripColors, StripWidth, -Main.screenPosition + Projectile.Size / 2f, (Projectile.timeLeft > TotalTimeLeft) ? (ActualTotalTimeleft - Projectile.timeLeft) : Projectile.timeLeft);
             _vertexStrip.DrawTrail();
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
         }
