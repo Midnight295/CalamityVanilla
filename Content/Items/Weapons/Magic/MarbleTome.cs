@@ -18,25 +18,27 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 10;
+            Item.damage = 4;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 21;
-            Item.useTime = 7;
-            Item.useAnimation = 7;
+            Item.mana = 5;
+            Item.useTime = 1;
+            Item.useAnimation = 1;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.noUseGraphic = true;
+            Item.knockBack = 0f;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<MarbleTomeShield>();
+            Item.shootSpeed = 4f;
             Item.channel = true;
 
             Item.rare = ItemRarityID.Blue;
-            Item.value = Item.sellPrice(0, 0, 89, 74);
+            Item.value = Item.sellPrice(0, 1);
         }
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback) => false;
-
-        public override void HoldItem(Player player)
+        public override bool CanShoot(Player player)
         {
-
+            return player.ownedProjectileCounts[Item.shoot] <= 0;
         }
     }
 }

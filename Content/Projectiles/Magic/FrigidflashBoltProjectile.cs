@@ -34,7 +34,6 @@ namespace CalamityVanilla.Content.Projectiles.Magic
             Projectile.extraUpdates = 3;
             Projectile.alpha = 255;
             Projectile.penetrate = 10;
-            Projectile.ignoreWater = false;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
