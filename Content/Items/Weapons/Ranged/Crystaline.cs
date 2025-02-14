@@ -22,7 +22,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Item.consumable = false;
             Item.maxStack = 1;
         }
-        public override void HoldItem(Player player)
+        public static bool IsHoldingCrystaline(Player player)
+        {
+            return player.inventory[player.selectedItem].type == ModContent.ItemType<Crystaline>();
+        }
+        public static void UpdateCrystalineStealth(Player player)
         {
             Main.NewText(player.stealth);
             player.GetModPlayer<CVModPlayer>().StealthEnabled = true;

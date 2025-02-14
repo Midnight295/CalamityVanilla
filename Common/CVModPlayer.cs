@@ -1,12 +1,8 @@
-﻿using CalamityVanilla.Content.Projectiles.Ranged;
+﻿using CalamityVanilla.Content.Items.Weapons.Ranged;
+using CalamityVanilla.Content.Projectiles.Ranged;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,24 +13,39 @@ namespace CalamityVanilla.Common
     {
         public override void Load()
         {
+            ModContent.GetInstance<CalamityVanilla>().Logger.Info("Inject start");
             IL_Player.Update += EnableStealth;
         }
         public override void Unload()
         {
+            ModContent.GetInstance<CalamityVanilla>().Logger.Info("NotInject start");
             IL_Player.Update -= EnableStealth;
         }
         private void EnableStealth(ILContext il)
         {
             ILCursor cursor = new(il);
-            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchLdfld("Terraria.Player", "manaSick")))
+            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchLdfld(typeof(Player), nameof(Player.manaSick))))
                 return;
 
+            ILLabel skipCustomBehavior = il.DefineLabel();
             ILLabel skipDefaultBehavior = il.DefineLabel();
             cursor.Index -= 1;
             cursor.MarkLabel(skipDefaultBehavior);
-            cursor.Index -= 3;
+            cursor.Index -= 2;
 
-            cursor.Emit(OpCodes.Brfalse, skipDefaultBehavior);
+            cursor.EmitDelegate((Player player) =>
+            {
+                return Content.Items.Weapons.Ranged.Crystaline.IsHoldingCrystaline(player);
+            });
+            cursor.Emit(OpCodes.Brfalse, skipCustomBehavior);
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.EmitDelegate((Player player) =>
+            {
+                Content.Items.Weapons.Ranged.Crystaline.UpdateCrystalineStealth(player);
+            });
+            cursor.Emit(OpCodes.Br, skipDefaultBehavior);
+            cursor.MarkLabel(skipCustomBehavior);
+            cursor.Emit(OpCodes.Ldarg_0);
         }
 
         public bool StealthEnabled = false;
