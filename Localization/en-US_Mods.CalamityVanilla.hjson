@@ -131,6 +131,26 @@ Items: {
 		DisplayName: Marble Tome
 		Tooltip: ""
 	}
+
+	JeoBody: {
+		DisplayName: Jeo Body
+		Tooltip: ""
+	}
+
+	JeoMask: {
+		DisplayName: Jeo Mask
+		Tooltip: ""
+	}
+
+	JeoTail: {
+		DisplayName: Jeo Tail
+		Tooltip: ""
+	}
+
+	Crystaline: {
+		DisplayName: Crystaline
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -167,4 +187,5 @@ Projectiles: {
 	StickyFleshnade.DisplayName: Sticky Fleshnade
 	Honeycombnade.DisplayName: Honeycombnade
 	MarbleTomeShield.DisplayName: Marble Tome Shield
+	Crystaline.DisplayName: Crystaline
 }

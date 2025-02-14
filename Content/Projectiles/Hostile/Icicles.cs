@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -41,6 +42,7 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         }
         public override void OnKill(int timeLeft)
         {
+            SoundEngine.PlaySound(SoundID.Item27);
             for(int i = 0; i < 15; i++)
             {
                 Dust d = Dust.NewDustDirect(Projectile.position, 16, 16, DustID.FrostStaff);

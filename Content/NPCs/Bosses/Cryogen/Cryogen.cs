@@ -153,11 +153,20 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                 NPC.noTileCollide = true;
             }
         }
+        public override bool PreAI()
+        {
+            NPC.localAI[0]--;
+            if (NPC.localAI[0] > 0)
+            {
+                NPC.position -= NPC.velocity;
+            }
+            NPC.rotation += (NPC.velocity * new Vector2(0.01f, 0.005f)).Length() * NPC.direction;
+            return NPC.localAI[0] <= 0;
+        }
         public override void AI()
         {
             NPC.direction = NPC.velocity.X == 0? 1 : Math.Sign(NPC.velocity.X);
             Lighting.AddLight(NPC.Center, new Vector3(0.8f,1f,1f));
-            NPC.rotation += (NPC.velocity * new Vector2(0.01f,0.005f)).Length() * NPC.direction;
             if (Main.rand.NextBool(10))
             {
                 Dust d = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Snow);

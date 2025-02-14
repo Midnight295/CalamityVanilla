@@ -1,5 +1,7 @@
 ﻿using CalamityVanilla.Content.Projectiles.Ranged;
 using Microsoft.Xna.Framework;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,33 @@ namespace CalamityVanilla.Common
 {
     public class CVModPlayer : ModPlayer
     {
+        public override void Load()
+        {
+            IL_Player.Update += EnableStealth;
+        }
+        public override void Unload()
+        {
+            IL_Player.Update -= EnableStealth;
+        }
+        private void EnableStealth(ILContext il)
+        {
+            ILCursor cursor = new(il);
+            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchLdfld("Terraria.Player", "manaSick")))
+                return;
+
+            ILLabel skipDefaultBehavior = il.DefineLabel();
+            cursor.Index -= 1;
+            cursor.MarkLabel(skipDefaultBehavior);
+            cursor.Index -= 3;
+
+            cursor.Emit(OpCodes.Brfalse, skipDefaultBehavior);
+        }
+
+        public bool StealthEnabled = false;
+        public override void ResetEffects()
+        {
+            StealthEnabled = false;
+        }
         public int GothicToothRegenCounter = 0;
         public override void PostUpdateBuffs()
         {

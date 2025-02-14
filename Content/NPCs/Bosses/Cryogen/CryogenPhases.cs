@@ -22,7 +22,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             if (NPC.ai[0] <= 0)
             {
                 NPC.velocity.Y += 0.3f;
-                NPC.velocity += NPC.Center.DirectionTo(target.Center) * 0.8f;
+                NPC.velocity += NPC.Center.DirectionTo(target.Center) * 0.4f;
                 NPC.velocity = NPC.velocity.LengthClamp(4.5f, 0);
 
                 if(NPC.life < NPC.lifeMax * _phase2HealthMultiplier)
@@ -37,20 +37,26 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             {
                 NPC.rotation += NPC.direction * 0.1f;
                 NPC.velocity *= 0.99f;
-                for(int x = NPC.Left.ToTileCoordinates().X; x < NPC.Right.ToTileCoordinates().X; x++) // Destroy ice blocks
+                bool hitAnything = false;
+                for (int x = NPC.Left.ToTileCoordinates().X; x < NPC.Right.ToTileCoordinates().X; x++) // Destroy ice blocks
                 {
                     for (int y = NPC.Top.ToTileCoordinates().Y; y < NPC.Bottom.ToTileCoordinates().Y; y++)
                     {
-                        if (Main.tile[x,y].TileType == ModContent.TileType<CryogenIceTile>())
+                        if (Main.tile[x, y].TileType == ModContent.TileType<CryogenIceTile>())
                         {
-                            WorldGen.KillTile(x,y);
-                            NPC.velocity *= 0.98f;
-                            if (Main.rand.NextBool(5) && Main.netMode != NetmodeID.MultiplayerClient)
+                            hitAnything = true;
+                            WorldGen.KillTile(x, y);
+                            if (Main.rand.NextBool(2) && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(),Main.rand.NextVector2CircularEdge(6,6),ModContent.ProjectileType<IceShrapnel>(),12,1,-1);
+                                Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(), Main.rand.NextVector2CircularEdge(6, 6), ModContent.ProjectileType<IceShrapnel>(), 12, 1, -1);
                             }
                         }
                     }
+                }
+                if (hitAnything)
+                {
+                    NPC.velocity *= 0.9f;
+                    NPC.localAI[0] = 5;
                 }
             }
             if (NPC.ai[0] == -31)
@@ -101,7 +107,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                             }
                             if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Vector2 blockPlacement = (target.Center + target.velocity * 40) + Main.rand.NextVector2Circular(16 * 4, 16 * 4);
+                                Vector2 blockPlacement = (target.Center + target.velocity.LengthClamp(1000,5) * 40) + Main.rand.NextVector2Circular(16 * 4, 16 * 4);
                                 Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, NPC.DirectionTo(blockPlacement) * 48, ModContent.ProjectileType<CryogenIceBlock>(), 0, 0, ai0: blockPlacement.X, ai1: blockPlacement.Y, ai2: CryogenIceBlockSystem.DEFAULT_ICE_TIMER);
                             }
                         }
@@ -294,17 +300,18 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 
             if (NPC.ai[0] >= 60)
             {
-                NPC.rotation += (NPC.ai[0] - 60) * 0.001f * NPC.direction;
+                NPC.rotation += Math.Clamp((NPC.ai[0] - 60),0,240) * 0.001f * NPC.direction;
                 if (NPC.ai[0] > 260)
                 {
+                    bool hitAnything = false;
                     for (int x = NPC.Left.ToTileCoordinates().X; x < NPC.Right.ToTileCoordinates().X; x++) // Destroy ice blocks
                     {
                         for (int y = NPC.Top.ToTileCoordinates().Y; y < NPC.Bottom.ToTileCoordinates().Y; y++)
                         {
                             if (Main.tile[x, y].TileType == ModContent.TileType<CryogenIceTile>())
                             {
+                                hitAnything = true;
                                 WorldGen.KillTile(x, y);
-                                NPC.velocity *= 0.975f;
                                 if (Main.rand.NextBool(2) && Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(), Main.rand.NextVector2CircularEdge(6, 6), ModContent.ProjectileType<IceShrapnel>(), 12, 1, -1);
@@ -312,8 +319,14 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                             }
                         }
                     }
+                    if (hitAnything)
+                    {
+                        NPC.velocity *= 0.9f;
+                        NPC.localAI[0] = 5;
+                    }
                 }
                 NPC.velocity *= 0.99f;
+                NPC.velocity -= NPC.Center.DirectionTo(target.Center) * 0.01f;
             }
             if (NPC.ai[0] == 300)
             {
