@@ -191,3 +191,5 @@ Projectiles: {
 	MarbleRock.DisplayName: Marble Rock
 	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Ball Mini
 }
+
+Tiles.SinisterRoot.MapEntry: Sinister Root
