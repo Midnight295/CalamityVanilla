@@ -70,7 +70,7 @@ namespace CalamityVanilla
             item.useAnimation = UseTime;
             item.knockBack = Knockback;
             item.UseSound = SoundID.Item1;
-            item.Size = new Vector2(16, 16);
+            item.Size = new Vector2(32, 32);
         }
         //public static PlayerStats PlayerStats(this Player player)
         //{
