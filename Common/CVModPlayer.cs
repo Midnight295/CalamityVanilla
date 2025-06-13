@@ -11,48 +11,6 @@ namespace CalamityVanilla.Common
 {
     public class CVModPlayer : ModPlayer
     {
-        public override void Load()
-        {
-            ModContent.GetInstance<CalamityVanilla>().Logger.Info("Inject start");
-            IL_Player.Update += EnableStealth;
-        }
-        public override void Unload()
-        {
-            ModContent.GetInstance<CalamityVanilla>().Logger.Info("NotInject start");
-            IL_Player.Update -= EnableStealth;
-        }
-        private void EnableStealth(ILContext il)
-        {
-            ILCursor cursor = new(il);
-            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchLdfld(typeof(Player), nameof(Player.manaSick))))
-                return;
-
-            ILLabel skipCustomBehavior = il.DefineLabel();
-            ILLabel skipDefaultBehavior = il.DefineLabel();
-            cursor.Index -= 1;
-            cursor.MarkLabel(skipDefaultBehavior);
-            cursor.Index -= 2;
-
-            cursor.EmitDelegate((Player player) =>
-            {
-                return Content.Items.Weapons.Ranged.Crystaline.IsHoldingCrystaline(player);
-            });
-            cursor.Emit(OpCodes.Brfalse, skipCustomBehavior);
-            cursor.Emit(OpCodes.Ldarg_0);
-            cursor.EmitDelegate((Player player) =>
-            {
-                Content.Items.Weapons.Ranged.Crystaline.UpdateCrystalineStealth(player);
-            });
-            cursor.Emit(OpCodes.Br, skipDefaultBehavior);
-            cursor.MarkLabel(skipCustomBehavior);
-            cursor.Emit(OpCodes.Ldarg_0);
-        }
-
-        public bool StealthEnabled = false;
-        public override void ResetEffects()
-        {
-            StealthEnabled = false;
-        }
         public int GothicToothRegenCounter = 0;
         public override void PostUpdateBuffs()
         {

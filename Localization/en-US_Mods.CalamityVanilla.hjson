@@ -132,24 +132,9 @@ Items: {
 		Tooltip: ""
 	}
 
-	JeoBody: {
-		DisplayName: Jeo Body
-		Tooltip: ""
-	}
-
-	JeoMask: {
-		DisplayName: Jeo Mask
-		Tooltip: ""
-	}
-
-	JeoTail: {
-		DisplayName: Jeo Tail
-		Tooltip: ""
-	}
-
 	Crystaline: {
 		DisplayName: Crystaline
-		Tooltip: ""
+		Tooltip: Throws a splitting knife
 	}
 }
 
@@ -190,6 +175,7 @@ Projectiles: {
 	Crystaline.DisplayName: Crystaline
 	MarbleRock.DisplayName: Marble Rock
 	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Ball Mini
+	CrystalineShard.DisplayName: Crystaline Shard
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

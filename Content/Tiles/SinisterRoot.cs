@@ -69,13 +69,12 @@ namespace CalamityVanilla.Content.Tiles
             }
         }
     }
-    public class SinisterRootSpanwer : GlobalTile
+    public class SinisterRootSpawner : GlobalTile
     {
         public override void RandomUpdate(int i, int j, int type)
         {
-            if (type != TileID.CorruptGrass && type != TileID.Ebonstone && type != TileID.Ebonsand && type != TileID.CorruptSandstone && type != TileID.CorruptHardenedSand && type != TileID.CorruptJungleGrass && type != TileID.CorruptIce)
-                return;
-            if (Main.tile[i, j-1].TileType == ModContent.TileType<SinisterRoot>() || !Main.hardMode || !Main.rand.NextBool(100))
+            if ((type != TileID.CorruptGrass && type != TileID.Ebonstone && type != TileID.Ebonsand && type != TileID.CorruptSandstone && type != TileID.CorruptHardenedSand && type != TileID.CorruptJungleGrass && type != TileID.CorruptIce) ||
+                Main.tile[i, j - 1].TileType == ModContent.TileType<SinisterRoot>() || !Main.hardMode || !Main.rand.NextBool(1000))
                 return;
             WorldGen.PlaceTile(i, j - 1, ModContent.TileType<SinisterRoot>(), style: Main.rand.Next(3));
         }
