@@ -15,9 +15,18 @@ namespace CalamityVanilla.Common
         }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if(npc.type == NPCID.Vampire)
+            switch (npc.type)
             {
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TheGothic>(), 100));
+                case NPCID.GoblinArcher:
+                case NPCID.GoblinPeon:
+                case NPCID.GoblinSorcerer:
+                case NPCID.GoblinThief:
+                case NPCID.GoblinWarrior:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GoblinScrap>(), 4,1,2));
+                    break;
+                case NPCID.Vampire:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TheGothic>(), 100));
+                    break;
             }
         }
     }

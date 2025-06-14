@@ -18,7 +18,8 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
     {
         public override void SetDefaults()
         {
-            Projectile.QuickDefaults(false,24);
+            Projectile.QuickDefaults(false,16);
+            Projectile.penetrate = 3;
         }
         public override void SetStaticDefaults()
         {
@@ -50,20 +51,21 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
                     }
                 }
                 SoundEngine.PlaySound(SoundID.Item110 with { Pitch = 0.5f, PitchVariance = 0.6f},Projectile.position);
+
                 PrettySparkleParticle sparkle = CVParticleOrchestrator.RequestPrettySparkleParticle();
                 sparkle.LocalPosition = Projectile.Center;
-                sparkle.Scale = new Vector2(Main.rand.NextFloat(2.7f, 3.3f), Main.rand.NextFloat(0.9f,1.1f));
-                sparkle.Rotation = MathHelper.PiOver2 + Main.rand.NextFloat(-0.1f,0.1f);
+                sparkle.Scale = new Vector2(Main.rand.NextFloat(2.7f, 3.3f), Main.rand.NextFloat(0.9f, 1.1f));
+                sparkle.Rotation = MathHelper.PiOver2 + Main.rand.NextFloat(-0.1f, 0.1f);
                 sparkle.DrawVerticalAxis = true;
                 sparkle.ColorTint = new Color(0.3f, 0.9f, 1f, 0f);
-                sparkle.FadeInEnd = 15;
-                sparkle.FadeOutStart = 15;
+                sparkle.FadeInEnd = 5;
+                sparkle.FadeOutStart = 5;
                 sparkle.FadeOutEnd = 40;
                 Main.ParticleSystem_World_OverPlayers.Add(sparkle);
 
-                for(int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GemDiamond, new Vector2(0, Main.rand.NextFloat(-5, 5)).RotatedBy(sparkle.Rotation + Main.rand.NextFloat(-0.1f,0.1f)));
+                    Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GemDiamond, new Vector2(0, Main.rand.NextFloat(-5, 5)).RotatedBy(sparkle.Rotation + Main.rand.NextFloat(-0.1f, 0.1f)));
                     d.noGravity = true;
                     d.scale = Main.rand.NextFloat(0.8f, 1.2f);
                     Dust d2 = Dust.NewDustPerfect(Projectile.Center, DustID.GemDiamond, new Vector2(Main.rand.NextFloat(-7, 7), 0).RotatedBy(sparkle.Rotation + Main.rand.NextFloat(-0.1f, 0.1f)));

@@ -23,5 +23,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Item.maxStack = 1;
             Item.UseSound = SoundID.Item1;
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe().AddTile(TileID.Anvils).AddIngredient(ItemID.ThrowingKnife, 150).AddIngredient(ItemID.FallenStar, 5).AddIngredient(ItemID.Diamond, 7).Register();
+        }
     }
 }

@@ -136,6 +136,20 @@ Items: {
 		DisplayName: Crystaline
 		Tooltip: Throws a splitting knife
 	}
+
+	GoblinScrap: {
+		DisplayName: Goblin Scrap
+		Tooltip: ""
+	}
+
+	MoneyShot: {
+		DisplayName: Money Shot
+		Tooltip:
+			'''
+			Uses coins for ammo
+			higher value coins do more damage
+			'''
+	}
 }
 
 Projectiles: {
