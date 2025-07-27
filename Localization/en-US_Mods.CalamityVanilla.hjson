@@ -150,6 +150,11 @@ Items: {
 			higher value coins do more damage
 			'''
 	}
+
+	Twiflight: {
+		DisplayName: Twiflight
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -190,6 +195,7 @@ Projectiles: {
 	MarbleRock.DisplayName: Marble Rock
 	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Ball Mini
 	CrystalineShard.DisplayName: Crystaline Shard
+	TwiflightFeather.DisplayName: Twiflight Feather
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

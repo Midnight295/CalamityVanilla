@@ -30,10 +30,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             CreateRecipe().AddTile(TileID.MythrilAnvil)
-                .AddIngredient(ItemID.BeesKnees)
-                .AddIngredient(ItemID.HellwingBow)
-                .AddIngredient(ItemID.BloodRainBow)
-                .AddIngredient(ItemID.IceBow)
+                .AddIngredient(ModContent.ItemType<TheGothic>())
+                .AddIngredient(ModContent.ItemType<Twiflight>())
                 .AddIngredient(ItemID.ChlorophyteBar,10)
                 .Register();
         }
