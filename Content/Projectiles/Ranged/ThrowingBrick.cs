@@ -51,7 +51,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
 
             if (Collision.SolidCollision(Projectile.position - new Vector2(Projectile.width / 1.5f, Projectile.height / 1.5f), (int)(Projectile.width * 1.5f), (int)(Projectile.height * 1.5f)))
             {
-                OnTileCollide(Projectile.oldVelocity);
+                OnTileCollide(Projectile.velocity);
             }
 
             // This check implements "terminal velocity". We don't want the projectile to keep getting faster and faster.

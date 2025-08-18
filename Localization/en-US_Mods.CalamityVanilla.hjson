@@ -163,7 +163,20 @@ Items: {
 
 	CursedDagger: {
 		DisplayName: Cursed Dagger
-		Tooltip: "Throws an exploding dagger\nThe inferno wears off after exploding"
+		Tooltip:
+			'''
+			Throws an exploding dagger
+			The inferno wears off after exploding
+			'''
+	}
+
+	SeafoamBomb: {
+		DisplayName: Seafoam Grenade
+		Tooltip:
+			'''
+			Explodes into seafoam
+			'Mmmm, salty!'
+			'''
 	}
 }
 
@@ -209,6 +222,8 @@ Projectiles: {
 	ThrowingBrick.DisplayName: Throwing Brick
 	CursedDaggerProjectile.DisplayName: Cursed Dagger Projectile
 	CursedDaggerExplosion.DisplayName: Cursed Dagger Explosion
+	SeafoamBomb.DisplayName: Seafoam Grenade
+	Seafoam.DisplayName: Seafoam
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

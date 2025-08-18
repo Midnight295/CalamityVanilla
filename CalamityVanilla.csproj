@@ -17,6 +17,8 @@
 	  <None Remove="Content\Projectiles\Ranged\CursedDaggerExplosion.png" />
 	  <None Remove="Content\Projectiles\Ranged\CursedDaggerProjectile.png" />
 	  <None Remove="Content\Projectiles\Ranged\IchorJavelinProjectile.png" />
+	  <None Remove="Content\Projectiles\Ranged\Seafoam.png" />
+	  <None Remove="Content\Projectiles\Ranged\SeafoamBomb.png" />
 	</ItemGroup>
 
 	<!-- References -->
