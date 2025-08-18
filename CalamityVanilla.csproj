@@ -10,8 +10,13 @@
 	<ItemGroup>
 	  <None Remove="Content\Dusts\SuperMagicFireDust.png" />
 	  <None Remove="Content\Dusts\SuperMagicIceDust.png" />
+	  <None Remove="Content\Items\Weapons\Ranged\CursedDagger.png" />
+	  <None Remove="Content\Items\Weapons\Ranged\IchorJavelin.png" />
 	  <None Remove="Content\Projectiles\Magic\FrigidflashColdBoltProjectile.png" />
 	  <None Remove="Content\Projectiles\Magic\FrigidflashHotBoltProjectile.png" />
+	  <None Remove="Content\Projectiles\Ranged\CursedDaggerExplosion.png" />
+	  <None Remove="Content\Projectiles\Ranged\CursedDaggerProjectile.png" />
+	  <None Remove="Content\Projectiles\Ranged\IchorJavelinProjectile.png" />
 	</ItemGroup>
 
 	<!-- References -->

@@ -155,6 +155,16 @@ Items: {
 		DisplayName: Twiflight
 		Tooltip: ""
 	}
+
+	ThrowingBrick: {
+		DisplayName: Throwing Brick
+		Tooltip: "'Keep away from glass'"
+	}
+
+	CursedDagger: {
+		DisplayName: Cursed Dagger
+		Tooltip: "Throws an exploding dagger\nThe inferno wears off after exploding"
+	}
 }
 
 Projectiles: {
@@ -196,6 +206,9 @@ Projectiles: {
 	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Ball Mini
 	CrystalineShard.DisplayName: Crystaline Shard
 	TwiflightFeather.DisplayName: Twiflight Feather
+	ThrowingBrick.DisplayName: Throwing Brick
+	CursedDaggerProjectile.DisplayName: Cursed Dagger Projectile
+	CursedDaggerExplosion.DisplayName: Cursed Dagger Explosion
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

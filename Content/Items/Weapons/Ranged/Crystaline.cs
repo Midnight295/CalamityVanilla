@@ -22,6 +22,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Item.consumable = false;
             Item.maxStack = 1;
             Item.UseSound = SoundID.Item1;
+            Item.value = 800;
         }
         public override void AddRecipes()
         {
