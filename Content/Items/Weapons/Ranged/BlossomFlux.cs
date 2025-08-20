@@ -32,7 +32,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             CreateRecipe().AddTile(TileID.MythrilAnvil)
                 .AddIngredient(ModContent.ItemType<TheGothic>())
                 .AddIngredient(ModContent.ItemType<Twiflight>())
-                .AddIngredient(ItemID.ChlorophyteBar,10)
+                .AddIngredient(ItemID.ChlorophyteBar, 10)
+                .AddIngredient(ItemID.Ectoplasm, 8)
                 .Register();
         }
         public override Vector2? HoldoutOffset()
