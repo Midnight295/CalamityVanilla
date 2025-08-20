@@ -29,7 +29,7 @@ namespace CalamityVanilla.Content.Tiles
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(124, 87, 149), name);
 
-            TileObjectData.newTile.CoordinateHeights = [22];
+            TileObjectData.newTile.CoordinateHeights = [20];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.RandomStyleRange = 3;

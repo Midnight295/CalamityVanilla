@@ -51,7 +51,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CursedDaggerExplosion>(), (int)(Projectile.damage * 1.5f), Projectile.knockBack);
                 }
-                SoundEngine.PlaySound(SoundID.Item14 with { Pitch = 0.5f, PitchVariance = 0.6f }, Projectile.position);
+                SoundEngine.PlaySound(SoundID.Item14 with { Pitch = 0.5f, PitchVariance = 0.6f, Volume = 0.6f }, Projectile.position);
                 Projectile.frame = 1;
                 for (int i = 0; i < 40; i++)
                 {
