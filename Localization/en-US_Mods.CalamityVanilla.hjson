@@ -224,6 +224,7 @@ Projectiles: {
 	CursedDaggerExplosion.DisplayName: Cursed Dagger Explosion
 	SeafoamBomb.DisplayName: Seafoam Grenade
 	Seafoam.DisplayName: Seafoam
+	Seafoam2.DisplayName: Seafoam2
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

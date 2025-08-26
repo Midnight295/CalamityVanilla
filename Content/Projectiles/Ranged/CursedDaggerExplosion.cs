@@ -33,7 +33,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
         }
         public override Color? GetAlpha(Color lightColor)
         {
-            return new Color(1f, 1f, 1f, 0f);
+            return new Color(1f, 1f, 1f, 0.5f);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

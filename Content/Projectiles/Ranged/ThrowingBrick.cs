@@ -30,7 +30,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
         public override void OnKill(int timeLeft)
         {
             //SoundEngine.PlaySound(SoundID.Tink, Projectile.position);
-            SoundEngine.PlaySound(SoundID.Item127, Projectile.position);
+            SoundEngine.PlaySound(SoundID.Item127 with { PitchVariance = 0.5f}, Projectile.position);
             for (int i = 0; i < 15; i++)
             {
                 Dust d = Dust.NewDustPerfect(Main.rand.NextVector2FromRectangle(Projectile.Hitbox), DustID.Clay, Main.rand.NextVector2Circular(2, 2));
