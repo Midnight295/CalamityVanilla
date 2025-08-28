@@ -24,7 +24,7 @@ namespace CalamityVanilla.Content.Items.Material
             Item.width = 46;
             Item.height = 46;
             Item.maxStack = 1;
-            Item.value = 100;
+            Item.value = 0;
             Item.rare = ItemRarityID.Pink;
         }
 

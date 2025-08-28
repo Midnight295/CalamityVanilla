@@ -12,6 +12,8 @@ namespace CalamityVanilla.Common
         public override void ModifyGlobalLoot(GlobalLoot globalLoot) //Drop Cryo Key Mold
         {
             globalLoot.Add(ItemDropRule.ByCondition(new Conditions.FrozenKeyCondition(), ModContent.ItemType<CryogenSummonMold>(), 100));
+            globalLoot.Add(ItemDropRule.ByCondition(new Conditions.FrozenKeyCondition(), ModContent.ItemType<EleumSoul>(), 5));
+            globalLoot.Add(ItemDropRule.ByCondition(new Conditions.LivingFlames(), ModContent.ItemType<HavocSoul>(), 5));
         }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
@@ -25,7 +27,7 @@ namespace CalamityVanilla.Common
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GoblinScrap>(), 4,1,2));
                     break;
                 case NPCID.Vampire:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TheGothic>(), 100));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TheGothic>(), 50));
                     break;
             }
         }
