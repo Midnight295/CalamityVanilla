@@ -37,20 +37,6 @@ namespace CalamityVanilla.Content.Projectiles.Melee
         {
             Timer++;
 
-            if (Timer % 3 == 0)
-            {
-                Vector2 velocity = Projectile.velocity.RotatedByRandom(0.2) * Main.rand.NextFloat(2f, 3f);
-                Dust dust = Dust.NewDustDirect(
-                    Projectile.position, Projectile.width, Projectile.height,
-                    DustID.Obsidian,
-                    0, 0,
-                    Alpha: 100,
-                    newColor: Color.White,
-                    Scale: 1f
-                );
-                dust.noGravity = true;
-            }
-
             Projectile.Opacity = Utils.GetLerpValue(0, 10, Timer, true) * Utils.GetLerpValue(TotalTime, TotalTime - 20, Timer, true);
             if (Timer > TotalTime)
             {
