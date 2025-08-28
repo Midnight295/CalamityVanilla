@@ -208,6 +208,11 @@ Items: {
 		DisplayName: Hive Mind Relic
 		Tooltip: ""
 	}
+
+	PerfectDark: {
+		DisplayName: Perfect Dark
+		Tooltip: "Disperses lingering spore clouds"
+	}
 }
 
 Projectiles: {
@@ -255,6 +260,7 @@ Projectiles: {
 	SeafoamBomb.DisplayName: Seafoam Grenade
 	Seafoam.DisplayName: Seafoam
 	Seafoam2.DisplayName: Seafoam2
+	PerfectDarkCloud.DisplayName: Dark Spore Cloud
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root
