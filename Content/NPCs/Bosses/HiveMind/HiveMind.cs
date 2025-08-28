@@ -1,4 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityVanilla.Content.Items.Consumable;
+using CalamityVanilla.Content.Items.Equipment.Vanity;
+using CalamityVanilla.Content.Items.Placeable.Furniture.Relics;
+using CalamityVanilla.Content.Items.Weapons.Magic;
+using CalamityVanilla.Content.Items.Weapons.Ranged;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -6,6 +11,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -187,6 +193,48 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
 
             return false;
         }
+
+        public override void BossLoot(ref int potionType)
+        {
+            potionType = ItemID.GreaterHealingPotion;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            // Do NOT misuse the ModifyNPCLoot and OnKill hooks: the former is only used for registering drops, the latter for everything else
+
+            // The order in which you add loot will appear as such in the Bestiary. To mirror vanilla boss order:
+            // 1. Trophy
+            // 2. Classic Mode ("not expert")
+            // 3. Expert Mode (usually just the treasure bag)
+            // 4. Master Mode (relic first, pet last, everything else in between)
+
+            // Trophies are spawned with 1/10 chance
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.Trophies.HiveMindTrophy>(), 10));
+
+            // All the Classic Mode drops here are based on "not expert", meaning we use .OnSuccess() to add them into the rule, which then gets added
+            LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+
+            // Notice we use notExpertRule.OnSuccess instead of npcLoot.Add so it only applies in normal mode
+            // Boss masks are spawned with 1/7 chance
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<HiveMindMask>(), 7));
+
+            //marble tome is here just as a placeholder idk if i need to clarify that
+            notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<MyceliumStaff>(), ModContent.ItemType<MarbleTome>()));
+
+            // Finally add the leading rule
+            npcLoot.Add(notExpertRule);
+
+            // Add the treasure bag using ItemDropRule.BossBag (automatically checks for expert mode)
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<HiveMindBag>()));
+
+            // ItemDropRule.MasterModeCommonDrop for the relic
+            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<HiveMindRelic>()));
+
+            // ItemDropRule.MasterModeDropOnAllPlayers for the pet
+            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ItemID.BrainOfCthulhuPetItem, 4));
+        }
+
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.EyeofCthulhu);

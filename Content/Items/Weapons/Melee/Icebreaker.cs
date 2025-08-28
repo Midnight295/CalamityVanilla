@@ -15,7 +15,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
         public override void SetDefaults()
         {
             Item.DefaultToSword(80, 8, 5);
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Pink;
             Item.value = Item.sellPrice(0, 3, 0, 0);
             Item.shoot = ModContent.ProjectileType<Projectiles.Melee.Icebreaker>();
             Item.shootSpeed = 11;

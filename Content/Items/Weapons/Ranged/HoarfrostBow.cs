@@ -15,7 +15,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Item.reuseDelay = 10;
             Item.damage = 40;
             Item.knockBack = 1;
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Pink;
             Item.value = Item.sellPrice(0, 3, 0, 0);
             Item.consumeAmmoOnFirstShotOnly = true;
         }

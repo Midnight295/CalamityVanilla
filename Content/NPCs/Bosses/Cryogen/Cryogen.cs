@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityVanilla.Content.Items.Equipment.Vanity;
+using CalamityVanilla.Content.Items.Consumable;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -6,8 +8,12 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using CalamityVanilla.Content.Items.Weapons.Melee;
+using CalamityVanilla.Content.Items.Weapons.Ranged;
+using CalamityVanilla.Content.Items.Placeable.Furniture.Relics;
 
 namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 {
@@ -105,15 +111,51 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             spriteBatch.Draw(tex.Value, NPC.Center - Main.screenPosition, NPC.frame, Color.White, phase == 2? (float)Math.Sin(Main.timeForVisualEffects * 0.8f) * 0.1f: NPC.velocity.X * 0.03f, NPC.frame.Size() / 2, !ForTheWorthy ? 1f : 0.5f, SpriteEffects.None, 0);
             return false;
         }
-        public override void BossLoot(ref string name, ref int potionType)
+        public override void BossLoot(ref int potionType)
         {
             potionType = ItemID.GreaterHealingPotion;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            // Do NOT misuse the ModifyNPCLoot and OnKill hooks: the former is only used for registering drops, the latter for everything else
+
+            // The order in which you add loot will appear as such in the Bestiary. To mirror vanilla boss order:
+            // 1. Trophy
+            // 2. Classic Mode ("not expert")
+            // 3. Expert Mode (usually just the treasure bag)
+            // 4. Master Mode (relic first, pet last, everything else in between)
+
+            // Trophies are spawned with 1/10 chance
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.Trophies.CryogenTrophy>(), 10));
+
+            // All the Classic Mode drops here are based on "not expert", meaning we use .OnSuccess() to add them into the rule, which then gets added
+            LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+
+            // Notice we use notExpertRule.OnSuccess instead of npcLoot.Add so it only applies in normal mode
+            // Boss masks are spawned with 1/7 chance
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<CryogenMask>(), 7));
+
+            notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<Icebreaker>(), ModContent.ItemType<HoarfrostBow>()));
+
+            // Finally add the leading rule
+            npcLoot.Add(notExpertRule);
+
+            // Add the treasure bag using ItemDropRule.BossBag (automatically checks for expert mode)
+            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CryogenBag>()));
+
+            // ItemDropRule.MasterModeCommonDrop for the relic
+            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CryogenRelic>()));
+
+            // ItemDropRule.MasterModeDropOnAllPlayers for the pet
+            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ItemID.BrainOfCthulhuPetItem, 4));
         }
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.EyeofCthulhu);
             NPC.lifeMax = 16000;
             NPC.defense = 30;
+            NPC.value = 200000;
 
             NPC.aiStyle = -1;
             NPC.noGravity = true;

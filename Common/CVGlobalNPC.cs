@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Items.Material;
+﻿using CalamityVanilla.Common.ItemDropRules.DropConditions;
+using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -12,8 +13,8 @@ namespace CalamityVanilla.Common
         public override void ModifyGlobalLoot(GlobalLoot globalLoot) //Drop Cryo Key Mold
         {
             globalLoot.Add(ItemDropRule.ByCondition(new Conditions.FrozenKeyCondition(), ModContent.ItemType<CryogenSummonMold>(), 100));
-            globalLoot.Add(ItemDropRule.ByCondition(new Conditions.FrozenKeyCondition(), ModContent.ItemType<EleumSoul>(), 5));
-            globalLoot.Add(ItemDropRule.ByCondition(new Conditions.LivingFlames(), ModContent.ItemType<HavocSoul>(), 5));
+            globalLoot.Add(ItemDropRule.ByCondition(new EleumSoulDropCondition(), ModContent.ItemType<EleumSoul>(), 5));
+            globalLoot.Add(ItemDropRule.ByCondition(new HavocSoulDropCondition(), ModContent.ItemType<HavocSoul>(), 5));
         }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {

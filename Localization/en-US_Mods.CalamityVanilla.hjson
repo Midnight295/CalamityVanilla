@@ -178,6 +178,36 @@ Items: {
 			'Mmmm, salty!'
 			'''
 	}
+
+	CryogenBag: {
+		DisplayName: Treasure Bag (Cryogen)
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	CryogenTrophy: {
+		DisplayName: Cryogen Trophy
+		Tooltip: ""
+	}
+
+	HiveMindBag: {
+		DisplayName: Treasure Bag (Hive Mind)
+		Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+	}
+
+	HiveMindTrophy: {
+		DisplayName: Hive Mind Trophy
+		Tooltip: ""
+	}
+
+	CryogenRelic: {
+		DisplayName: Cryogen Relic
+		Tooltip: ""
+	}
+
+	HiveMindRelic: {
+		DisplayName: Hive Mind Relic
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -228,3 +258,8 @@ Projectiles: {
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root
+
+DropConditions: {
+	EleumSoul: Mods.CalamityVanilla.DropConditions.EleumSoul
+	HavocSoul: Mods.CalamityVanilla.DropConditions.HavocSoul
+}
