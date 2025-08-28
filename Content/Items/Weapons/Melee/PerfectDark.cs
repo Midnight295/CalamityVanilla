@@ -12,16 +12,16 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            Item.Size = new Vector2(32, 32);
-            Item.damage = 45;
-            Item.knockBack = 3f;
-            Item.useTime = 27;
-            Item.useAnimation = 27;
+            Item.Size = new Vector2(28, 34);
+            Item.damage = 67;
+            Item.knockBack = 6f;
+            Item.useTime = 21;
+            Item.useAnimation = 21;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.UseSound = SoundID.Item1;
             Item.DamageType = DamageClass.Melee;
             Item.rare = ItemRarityID.Pink;
-            Item.value = Item.sellPrice(0, 2, 0, 0);
+            Item.value = Item.sellPrice(0, 2, 10, 0);
             Item.shoot = ModContent.ProjectileType<Projectiles.Melee.PerfectDarkCloud>();
             Item.shootSpeed = 5;
         }
@@ -37,8 +37,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                     position,
                     velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.66f, 1.5f),
                     type,
-                    (int)(damage * 0.5f),
-                    knockback,
+                    damage,//(int)(damage * 0.5f),
+                    (int)(knockback * 0.33f),
                     player.whoAmI,
                     ai0: Main.rand.Next(90, 150)
                 );
@@ -48,14 +48,15 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
 
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 8; i++)
             {
                 float pointProgress = Main.rand.NextFloat(0.6f);
                 CVUtils.GetPointOnSwungItemPath(60f, 74f, 0.4f + pointProgress, player.GetAdjustedItemScale(Item), out var location, out var outwardDirection, player);
                 Vector2 velocity = outwardDirection.RotatedBy(MathHelper.PiOver2 * player.direction * player.gravDir);
 
-                float dustInterpolator = Utils.GetLerpValue(0.2f, 0.4f, pointProgress, true);
-                float dustScale = MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
+                float dustInterpolator = Utils.GetLerpValue(0.2f, 0.6f, pointProgress, true);
+                float dustScale = MathHelper.Lerp(1f, 1.5f, dustInterpolator);//MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
+                dustScale *= Main.rand.NextFloat(0.66f, 1.5f);
                 Color dustColor = Color.Lerp(Color.White, Color.Black, dustInterpolator);
                 int dustAlpha = 0;// (int)MathHelper.Lerp(100, 0, dustInterpolator);
                 int dustType = DustID.Shadowflame;

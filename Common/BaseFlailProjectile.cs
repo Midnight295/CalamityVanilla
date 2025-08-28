@@ -1,0 +1,471 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace CalamityVanilla.Common
+{
+    // Mostly adapted from Example Mod because I didn't want to manually decipher flail code
+    public abstract class BaseFlailProjectile : ModProjectile
+    {
+        public enum AIState
+        {
+            Spinning,
+            LaunchingForward,
+            Retracting,
+            UnusedState,
+            ForcedRetracting,
+            Ricochet,
+            Dropping
+        }
+
+        public AIState CurrentAIState
+        {
+            get => (AIState)Projectile.ai[0];
+            set => Projectile.ai[0] = (float)value;
+        }
+        public ref float StateTimer => ref Projectile.ai[1];
+        public ref float CollisionCounter => ref Projectile.localAI[0];
+        public ref float SpinningStateTimer => ref Projectile.localAI[1];
+
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+
+            if (!player.active || player.dead || player.noItems || player.CCed || Vector2.Distance(Projectile.Center, player.Center) > 900f)
+            {
+                Projectile.Kill();
+                return;
+            }
+            if (Main.myPlayer == Projectile.owner && Main.mapFullscreen)
+            {
+                Projectile.Kill();
+                return;
+            }
+
+            Vector2 mountedCenter = player.MountedCenter;
+            bool doFastThrowDust = false;
+            bool shouldFreelyRotate = true;
+            bool ownerHitCheck = false;
+            int launchMaxTime = 10;
+            float launchSpeed = 24f;
+            float launchMaxDistance = 800f;
+            float retractionAcceleration = 3f;
+            float maximumRetractionSpeed = 16f;
+            float forcedRetractionAcceleration = 6f;
+            float maximumForcedRetractionSpeed = 48f;
+            float unusedRetractionAcceleration = 1f;
+            float unusedMaximumRetractionSpeed = 14f;
+            int unusedChainLength = 60;
+            int defaultHitCooldown = 10;
+            int spinningHitCooldown = 15;
+            int launchHitCooldown = 10;
+            int ricochetMaxTime = launchMaxTime + 5;
+
+            float meleeSpeed = player.GetTotalAttackSpeed(DamageClass.Melee);
+            launchSpeed *= meleeSpeed;
+            unusedRetractionAcceleration *= meleeSpeed;
+            unusedMaximumRetractionSpeed *= meleeSpeed;
+            retractionAcceleration *= meleeSpeed;
+            maximumRetractionSpeed *= meleeSpeed;
+            forcedRetractionAcceleration *= meleeSpeed;
+            maximumForcedRetractionSpeed *= meleeSpeed;
+            float launchRange = launchSpeed * launchMaxTime;
+            float maxDropRange = launchRange + 160f;
+
+            Projectile.localNPCHitCooldown = defaultHitCooldown;
+
+            switch (CurrentAIState)
+            {
+                case AIState.Spinning:
+                    ownerHitCheck = true;
+
+                    if (Main.myPlayer == Projectile.owner)
+                    {
+                        Vector2 origin = mountedCenter;
+                        Vector2 mouseWorld = Main.MouseWorld;
+                        Vector2 launchDirection = origin.DirectionTo(mouseWorld).SafeNormalize(Vector2.UnitX * player.direction);
+
+                        if (!player.channel)
+                        {
+                            CurrentAIState = AIState.LaunchingForward;
+                            StateTimer = 0f;
+                            Projectile.velocity = launchDirection * launchSpeed + player.velocity;
+                            Projectile.Center = mountedCenter;
+                            Projectile.netUpdate = true;
+                            Projectile.ResetLocalNPCHitImmunity();
+                            Projectile.localNPCHitCooldown = launchHitCooldown;
+                            break;
+                        }
+                    }
+
+                    SpinningStateTimer++;
+                    Vector2 positionOffsetDirection = new Vector2(player.direction).RotatedBy(MathF.PI * 10f * (SpinningStateTimer / 60f) * player.direction);
+                    positionOffsetDirection.Y *= 0.8f;
+                    if (positionOffsetDirection.Y * player.gravDir > 0f)
+                    {
+                        positionOffsetDirection.Y *= 0.5f;
+                    }
+                    Projectile.Center = mountedCenter + positionOffsetDirection * 30f;
+                    Projectile.velocity = Vector2.Zero;
+                    Projectile.localNPCHitCooldown = spinningHitCooldown;
+                    break;
+                case AIState.LaunchingForward:
+                    doFastThrowDust = true;
+                    bool shouldAutomaticallyRetract = StateTimer++ >= launchMaxTime;
+                    shouldAutomaticallyRetract |= Projectile.Distance(mountedCenter) >= launchMaxDistance;
+                    if (player.controlUseItem)
+                    {
+                        CurrentAIState = AIState.Dropping;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                        Projectile.velocity *= 0.2f;
+                        // add hook
+                        break;
+                    }
+                    if (shouldAutomaticallyRetract)
+                    {
+                        CurrentAIState = AIState.Retracting;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                        Projectile.velocity *= 0.3f;
+                        // add hook
+                    }
+                    player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    Projectile.localNPCHitCooldown = launchHitCooldown;
+                    break;
+                case AIState.Retracting:
+                    Vector2 retractionDirection = Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero);
+                    if (Projectile.Distance(mountedCenter) <= maximumRetractionSpeed)
+                    {
+                        Projectile.Kill();
+                        return;
+                    }
+                    if (player.controlUseItem)
+                    {
+                        CurrentAIState = AIState.Dropping;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                        Projectile.velocity *= 0.2f;
+                    }
+                    else
+                    {
+                        Projectile.velocity *= 0.98f;
+                        Projectile.velocity = Projectile.velocity.MoveTowards(retractionDirection * maximumRetractionSpeed, retractionAcceleration);
+                        player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    }
+                    break;
+                case AIState.UnusedState:
+                    if (!player.controlUseItem)
+                    {
+                        CurrentAIState = AIState.ForcedRetracting;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                        break;
+                    }
+                    float chainLength = Projectile.Distance(mountedCenter);
+                    Projectile.tileCollide = StateTimer == 1f;
+                    bool flag4 = chainLength <= launchRange;
+                    if (flag4 != Projectile.tileCollide)
+                    {
+                        Projectile.tileCollide = flag4;
+                        Projectile.ai[1] = Projectile.tileCollide ? 1 : 0;
+                        Projectile.netUpdate = true;
+                    }
+                    if (chainLength > unusedChainLength)
+                    {
+                        if (chainLength >= launchRange)
+                        {
+                            Projectile.velocity *= 0.5f;
+                            Projectile.velocity = Projectile.velocity.MoveTowards(Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero) * unusedMaximumRetractionSpeed, unusedMaximumRetractionSpeed);
+                        }
+                        Projectile.velocity *= 0.98f;
+                        Projectile.velocity = Projectile.velocity.MoveTowards(Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero) * unusedMaximumRetractionSpeed, unusedRetractionAcceleration);
+                    }
+                    else
+                    {
+                        if (Projectile.velocity.Length() < 6f)
+                        {
+                            Projectile.velocity.X *= 0.96f;
+                            Projectile.velocity.Y += 0.2f;
+                        }
+                        if (player.velocity.X == 0f)
+                        {
+                            Projectile.velocity.X *= 0.96f;
+                        }
+                    }
+                    player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    break;
+                case AIState.ForcedRetracting:
+                    Projectile.tileCollide = false;
+                    Vector2 forcedRetractionDirection = Projectile.DirectionTo(mountedCenter).SafeNormalize(Vector2.Zero);
+                    if (Projectile.Distance(mountedCenter) <= maximumForcedRetractionSpeed)
+                    {
+                        Projectile.Kill();
+                        return;
+                    }
+                    Projectile.velocity *= 0.98f;
+                    Projectile.velocity = Projectile.velocity.MoveTowards(forcedRetractionDirection * maximumForcedRetractionSpeed, forcedRetractionAcceleration);
+                    Vector2 target = Projectile.Center + Projectile.velocity;
+                    Vector2 value = mountedCenter.DirectionFrom(target).SafeNormalize(Vector2.Zero);
+                    if (Vector2.Dot(forcedRetractionDirection, value) < 0f)
+                    {
+                        Projectile.Kill();
+                        return;
+                    }
+                    player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    break;
+                case AIState.Ricochet:
+                    if (StateTimer++ >= ricochetMaxTime)
+                    {
+                        CurrentAIState = AIState.Dropping;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                    }
+                    else
+                    {
+                        Projectile.localNPCHitCooldown = launchHitCooldown;
+                        Projectile.velocity.Y += 0.6f;
+                        Projectile.velocity.X *= 0.95f;
+                        player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    }
+                    break;
+                case AIState.Dropping:
+                    if (!player.controlUseItem || Projectile.Distance(mountedCenter) > maxDropRange)
+                    {
+                        CurrentAIState = AIState.ForcedRetracting;
+                        StateTimer = 0f;
+                        Projectile.netUpdate = true;
+                        break;
+                    }
+                    if (!Projectile.shimmerWet)
+                    {
+                        Projectile.velocity.Y += 0.8f;
+                    }
+                    Projectile.velocity.X *= 0.95f;
+                    player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
+                    break;
+            }
+
+            Projectile.direction = Projectile.velocity.X > 0f ? 1 : -1;
+            Projectile.spriteDirection = Projectile.direction;
+            Projectile.ownerHitCheck = ownerHitCheck;
+            if (shouldFreelyRotate)
+            {
+                if (Projectile.velocity.Length() > 1f)
+                {
+                    Projectile.rotation = Projectile.velocity.ToRotation() + Projectile.velocity.X * 0.1f;
+                }
+                else
+                {
+                    Projectile.rotation += Projectile.velocity.X * 0.1f;
+                }
+            }
+            Projectile.timeLeft = 2;
+            player.heldProj = Projectile.whoAmI;
+            player.SetDummyItemTime(2);
+            player.itemRotation = Projectile.DirectionFrom(mountedCenter).ToRotation();
+            if (Projectile.Center.X < mountedCenter.X)
+            {
+                player.itemRotation += (float)Math.PI;
+            }
+            player.itemRotation = MathHelper.WrapAngle(player.itemRotation);
+            // dust
+
+            if (Projectile.shimmerWet)
+            {
+                ShimmerBehavior();
+            }
+        }
+
+        private void ShimmerBehavior()
+        {
+            if (Projectile.velocity.Y > 0f)
+            {
+                Projectile.velocity.Y *= -1f;
+                Projectile.netUpdate = true;
+            }
+            Projectile.velocity.Y -= 0.4f;
+            if (Projectile.velocity.Y < -8f)
+            {
+                Projectile.velocity.Y = -8f;
+            }
+        }
+
+        public override bool? CanDamage()
+        {
+            if (CurrentAIState == AIState.Spinning && SpinningStateTimer <= 12f)
+            {
+                return false;
+            }
+            return null;
+        }
+
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (CurrentAIState == AIState.Spinning) // Hit anything in an elipsis around the player
+            {
+                Vector2 mountedCenter = Main.player[Projectile.owner].MountedCenter;
+                Vector2 shortestVectorFromPlayerToTarget = targetHitbox.ClosestPointInRect(mountedCenter) - mountedCenter;
+                shortestVectorFromPlayerToTarget.Y /= 0.8f;
+                float hitRadius = 55f;
+                return shortestVectorFromPlayerToTarget.Length() <= hitRadius;
+            }
+            return null;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            int hitCooldown = 10;
+            int impactIntensity = 0;
+            Vector2 vector = Projectile.velocity;
+            float bounceAmount = 0.2f;
+            if (CurrentAIState == AIState.LaunchingForward || CurrentAIState == AIState.Ricochet)
+            {
+                bounceAmount = 0.4f;
+            }
+            if (CurrentAIState == AIState.Dropping)
+            {
+                bounceAmount = 0f;
+            }
+
+            if (oldVelocity.X != Projectile.velocity.X)
+            {
+                if (Math.Abs(oldVelocity.X) > 4f)
+                {
+                    impactIntensity = 1;
+                }
+                Projectile.velocity.X = -oldVelocity.X * bounceAmount;
+                Projectile.localAI[0] += 1f;
+            }
+
+            if (oldVelocity.Y != Projectile.velocity.Y)
+            {
+                if (Math.Abs(oldVelocity.Y) > 4f)
+                {
+                    impactIntensity = 1;
+                }
+                Projectile.velocity.Y = -oldVelocity.Y * bounceAmount;
+                Projectile.localAI[0] += 1f;
+            }
+
+            if (CurrentAIState == AIState.LaunchingForward)
+            {
+                CurrentAIState = AIState.Ricochet;
+                Projectile.localNPCHitCooldown = hitCooldown;
+                Projectile.netUpdate = true;
+                Point scanAreaStart = Projectile.TopLeft.ToTileCoordinates();
+                Point scanAreaEnd = Projectile.BottomRight.ToTileCoordinates();
+                impactIntensity = 2;
+                Projectile.CreateImpactExplosion(2, Projectile.Center, ref scanAreaStart, ref scanAreaEnd, Projectile.width, out var causedShockwaves);
+                Projectile.CreateImpactExplosion2_FlailTileCollision(Projectile.Center, causedShockwaves, vector);
+                Projectile.position -= vector;
+            }
+
+            if (impactIntensity > 0)
+            {
+                Projectile.netUpdate = true;
+                for (int i = 0; i < impactIntensity; i++)
+                {
+                    Collision.HitTiles(Projectile.position, vector, Projectile.width, Projectile.height);
+                }
+                SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
+            }
+
+            if (CurrentAIState != AIState.UnusedState && CurrentAIState != AIState.Spinning && CurrentAIState != AIState.Ricochet && CurrentAIState != AIState.Dropping && CollisionCounter >= 10f)
+            {
+                CurrentAIState = AIState.ForcedRetracting;
+                Projectile.netUpdate = true;
+            }
+
+            return false;
+        }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (CurrentAIState == AIState.Spinning)
+            {
+                modifiers.SourceDamage *= 1.2f;
+            }
+            else if (CurrentAIState == AIState.LaunchingForward || CurrentAIState == AIState.Retracting)
+            {
+                modifiers.SourceDamage *= 2f;
+            }
+
+            modifiers.HitDirectionOverride = (Main.player[Projectile.owner].Center.X < target.Center.X).ToDirectionInt();
+
+            if (CurrentAIState == AIState.Spinning)
+            {
+                modifiers.Knockback *= 0.25f;
+            }
+            else if (CurrentAIState == AIState.Dropping)
+            {
+                modifiers.Knockback *= 0.5f;
+            }
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            DrawChains(ref lightColor);
+
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Vector2 drawOrigin = texture.Size() * 0.5f;
+            SpriteEffects spriteEffects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Vector2 drawPosition = Projectile.Center + Vector2.UnitY * Projectile.gfxOffY - Main.screenPosition;
+
+            if (CurrentAIState == AIState.LaunchingForward)
+            {
+                Color afterimageColor = Projectile.GetAlpha(lightColor);
+                afterimageColor.A = 127;
+                afterimageColor *= 0.5f;
+
+                int afterimageCount = Math.Min(Projectile.oldPos.Length - 1, (int)StateTimer);
+
+                for (float i = 1f; i >= 0f; i -= 0.125f)
+                {
+                    float afterimageAlpha = 1f - i;
+                    Vector2 positionOffset = Projectile.velocity * -afterimageCount * i;
+                    Main.EntitySpriteDraw(texture, drawPosition + positionOffset, null, afterimageColor * afterimageAlpha, Projectile.rotation, drawOrigin, Projectile.scale * 1.15f * MathHelper.Lerp(0.5f, 1f, afterimageAlpha), spriteEffects);
+                }
+            }
+
+            return true;
+        }
+
+        private void DrawChains(ref Color lightColor)
+        {
+            Player player = Main.player[Projectile.owner];
+            Vector2 playerArmPosition = Main.GetPlayerArmPosition(Projectile);
+            playerArmPosition -= Vector2.UnitY * player.gfxOffY;
+
+            Asset<Texture2D> texture = TextureAssets.Extra[99];
+            Rectangle? sourceRectangle = texture.Frame(1, 6);
+            float num = -2;
+
+            Vector2 textureOrigin = (sourceRectangle.HasValue ? (sourceRectangle.Value.Size() / 2f) : (texture.Size() / 2f));
+            Vector2 chainDrawPosition = Projectile.Center;
+            Vector2 vectorFromProjectileToPlayerArms = playerArmPosition.MoveTowards(chainDrawPosition, 4f) - chainDrawPosition;
+            Vector2 unitVectorFromProjectileToPlayerArms = vectorFromProjectileToPlayerArms.SafeNormalize(Vector2.Zero);
+            float chainSegmentLength = (float)(sourceRectangle.HasValue ? sourceRectangle.Value.Height : texture.Height()) + num;
+            float chainRotation = unitVectorFromProjectileToPlayerArms.ToRotation() + MathHelper.PiOver2;
+            int chainCount = 0;
+            float chainLengthRemainingToDraw = vectorFromProjectileToPlayerArms.Length() + chainSegmentLength / 2f;
+
+            while (chainLengthRemainingToDraw > 0f)
+            {
+                Color chainLightColor = Lighting.GetColor((int)chainDrawPosition.X / 16, (int)(chainDrawPosition.Y / 16f));
+
+                Main.spriteBatch.Draw(texture.Value, chainDrawPosition - Main.screenPosition, sourceRectangle, chainLightColor, chainRotation, textureOrigin, 1f, SpriteEffects.None, 0f);
+
+                chainDrawPosition += unitVectorFromProjectileToPlayerArms * chainSegmentLength;
+                chainCount++;
+                chainLengthRemainingToDraw -= chainSegmentLength;
+            }
+        }
+    }
+}

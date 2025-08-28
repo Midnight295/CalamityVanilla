@@ -211,7 +211,12 @@ Items: {
 
 	PerfectDark: {
 		DisplayName: Perfect Dark
-		Tooltip: "Disperses lingering spore clouds"
+		Tooltip: Its baleful blade releases choking, noxious gas
+	}
+
+	TheSnowman: {
+		DisplayName: The Snowman
+		Tooltip: ""
 	}
 }
 
@@ -261,6 +266,7 @@ Projectiles: {
 	Seafoam.DisplayName: Seafoam
 	Seafoam2.DisplayName: Seafoam2
 	PerfectDarkCloud.DisplayName: Dark Spore Cloud
+	TheSnowman.DisplayName: The Snowman
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root
