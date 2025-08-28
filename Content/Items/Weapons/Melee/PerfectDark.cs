@@ -51,7 +51,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
             for (int i = 0; i < 2; i++)
             {
                 float pointProgress = Main.rand.NextFloat(0.6f);
-                CVUtils.GetPointOnSwungItemPath(68f, 84f, 0.4f + pointProgress, player.GetAdjustedItemScale(Item), out var location, out var outwardDirection, player);
+                CVUtils.GetPointOnSwungItemPath(60f, 74f, 0.4f + pointProgress, player.GetAdjustedItemScale(Item), out var location, out var outwardDirection, player);
                 Vector2 velocity = outwardDirection.RotatedBy(MathHelper.PiOver2 * player.direction * player.gravDir);
 
                 float dustInterpolator = Utils.GetLerpValue(0.2f, 0.4f, pointProgress, true);
