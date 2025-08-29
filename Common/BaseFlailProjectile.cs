@@ -16,6 +16,8 @@ namespace CalamityVanilla.Common
     // Mostly adapted from Example Mod because I didn't want to manually decipher flail code
     public abstract class BaseFlailProjectile : ModProjectile
     {
+        #region Implementation
+
         public enum AIState
         {
             Spinning,
@@ -278,7 +280,8 @@ namespace CalamityVanilla.Common
                 player.itemRotation += (float)Math.PI;
             }
             player.itemRotation = MathHelper.WrapAngle(player.itemRotation);
-            // dust
+
+            ShowVisuals(doFastThrowDust);
 
             if (Projectile.shimmerWet)
             {
@@ -451,22 +454,29 @@ namespace CalamityVanilla.Common
             Vector2 playerArmPosition = Main.GetPlayerArmPosition(Projectile);
             playerArmPosition -= Vector2.UnitY * player.gfxOffY;
 
-            Asset<Texture2D> texture = TextureAssets.Extra[99];
-            Rectangle? sourceRectangle = texture.Frame(1, 6);
-            float num = -2;
+            Asset<Texture2D> texture = ModContent.Request<Texture2D>(ChainTexture, AssetRequestMode.ImmediateLoad);
+            Rectangle? sourceRectangle = InitialChainSourceRectangle(texture);
+            float chainHeightAdjustment = ChainHeightAdjustment;
 
             Vector2 textureOrigin = (sourceRectangle.HasValue ? (sourceRectangle.Value.Size() / 2f) : (texture.Size() / 2f));
             Vector2 chainDrawPosition = Projectile.Center;
             Vector2 vectorFromProjectileToPlayerArms = playerArmPosition.MoveTowards(chainDrawPosition, 4f) - chainDrawPosition;
             Vector2 unitVectorFromProjectileToPlayerArms = vectorFromProjectileToPlayerArms.SafeNormalize(Vector2.Zero);
-            float chainSegmentLength = (float)(sourceRectangle.HasValue ? sourceRectangle.Value.Height : texture.Height()) + num;
+            float chainSegmentLength = (sourceRectangle.HasValue ? sourceRectangle.Value.Height : texture.Height()) + chainHeightAdjustment;
+            if (chainSegmentLength < 0)
+            {
+                chainSegmentLength = 10;
+            }
             float chainRotation = unitVectorFromProjectileToPlayerArms.ToRotation() + MathHelper.PiOver2;
             int chainCount = 0;
+
             float chainLengthRemainingToDraw = vectorFromProjectileToPlayerArms.Length() + chainSegmentLength / 2f;
 
             while (chainLengthRemainingToDraw > 0f)
             {
                 Color chainLightColor = Lighting.GetColor((int)chainDrawPosition.X / 16, (int)(chainDrawPosition.Y / 16f));
+
+                PreDrawChain(chainCount, ref texture, ref sourceRectangle, ref chainLightColor);
 
                 Main.spriteBatch.Draw(texture.Value, chainDrawPosition - Main.screenPosition, sourceRectangle, chainLightColor, chainRotation, textureOrigin, 1f, SpriteEffects.None, 0f);
 
@@ -475,6 +485,10 @@ namespace CalamityVanilla.Common
                 chainLengthRemainingToDraw -= chainSegmentLength;
             }
         }
+
+        #endregion
+
+        #region Gameplay properties
 
         /// <summary>
         /// The maximum allowed time a flail can stay launched.
@@ -574,6 +588,52 @@ namespace CalamityVanilla.Common
         /// </summary>
         public virtual int LaunchedNPCHitCooldown => 10;
 
-        public virtual void
+        #endregion
+
+        #region Gameplay functions
+
+        /// <summary>
+        /// Spawn effects that should appear near the flail.
+        /// </summary>
+        /// <param name="doFastThrowDust">Whether the flail is being launched. Flails being launched should generate bigger effects.</param>
+        public virtual void ShowVisuals(bool doFastThrowDust)
+        {
+
+        }
+
+        #endregion
+
+        #region Rendering properties & functions
+
+        /// <summary>
+        /// The file name of the chain texture file in the file space.
+        /// </summary>
+        public virtual string ChainTexture => Texture + "_Chain";
+
+        /// <summary>
+        /// The initial source rectangle of the chain texture the chain will use.
+        /// </summary>
+        /// <param name="texture">The chain texture, provided for convenience.</param>
+        /// <returns>The source rectangle. Return null to use the whole texture.</returns>
+        public virtual Rectangle? InitialChainSourceRectangle(Asset<Texture2D> texture) => null;
+
+        /// <summary>
+        /// How much the chain's height should be offset. Use this to adjust the chain overlap.
+        /// </summary>
+        public virtual int ChainHeightAdjustment => 0;
+
+        /// <summary>
+        /// Lets you modify chain drawing before a chain gets drawn.
+        /// </summary>
+        /// <param name="chainCount">The amount of chains drawn. Used to alternate between or change frames/textures.</param>
+        /// <param name="texture">The chain texture.</param>
+        /// <param name="sourceRectangle">The source rectangle.</param>
+        /// <param name="lighColor">The light color at the chain's position.</param>
+        public virtual void PreDrawChain(int chainCount, ref Asset<Texture2D> texture, ref Rectangle? sourceRectangle, ref Color lighColor)
+        {
+
+        }
+
+        #endregion
     }
 }
