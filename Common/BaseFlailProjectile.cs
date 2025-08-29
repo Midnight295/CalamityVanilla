@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -52,20 +55,20 @@ namespace CalamityVanilla.Common
             bool doFastThrowDust = false;
             bool shouldFreelyRotate = true;
             bool ownerHitCheck = false;
-            int launchMaxTime = 10;
-            float launchSpeed = 24f;
-            float launchMaxDistance = 800f;
-            float retractionAcceleration = 3f;
-            float maximumRetractionSpeed = 16f;
-            float forcedRetractionAcceleration = 6f;
-            float maximumForcedRetractionSpeed = 48f;
+            int launchMaxTime = MaxTimeLaunched;
+            float launchSpeed = LaunchSpeed;
+            float launchMaxDistance = MaxDistanceLaunched;
+            float retractionAcceleration = ManualRetractionAcceleration;
+            float maximumRetractionSpeed = MaxManualRetractionSpeed;
+            float forcedRetractionAcceleration = ForcedRetractionAcceleration;
+            float maximumForcedRetractionSpeed = MaxForcedRetractionSpeed;
             float unusedRetractionAcceleration = 1f;
             float unusedMaximumRetractionSpeed = 14f;
             int unusedChainLength = 60;
-            int defaultHitCooldown = 10;
-            int spinningHitCooldown = 15;
-            int launchHitCooldown = 10;
-            int ricochetMaxTime = launchMaxTime + 5;
+            int defaultHitCooldown = DefaultNPCHitCooldown;
+            int spinningHitCooldown = SpinningNPCHitCooldown;
+            int launchHitCooldown = LaunchedNPCHitCooldown;
+            int ricochetMaxTime = 10 + 5;//launchMaxTime + 5; Vanilla calculates this before changing launchMaxTime (which is 10 by default) to flail-specific values
 
             float meleeSpeed = player.GetTotalAttackSpeed(DamageClass.Melee);
             launchSpeed *= meleeSpeed;
@@ -174,7 +177,7 @@ namespace CalamityVanilla.Common
                     if (flag4 != Projectile.tileCollide)
                     {
                         Projectile.tileCollide = flag4;
-                        Projectile.ai[1] = Projectile.tileCollide ? 1 : 0;
+                        StateTimer = Projectile.tileCollide ? 1 : 0;
                         Projectile.netUpdate = true;
                     }
                     if (chainLength > unusedChainLength)
@@ -285,6 +288,11 @@ namespace CalamityVanilla.Common
 
         private void ShimmerBehavior()
         {
+            if (CurrentAIState == AIState.Retracting || CurrentAIState == AIState.ForcedRetracting)
+            {
+                return;
+            }
+
             if (Projectile.velocity.Y > 0f)
             {
                 Projectile.velocity.Y *= -1f;
@@ -299,7 +307,7 @@ namespace CalamityVanilla.Common
 
         public override bool? CanDamage()
         {
-            if (CurrentAIState == AIState.Spinning && SpinningStateTimer <= 12f)
+            if (CurrentAIState == AIState.Spinning && SpinningStateTimer <= 12f) // Can't damage while spinning and hasn't done one full spin
             {
                 return false;
             }
@@ -323,7 +331,7 @@ namespace CalamityVanilla.Common
         {
             int hitCooldown = 10;
             int impactIntensity = 0;
-            Vector2 vector = Projectile.velocity;
+            Vector2 velocity = Projectile.velocity;
             float bounceAmount = 0.2f;
             if (CurrentAIState == AIState.LaunchingForward || CurrentAIState == AIState.Ricochet)
             {
@@ -341,7 +349,7 @@ namespace CalamityVanilla.Common
                     impactIntensity = 1;
                 }
                 Projectile.velocity.X = -oldVelocity.X * bounceAmount;
-                Projectile.localAI[0] += 1f;
+                CollisionCounter++;
             }
 
             if (oldVelocity.Y != Projectile.velocity.Y)
@@ -351,7 +359,7 @@ namespace CalamityVanilla.Common
                     impactIntensity = 1;
                 }
                 Projectile.velocity.Y = -oldVelocity.Y * bounceAmount;
-                Projectile.localAI[0] += 1f;
+                CollisionCounter++;
             }
 
             if (CurrentAIState == AIState.LaunchingForward)
@@ -363,8 +371,8 @@ namespace CalamityVanilla.Common
                 Point scanAreaEnd = Projectile.BottomRight.ToTileCoordinates();
                 impactIntensity = 2;
                 Projectile.CreateImpactExplosion(2, Projectile.Center, ref scanAreaStart, ref scanAreaEnd, Projectile.width, out var causedShockwaves);
-                Projectile.CreateImpactExplosion2_FlailTileCollision(Projectile.Center, causedShockwaves, vector);
-                Projectile.position -= vector;
+                Projectile.CreateImpactExplosion2_FlailTileCollision(Projectile.Center, causedShockwaves, velocity);
+                Projectile.position -= velocity;
             }
 
             if (impactIntensity > 0)
@@ -372,7 +380,7 @@ namespace CalamityVanilla.Common
                 Projectile.netUpdate = true;
                 for (int i = 0; i < impactIntensity; i++)
                 {
-                    Collision.HitTiles(Projectile.position, vector, Projectile.width, Projectile.height);
+                    Collision.HitTiles(Projectile.position, velocity, Projectile.width, Projectile.height);
                 }
                 SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
             }
@@ -467,5 +475,105 @@ namespace CalamityVanilla.Common
                 chainLengthRemainingToDraw -= chainSegmentLength;
             }
         }
+
+        /// <summary>
+        /// The maximum allowed time a flail can stay launched.
+        /// </summary>
+        /// <remarks>
+        /// Also controls how far the flail can be from its owner when dropped.
+        /// <br/>
+        /// Overridden vanilla values:<br/>
+        /// - <see cref="ProjectileID.Mace"/>, <see cref="ProjectileID.FlamingMace"/>, <see cref="ProjectileID.TheDaoofPow"/>, <see cref="ProjectileID.DripplerFlail"/>, <see cref="ProjectileID.FlowerPow"/>: 13<br/>
+        /// - <see cref="ProjectileID.BallOHurt"/>, <see cref="ProjectileID.TheMeatball"/>, <see cref="ProjectileID.BlueMoon"/>, <see cref="ProjectileID.Sunfury"/>: 15<br/>
+        /// </remarks>
+        public virtual int MaxTimeLaunched => 10;
+
+        /// <summary>
+        /// The speed at which the flail will be launched.
+        /// </summary>
+        /// <remarks>
+        /// Overridden vanilla values:<br/>
+        /// - <see cref="ProjectileID.Mace"/>, <see cref="ProjectileID.FlamingMace"/>: 12<br/>
+        /// - <see cref="ProjectileID.BallOHurt"/>: 14<br/>
+        /// - <see cref="ProjectileID.TheMeatball"/>: 15<br/>
+        /// - <see cref="ProjectileID.BlueMoon"/>: 16<br/>
+        /// - <see cref="ProjectileID.Sunfury"/>: 17<br/>
+        /// - <see cref="ProjectileID.TheDaoofPow"/>: 21<br/>
+        /// - <see cref="ProjectileID.DripplerFlail"/>: 22<br/>
+        /// - <see cref="ProjectileID.FlowerPow"/>: 23<br/>
+        /// </remarks>
+        public virtual float LaunchSpeed => 24f;
+
+        /// <summary>
+        /// The maximum allowed distance a flail can be from its owner when launched.
+        /// </summary>
+        /// <remarks>
+        /// Also controls how far the flail can be from its owner when dropped.
+        /// </remarks>
+        public virtual float MaxDistanceLaunched => 800f;
+
+        /// <summary>
+        /// The speed the flail will attempt to reach when manually retracting the flail.
+        /// </summary>
+        /// <remarks>
+        /// Also controls the distance from the player at which the flail disappears when retracting, but this shouldn't matter.
+        /// <br/>
+        /// Overridden vanilla values:<br/>
+        /// - <see cref="ProjectileID.Mace"/>, <see cref="ProjectileID.FlamingMace"/>: 8<br/>
+        /// - <see cref="ProjectileID.BallOHurt"/>: 10<br/>
+        /// - <see cref="ProjectileID.TheMeatball"/>: 11<br/>
+        /// - <see cref="ProjectileID.BlueMoon"/>: 12<br/>
+        /// - <see cref="ProjectileID.Sunfury"/>: 14<br/>
+        /// - <see cref="ProjectileID.TheDaoofPow"/>: 20<br/>
+        /// - <see cref="ProjectileID.DripplerFlail"/>: 22<br/>
+        /// </remarks>
+        public virtual float MaxManualRetractionSpeed => 16f;
+
+        /// <summary>
+        /// How fast the flail will travel when manually retracting.
+        /// </summary>
+        public virtual float ManualRetractionAcceleration => 3f;
+
+        /// <summary>
+        /// The speed the flail will attempt to reach when the flail is being forcibly retracting.
+        /// </summary>
+        /// <remarks>
+        /// Also controls the distance from the player at which the flail disappears when retracting, but this shouldn't matter.
+        /// <br/>
+        /// Overridden vanilla values:<br/>
+        /// - <see cref="ProjectileID.Mace"/>, <see cref="ProjectileID.FlamingMace"/>: 13<br/>
+        /// - <see cref="ProjectileID.BallOHurt"/>: 15<br/>
+        /// - <see cref="ProjectileID.TheMeatball"/>, <see cref="ProjectileID.BlueMoon"/>: 16<br/>
+        /// - <see cref="ProjectileID.Sunfury"/>: 18<br/>
+        /// - <see cref="ProjectileID.TheDaoofPow"/>: 24<br/>
+        /// - <see cref="ProjectileID.DripplerFlail"/>: 26<br/>
+        /// </remarks>
+        public virtual float MaxForcedRetractionSpeed => 48f;
+
+        /// <summary>
+        /// How fast the flail will travel when being forcibly retracted.
+        /// </summary>
+        public virtual float ForcedRetractionAcceleration => 6;
+
+        /// <summary>
+        /// The default value <see cref="Projectile.localNPCHitCooldown"/> is set to.
+        /// </summary>
+        public virtual int DefaultNPCHitCooldown => 10;
+
+        /// <summary>
+        /// The value <see cref="Projectile.localNPCHitCooldown"/> is set to when spinning.
+        /// </summary>
+        /// <remarks>
+        /// Overridden vanilla values:<br/>
+        /// - <see cref="ProjectileID.TheDaoofPow"/>, <see cref="ProjectileID.DripplerFlail"/>, <see cref="ProjectileID.FlowerPow"/>: 12<br/>
+        /// </remarks>
+        public virtual int SpinningNPCHitCooldown => 15;
+
+        /// <summary>
+        /// The value <see cref="Projectile.localNPCHitCooldown"/> is set to when being launched.
+        /// </summary>
+        public virtual int LaunchedNPCHitCooldown => 10;
+
+        public virtual void
     }
 }

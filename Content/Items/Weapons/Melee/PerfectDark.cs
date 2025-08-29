@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using CalamityVanilla.Content.Dusts;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -59,11 +60,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                 player.itemRotation = savedItemRotation;
 
                 float dustInterpolator = Utils.GetLerpValue(0.2f, 0.6f, pointProgress, true);
-                float dustScale = MathHelper.Lerp(1.5f, 2f, dustInterpolator);//MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
+                float dustScale = MathHelper.Lerp(1f, 2f, dustInterpolator);//MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
                 dustScale *= Main.rand.NextFloat(0.75f, 1.25f);
                 Color dustColor = Color.Lerp(Color.White, Color.Black, dustInterpolator);
                 int dustAlpha = 0;// (int)MathHelper.Lerp(100, 0, dustInterpolator);
-                int dustType = DustID.Shadowflame;
+                int dustType = ModContent.DustType<PerfectDarkMagicDust>();
 
                 Dust dust = Dust.NewDustPerfect(
                     location,
@@ -74,7 +75,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                     Scale: dustScale
                 );
                 dust.noGravity = true;
-                //dust.fadeIn = 101f;
+                dust.fadeIn = Main.rand.NextFloat(0.01f, 0.1f);
             }
         }
     }
