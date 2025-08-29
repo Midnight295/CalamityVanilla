@@ -37,7 +37,7 @@ namespace CalamityVanilla.Content.Projectiles.Melee
         {
             Timer++;
 
-            Projectile.Opacity = Utils.GetLerpValue(0, 10, Timer, true) * Utils.GetLerpValue(TotalTime, TotalTime - 20, Timer, true);
+            Projectile.Opacity = Utils.GetLerpValue(0, 30, Timer, true) * Utils.GetLerpValue(TotalTime, TotalTime - 30, Timer, true);
             if (Timer > TotalTime)
             {
                 Projectile.Kill();

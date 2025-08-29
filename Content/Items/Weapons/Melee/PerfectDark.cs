@@ -34,7 +34,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                 Projectile.NewProjectile
                 (
                     source,
-                    position,
+                    position + velocity.SafeNormalize(Vector2.UnitX) * 16f,
                     velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(0.66f, 1.5f),
                     type,
                     damage,//(int)(damage * 0.5f),
@@ -48,15 +48,19 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
 
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 4; i++)
             {
                 float pointProgress = Main.rand.NextFloat(0.6f);
-                CVUtils.GetPointOnSwungItemPath(60f, 74f, 0.4f + pointProgress, player.GetAdjustedItemScale(Item), out var location, out var outwardDirection, player);
+                float pointProgressOffset = Main.rand.NextFloat(-0.2f, 0.2f);
+                float savedItemRotation = player.itemRotation;
+                player.itemRotation += Main.rand.NextFloat(-0.2f, 0.2f);
+                CVUtils.GetPointOnSwungItemPath(60f, 74f, 0.4f + pointProgress + pointProgressOffset, player.GetAdjustedItemScale(Item), out var location, out var outwardDirection, player);
                 Vector2 velocity = outwardDirection.RotatedBy(MathHelper.PiOver2 * player.direction * player.gravDir);
+                player.itemRotation = savedItemRotation;
 
                 float dustInterpolator = Utils.GetLerpValue(0.2f, 0.6f, pointProgress, true);
-                float dustScale = MathHelper.Lerp(1f, 1.5f, dustInterpolator);//MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
-                dustScale *= Main.rand.NextFloat(0.66f, 1.5f);
+                float dustScale = MathHelper.Lerp(1.5f, 2f, dustInterpolator);//MathHelper.Lerp(1.5f, 2.5f, dustInterpolator);
+                dustScale *= Main.rand.NextFloat(0.75f, 1.25f);
                 Color dustColor = Color.Lerp(Color.White, Color.Black, dustInterpolator);
                 int dustAlpha = 0;// (int)MathHelper.Lerp(100, 0, dustInterpolator);
                 int dustType = DustID.Shadowflame;
@@ -70,6 +74,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                     Scale: dustScale
                 );
                 dust.noGravity = true;
+                //dust.fadeIn = 101f;
             }
         }
     }
