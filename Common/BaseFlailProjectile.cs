@@ -119,6 +119,7 @@ namespace CalamityVanilla.Common
                     Projectile.Center = mountedCenter + positionOffsetDirection * 30f;
                     Projectile.velocity = Vector2.Zero;
                     Projectile.localNPCHitCooldown = spinningHitCooldown;
+
                     break;
                 case AIState.LaunchingForward:
                     doFastThrowDust = true;
@@ -130,7 +131,9 @@ namespace CalamityVanilla.Common
                         StateTimer = 0f;
                         Projectile.netUpdate = true;
                         Projectile.velocity *= 0.2f;
-                        // add hook
+
+                        OnDropDuringLaunch();
+
                         break;
                     }
                     if (shouldAutomaticallyRetract)
@@ -139,7 +142,8 @@ namespace CalamityVanilla.Common
                         StateTimer = 0f;
                         Projectile.netUpdate = true;
                         Projectile.velocity *= 0.3f;
-                        // add hook
+
+                        OnManualRetract();
                     }
                     player.ChangeDir(player.Center.X < Projectile.Center.X ? 1 : -1);
                     Projectile.localNPCHitCooldown = launchHitCooldown;
@@ -157,6 +161,8 @@ namespace CalamityVanilla.Common
                         StateTimer = 0f;
                         Projectile.netUpdate = true;
                         Projectile.velocity *= 0.2f;
+
+                        OnDropDuringManualRetract();
                     }
                     else
                     {
@@ -435,17 +441,20 @@ namespace CalamityVanilla.Common
                 afterimageColor.A = 127;
                 afterimageColor *= 0.5f;
 
-                int afterimageCount = Math.Min(Projectile.oldPos.Length - 1, (int)StateTimer);
+                int afterimageCount = Math.Min(5, (int)StateTimer);
 
                 for (float i = 1f; i >= 0f; i -= 0.125f)
                 {
                     float afterimageAlpha = 1f - i;
                     Vector2 positionOffset = Projectile.velocity * -afterimageCount * i;
-                    Main.EntitySpriteDraw(texture, drawPosition + positionOffset, null, afterimageColor * afterimageAlpha, Projectile.rotation, drawOrigin, Projectile.scale * 1.15f * MathHelper.Lerp(0.5f, 1f, afterimageAlpha), spriteEffects);
+                    Main.spriteBatch.Draw(texture, drawPosition + positionOffset, null, afterimageColor * afterimageAlpha, Projectile.rotation, drawOrigin, Projectile.scale * 1.15f * MathHelper.Lerp(0.5f, 1f, afterimageAlpha), spriteEffects, 0);
                 }
             }
 
-            return true;
+            Color mainColor = Projectile.GetAlpha(lightColor);
+            Main.spriteBatch.Draw(texture, drawPosition, null, mainColor, Projectile.rotation, drawOrigin, Projectile.scale, spriteEffects, 0);
+
+            return false;
         }
 
         private void DrawChains(ref Color lightColor)
@@ -591,6 +600,30 @@ namespace CalamityVanilla.Common
         #endregion
 
         #region Gameplay functions
+
+        /// <summary>
+        /// Called when the flail goes from being launched to being manually retracted.
+        /// </summary>
+        public virtual void OnManualRetract()
+        {
+
+        }
+
+        /// <summary>
+        /// Called when the flail goes from being launched to being dropped.
+        /// </summary>
+        public virtual void OnDropDuringLaunch()
+        {
+
+        }
+
+        /// <summary>
+        /// Called when the flail goes from being retracted to being dropped.
+        /// </summary>
+        public virtual void OnDropDuringManualRetract()
+        {
+
+        }
 
         /// <summary>
         /// Spawn effects that should appear near the flail.
