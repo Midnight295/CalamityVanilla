@@ -29,7 +29,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
             {
                 Projectile.frame++;
             }
-            Lighting.AddLight(Projectile.Center, new Vector3(0.9f, 1f, 0f) * Projectile.timeLeft/14f); // R G B values from 0 to 1f. This is the red from the Crimson Heart pet
+            Lighting.AddLight(Projectile.Center, new Vector3(0.9f, 1f, 0f) * Projectile.timeLeft/14f); // R G B values from 0 to 1f.
         }
         public override Color? GetAlpha(Color lightColor)
         {

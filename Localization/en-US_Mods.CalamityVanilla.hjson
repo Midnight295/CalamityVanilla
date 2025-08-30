@@ -218,6 +218,11 @@ Items: {
 		DisplayName: The Snowman
 		Tooltip: ""
 	}
+
+	ParasiticBelt: {
+		DisplayName: Parasitic Belt
+		Tooltip: Attacks deal 5% more damage and inflict Ichor when below 50% health
+	}
 }
 
 Projectiles: {
