@@ -216,7 +216,7 @@ Items: {
 
 	TheSnowman: {
 		DisplayName: The Snowman
-		Tooltip: ""
+		Tooltip: "Collapses into snowballs when dropped"
 	}
 
 	ParasiticBelt: {
@@ -272,6 +272,11 @@ Projectiles: {
 	Seafoam2.DisplayName: Seafoam2
 	PerfectDarkCloud.DisplayName: Dark Spore Cloud
 	TheSnowman.DisplayName: The Snowman
+	TheSnowmanSnowballBig.DisplayName: Snowball
+	TheSnowmanSnowballMedium.DisplayName: Snowball
+	TheSnowmanSnowballSmall.DisplayName: Snowball
+	TheSnowmanSnowballTiny.DisplayName: Snowball
+	TheSnowmanPile.DisplayName: Miserable Little Pile of Snow
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

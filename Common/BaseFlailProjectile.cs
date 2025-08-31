@@ -55,7 +55,7 @@ namespace CalamityVanilla.Common
 
             Vector2 mountedCenter = player.MountedCenter;
             bool doFastThrowDust = false;
-            bool shouldFreelyRotate = true;
+            bool shouldFreelyRotate = ShouldFreelyRotate;
             bool ownerHitCheck = false;
             int launchMaxTime = MaxTimeLaunched;
             float launchSpeed = LaunchSpeed;
@@ -426,6 +426,29 @@ namespace CalamityVanilla.Common
             }
         }
 
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            if (CurrentAIState == AIState.Spinning)
+            {
+                modifiers.SourceDamage *= 1.2f;
+            }
+            else if (CurrentAIState == AIState.LaunchingForward || CurrentAIState == AIState.Retracting)
+            {
+                modifiers.SourceDamage *= 2f;
+            }
+
+            modifiers.HitDirectionOverride = (Main.player[Projectile.owner].Center.X < target.Center.X).ToDirectionInt();
+
+            if (CurrentAIState == AIState.Spinning)
+            {
+                modifiers.Knockback *= 0.25f;
+            }
+            else if (CurrentAIState == AIState.Dropping)
+            {
+                modifiers.Knockback *= 0.5f;
+            }
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             DrawChains(ref lightColor);
@@ -596,6 +619,11 @@ namespace CalamityVanilla.Common
         /// The value <see cref="Projectile.localNPCHitCooldown"/> is set to when being launched.
         /// </summary>
         public virtual int LaunchedNPCHitCooldown => 10;
+
+        /// <summary>
+        /// Whether the flail should freely rotate.
+        /// </summary>
+        public virtual bool ShouldFreelyRotate => true;
 
         #endregion
 

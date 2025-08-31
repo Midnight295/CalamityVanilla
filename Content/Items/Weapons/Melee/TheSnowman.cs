@@ -17,26 +17,20 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
         public override void SetDefaults()
         {
             Item.Size = new Vector2(30, 30);
-            Item.damage = 25;
+            Item.damage = 60;
             Item.knockBack = 6f;
-            Item.useTime = 15;
-            Item.useAnimation = 15;
+            Item.useTime = 21;
+            Item.useAnimation = 21;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.UseSound = SoundID.Item1;
             Item.DamageType = DamageClass.Melee;
             Item.rare = ItemRarityID.Pink;
-            Item.value = Item.sellPrice(0, 3, 0, 0);
+            Item.value = Item.sellPrice(0, 3, 10, 0);
             Item.shoot = ModContent.ProjectileType<Projectiles.Melee.TheSnowman>();
-            Item.shootSpeed = 11;
+            Item.shootSpeed = 15.9f;
             Item.noMelee = true;
             Item.noUseGraphic = true;
             Item.channel = true;
-        }
-
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-        {
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI, ai2: position.Y);
-            return false;
         }
     }
 }
