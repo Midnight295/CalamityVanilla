@@ -221,7 +221,7 @@ Items: {
 
 	ParasiticBelt: {
 		DisplayName: Parasitic Belt
-		Tooltip: Attacks deal 5% more damage and inflict Ichor when below 50% health
+		Tooltip: Attacks deal 15% more damage and inflict Ichor when below 50% health
 	}
 }
 
@@ -277,6 +277,7 @@ Projectiles: {
 	TheSnowmanSnowballSmall.DisplayName: Snowball
 	TheSnowmanSnowballTiny.DisplayName: Snowball
 	TheSnowmanPile.DisplayName: Miserable Little Pile of Snow
+	ParasiticBeltEffect.DisplayName: Parasitic Belt Effect
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root
@@ -284,4 +285,11 @@ Tiles.SinisterRoot.MapEntry: Sinister Root
 DropConditions: {
 	EleumSoul: Mods.CalamityVanilla.DropConditions.EleumSoul
 	HavocSoul: Mods.CalamityVanilla.DropConditions.HavocSoul
+}
+
+Buffs: {
+	ParasiticBeltBuff: {
+		DisplayName: Parasitic Imbue
+		Description: Attacks are stronger and inflict Ichor
+	}
 }
