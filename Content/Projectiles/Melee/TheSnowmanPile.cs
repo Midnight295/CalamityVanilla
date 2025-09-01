@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace CalamityVanilla.Content.Projectiles.Melee
@@ -14,6 +15,11 @@ namespace CalamityVanilla.Content.Projectiles.Melee
     {
         public ref float Timer => ref Projectile.ai[0];
         public  float TotalTime => Projectile.ai[1];
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.DontAttachHideToAlpha[Type] = true;
+        }
 
         public override void SetDefaults()
         {
