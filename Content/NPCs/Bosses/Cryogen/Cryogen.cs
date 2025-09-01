@@ -138,6 +138,8 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 
             notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<Icebreaker>(), ModContent.ItemType<HoarfrostBow>()));
 
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<TheSnowman>(), 5));
+
             // Finally add the leading rule
             npcLoot.Add(notExpertRule);
 

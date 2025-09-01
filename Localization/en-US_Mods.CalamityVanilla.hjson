@@ -216,7 +216,7 @@ Items: {
 
 	TheSnowman: {
 		DisplayName: The Snowman
-		Tooltip: "Collapses into snowballs when dropped"
+		Tooltip: Collapses into snowballs when dropped
 	}
 
 	ParasiticBelt: {

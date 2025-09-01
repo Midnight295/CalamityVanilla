@@ -2,6 +2,7 @@
 using CalamityVanilla.Content.Items.Equipment.Vanity;
 using CalamityVanilla.Content.Items.Placeable.Furniture.Relics;
 using CalamityVanilla.Content.Items.Weapons.Magic;
+using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -220,7 +221,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<HiveMindMask>(), 7));
 
             //marble tome is here just as a placeholder idk if i need to clarify that
-            notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<MyceliumStaff>(), ModContent.ItemType<MarbleTome>()));
+            notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, ModContent.ItemType<MyceliumStaff>(), ModContent.ItemType<PerfectDark>()));
 
             // Finally add the leading rule
             npcLoot.Add(notExpertRule);

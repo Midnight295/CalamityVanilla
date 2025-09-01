@@ -45,7 +45,7 @@ namespace CalamityVanilla.Content.Items.Consumable
 
             itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<HiveMindMask>(), 7));
             //marble tome is here just as a placeholder idk if i need to clarify that
-            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<MyceliumStaff>(), ModContent.ItemType<MarbleTome>()));
+            itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<MyceliumStaff>(), ModContent.ItemType<PerfectDark>()));
             itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<HiveMind>()));
         }
     }
