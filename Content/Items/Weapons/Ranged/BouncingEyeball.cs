@@ -14,7 +14,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
         {
             Item.DefaultToThrownWeapon(ModContent.ProjectileType<BouncingEyeballCluster>(), 20, 15, true);
             Item.noUseGraphic = true;
-            Item.damage = 8;
+            Item.damage = 12;
             Item.knockBack = 2;
             Item.rare = ItemRarityID.White;
             Item.consumable = true;
@@ -40,7 +40,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Projectile.velocity.Y += 0.5f;
             Projectile.velocity.X *= 0.99f;
 
-            Projectile.rotation += Projectile.velocity.X / 45f;
+            Projectile.rotation += Projectile.velocity.X / 60f;
+            Projectile.rotation += Projectile.velocity.Length() * Projectile.direction / 55f;
             //Projectile.rotation += (Projectile.velocity.X + Math.Abs(Projectile.velocity.Y) * Projectile.direction) / 60f;
 
             if (Main.rand.NextBool(5))
@@ -74,11 +75,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
                 //d.noGravity = !Main.rand.NextBool(3);
             }
 
-            int eyeCount = Main.rand.Next(2, 4);
+            int eyeCount = Main.rand.Next(2, 5);
             for (int  j = 0; j < eyeCount; j++)
             {
                 float rand = Main.rand.NextFloat(MathHelper.TwoPi);
-                int p = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (Projectile.velocity / 1.2f).RotatedBy(rand), ModContent.ProjectileType<BouncingEyeProj>(), 10, 0, ai1: j % 3);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (Projectile.velocity / 1.12f).RotatedBy(rand), ModContent.ProjectileType<BouncingEyeProj>(), 10, 0, ai1: j % 3);
             }
         }
 
@@ -101,6 +102,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
     public class BouncingEyeProj : ModProjectile
     {
+        public int penetrateTime = 8;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 3;
@@ -120,18 +122,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
         public override void AI()
         {
-            Projectile.ai[0]++;
-
-            if (Projectile.ai[0] < 5)
-            {
-                Projectile.damage = 0;
-                Projectile.penetrate = -1;
-            }
-            else if (Projectile.ai[0] == 5)
-            {
-                Projectile.damage = 16;
-                Projectile.penetrate = 3;
-            }
+            
             //Main.NewText(Projectile.timeLeft);
 
             int widthAndHeight;
@@ -149,25 +140,38 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             Projectile.velocity.Y += 0.5f;
             Projectile.velocity.X *= 0.99f;
 
+            if (Projectile.velocity.Y > 16f)
+            {
+                Projectile.velocity.Y = 16f;
+            }
+
             Projectile.rotation += Projectile.velocity.X / 45f;
             //Projectile.rotation += (Projectile.velocity.X + Math.Abs(Projectile.velocity.Y) * Projectile.direction) / 60f;
 
-            if (Main.rand.NextBool(8))
+            Projectile.ai[0]++;
+
+            if (Projectile.ai[0] < penetrateTime)
+            {
+                Projectile.damage = 0;
+                Projectile.penetrate = -1;
+            }
+            else if (Projectile.ai[0] == penetrateTime)
+            {
+                Projectile.damage = 16;
+                Projectile.penetrate = 3;
+            }
+
+            if (Main.rand.NextBool(5))
             {
                 Dust d = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<EyeballBloodDust>());
                 d.velocity = Main.rand.NextVector2Circular(1f, 1f);
                 d.scale = 0.75f;
             }
-
-            if (Projectile.velocity.Y > 16f)
-            {
-                Projectile.velocity.Y = 16f;
-            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (Projectile.ai[0] > 5)
+            if (Projectile.ai[0] > penetrateTime)
             {
                 Projectile.penetrate = 0;
             }
@@ -186,13 +190,13 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.NPCHit1, Projectile.position);
+            SoundEngine.PlaySound(SoundID.NPCDeath11, Projectile.position);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<EyeballBloodDust>());
                 d.velocity = Main.rand.NextVector2Circular(2f, 2f);
-                d.scale = Main.rand.NextFloat(0.5f, 1f);
+                d.scale = Main.rand.NextFloat(0.5f, 1.5f);
                 //d.noGravity = !Main.rand.NextBool(3);
             }
         }

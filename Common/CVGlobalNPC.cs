@@ -33,7 +33,23 @@ namespace CalamityVanilla.Common
                     break;
 
                 case NPCID.Drippler:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BouncingEyeball>(), 5, 10, 20));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BouncingEyeball>(), 4, 15, 35));
+                    break;
+                case NPCID.DemonEye:
+                case NPCID.DemonEye2:
+                case NPCID.PurpleEye:
+                case NPCID.PurpleEye2:
+                case NPCID.GreenEye:
+                case NPCID.GreenEye2:
+                case NPCID.DialatedEye:
+                case NPCID.DialatedEye2:
+                case NPCID.SleepyEye:
+                case NPCID.SleepyEye2:
+                case NPCID.CataractEye:
+                case NPCID.CataractEye2:
+                case NPCID.DemonEyeOwl:
+                case NPCID.DemonEyeSpaceship:
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsBloodMoonAndNotFromStatue(), ModContent.ItemType<BouncingEyeball>(), 10, 5, 15));
                     break;
             }
         }

@@ -225,8 +225,8 @@ Items: {
 	}
 
 	BouncingEyeball: {
-		DisplayName: Bouncing Eyeball
-		Tooltip: ""
+		DisplayName: Eyeball Cluster
+		Tooltip: "Splits into bouncing eyes"
 	}
 }
 
