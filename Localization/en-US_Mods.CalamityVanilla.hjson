@@ -223,6 +223,11 @@ Items: {
 		DisplayName: Parasitic Belt
 		Tooltip: Attacks deal 15% more damage and inflict Ichor when below 50% health
 	}
+
+	BouncingEyeball: {
+		DisplayName: Bouncing Eyeball
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -278,6 +283,8 @@ Projectiles: {
 	TheSnowmanSnowballTiny.DisplayName: Snowball
 	TheSnowmanPile.DisplayName: Miserable Little Pile of Snow
 	ParasiticBeltEffect.DisplayName: Parasitic Belt Effect
+	BouncingEyeballCluster.DisplayName: Bouncing Eyeball Cluster
+	BouncingEyeProj.DisplayName: Bouncing Eye Proj
 }
 
 Tiles.SinisterRoot.MapEntry: Sinister Root

@@ -27,8 +27,13 @@ namespace CalamityVanilla.Common
                 case NPCID.GoblinWarrior:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<GoblinScrap>(), 4,1,2));
                     break;
+
                 case NPCID.Vampire:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<TheGothic>(), 50));
+                    break;
+
+                case NPCID.Drippler:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BouncingEyeball>(), 5, 10, 20));
                     break;
             }
         }

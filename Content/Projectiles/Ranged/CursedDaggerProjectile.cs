@@ -49,7 +49,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
             {
                 if (Main.myPlayer == Projectile.owner)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CursedDaggerExplosion>(), (int)(Projectile.damage * 1.5f), Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<CursedDaggerExplosion>(), (int)(Projectile.damage * 2.5f), Projectile.knockBack);
                 }
                 SoundEngine.PlaySound(SoundID.Item14 with { Pitch = 0.5f, PitchVariance = 0.6f, Volume = 0.6f }, Projectile.position);
                 Projectile.frame = 1;
