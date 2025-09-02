@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityVanilla.Common;
+using CalamityVanilla.Content.Dusts;
+using CalamityVanilla.Content.NPCs.Bosses.Cryogen;
+using Microsoft.Build.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -9,6 +13,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -26,25 +31,37 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         {
             if(Projectile.timeLeft == (60 * 3) - 1)
             {
-                SoundEngine.PlaySound(ContentSamples.ItemsByType[ItemID.CopperAxe].UseSound, Projectile.position);
+                SoundEngine.PlaySound(SoundID.Item1, Projectile.position);
             }
 
             Projectile.velocity *= 0.99f;
             Projectile.rotation += 0.1f;
             Projectile.scale = 1f + MathF.Sin(Projectile.timeLeft * 0.1f) * 0.1f;
+
+            if (Projectile.timeLeft < 60)
+                Projectile.ai[2] += 1f / 60;
         }
         public override void OnKill(int timeLeft)
         {
             SoundEngine.PlaySound(SoundID.Item14,Projectile.position);
+            int type = ModContent.DustType<SimpleColorableGlowyDust>();
+
             for(int i = 0; i < 20; i++)
             {
-                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,DustID.Frost);
-                d.velocity = Main.rand.NextVector2Circular(6, 6);
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,type);
+                d.velocity = Main.rand.NextVector2Circular(12, 12);
                 d.noGravity = true;
-                d.scale = 1.5f;
-                d.fadeIn = Main.rand.NextFloat(2);
+                d.scale = 1.2f;
+                //d.fadeIn = Main.rand.NextFloat(2);
+                d.color = Cryogen.GetAuroraColor((int)Main.timeForVisualEffects + Main.rand.Next(30) + Projectile.whoAmI * 25) with { A = 0 };
+
+                Dust d2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Frost);
+                d2.velocity = Main.rand.NextVector2Circular(6, 6);
+                d2.scale = 1.5f;
+                d2.noGravity = Main.rand.NextBool();
             }
-            if(Main.netMode != NetmodeID.MultiplayerClient)
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for(int i = 0; i < 4; i++)
                 {
@@ -55,8 +72,10 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         public override bool PreDraw(ref Color lightColor)
         {
             Asset<Texture2D> tex = TextureAssets.Projectile[Type];
+            Asset<Texture2D> glow = TextureAssets.Extra[ExtrasID.KeybrandRing];
+            Main.EntitySpriteDraw(glow.Value, Projectile.Center - Main.screenPosition, null, Cryogen.GetAuroraColor((int)Main.timeForVisualEffects + Projectile.whoAmI * 25) with { A = 64 } * Projectile.ai[2],0f,glow.Size() / 2, 1f - Projectile.ai[2], SpriteEffects.None);
             Main.EntitySpriteDraw(tex.Value, Projectile.Center - Main.screenPosition, new Rectangle(tex.Height(), 0, tex.Height(), tex.Height()), new Color(1f, 1f, 1f, 0.5f), Projectile.rotation, new Vector2(tex.Height() / 2) - new Vector2(1), Projectile.scale, SpriteEffects.None);
-            Main.EntitySpriteDraw(tex.Value, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, tex.Height(), tex.Height()), new Color(1f, 1f, 1f, 0.5f), 0,new Vector2(tex.Height() / 2) - new Vector2(1), Projectile.scale,SpriteEffects.None);
+            Main.EntitySpriteDraw(tex.Value, Projectile.Center - Main.screenPosition, new Rectangle(0, 0, tex.Height(), tex.Height()), new Color(1f, 1f, 1f, 0.5f), Projectile.ai[0] != 0 ? 0 : MathHelper.PiOver4, new Vector2(tex.Height() / 2) - new Vector2(1), Projectile.scale,SpriteEffects.None);
             return false;
         }
     }

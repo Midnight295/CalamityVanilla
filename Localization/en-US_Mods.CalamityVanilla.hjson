@@ -226,7 +226,27 @@ Items: {
 
 	BouncingEyeball: {
 		DisplayName: Eyeball Cluster
-		Tooltip: "Splits into bouncing eyes"
+		Tooltip: Splits into bouncing eyes
+	}
+
+	IceSculptureAngel: {
+		DisplayName: Angel Ice Sculpture
+		Tooltip: ""
+	}
+
+	IceSculptureArmor: {
+		DisplayName: Armor Ice Sculpture
+		Tooltip: ""
+	}
+
+	IceSculptureHelix: {
+		DisplayName: Helix Ice Sculpture
+		Tooltip: ""
+	}
+
+	IceSculptureHorse: {
+		DisplayName: Horse Ice Sculpture
+		Tooltip: ""
 	}
 }
 
@@ -285,9 +305,13 @@ Projectiles: {
 	ParasiticBeltEffect.DisplayName: Parasitic Belt Effect
 	BouncingEyeballCluster.DisplayName: Bouncing Eyeball Cluster
 	BouncingEyeProj.DisplayName: Bouncing Eye Proj
+	IcePillarSpawner.DisplayName: Ice Pillar Spawner
 }
 
-Tiles.SinisterRoot.MapEntry: Sinister Root
+Tiles: {
+	SinisterRoot.MapEntry: Sinister Root
+	IceSculptures.MapEntry: Mods.CalamityVanilla.Tiles.IceSculptures.MapEntry
+}
 
 DropConditions: {
 	EleumSoul: Mods.CalamityVanilla.DropConditions.EleumSoul

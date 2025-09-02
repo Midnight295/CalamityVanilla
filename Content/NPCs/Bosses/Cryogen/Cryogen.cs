@@ -35,7 +35,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             {
                 for (int i = 0; i < 7; i++)
                 {
-                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Circular(6, 6), Mod.Find<ModGore>("Cryogen" + $"{i}").Type);
+                    int g = Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Circular(6, 6), Mod.Find<ModGore>("Cryogen" + $"{i}").Type);
                 }
                 for (int i = 0; i < 100; i++)
                 {
@@ -115,7 +115,6 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
         {
             potionType = ItemID.GreaterHealingPotion;
         }
-
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             // Do NOT misuse the ModifyNPCLoot and OnKill hooks: the former is only used for registering drops, the latter for everything else
@@ -178,25 +177,6 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                 new FlavorTextBestiaryInfoElement("An incredible feat of magical architecture, this intricate fortress of ice and steel serves to trap a lonely soul inside...")
             });
         }
-        public override void OnHitByItem(Player player, Item item, NPC.HitInfo hit, int damageDone)
-        {
-            OnHitByAnything();
-        }
-        public override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
-        {
-            OnHitByAnything();
-        }
-        private void OnHitByAnything()
-        {
-            if(phase == 2 && NPC.ai[0] > 20) // if in the icy ball of scary
-            {
-                NPC.ai[0] = 0;
-                NPC.ai[1] = 0;
-                NPC.ai[2] = 0;
-                phase = 3;
-                NPC.noTileCollide = true;
-            }
-        }
         public override bool PreAI()
         {
             NPC.localAI[0]--;
@@ -206,6 +186,14 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             }
             NPC.rotation += (NPC.velocity * new Vector2(0.01f, 0.005f)).Length() * NPC.direction;
             return NPC.localAI[0] <= 0;
+        }
+        public static Color[] AuroraColors = [Color.GreenYellow ,Color.MediumSpringGreen, Color.Magenta ,Color.MediumSlateBlue, Color.DodgerBlue];
+        public static Color GetAuroraColor(int Time)
+        {
+            int fadeTime = 60;
+            int index = (int)((Time / fadeTime) % AuroraColors.Length);
+            int nextIndex = (index + 1) % AuroraColors.Length;
+            return Color.Lerp(AuroraColors[index], AuroraColors[nextIndex], (Time % fadeTime) / (float)fadeTime);
         }
         public override void AI()
         {
@@ -228,21 +216,6 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                     break;
                 case 1:
                     SlamAttack_1();
-                    break;
-                case 2:
-                    SpikyIceBarrier_2();
-                    break;
-                case 3:
-                    Phase2DPanic_3();
-                    break;
-                case 4:
-                    Phase2Derping_4();
-                    break;
-                case 5:
-                    Phase2Icicles_5();
-                    break;
-                case 6:
-                    Phase2IceBreaker_6();
                     break;
             }
         }
