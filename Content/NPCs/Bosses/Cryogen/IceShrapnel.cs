@@ -12,7 +12,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Projectiles.Hostile
+namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 {
     public class IceShrapnel : ModProjectile
     {

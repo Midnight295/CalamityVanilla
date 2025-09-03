@@ -1,5 +1,4 @@
 ﻿using CalamityVanilla.Common;
-using CalamityVanilla.Content.Projectiles.Hostile;
 using CalamityVanilla.Content.Tiles;
 using Microsoft.Xna.Framework;
 using System;

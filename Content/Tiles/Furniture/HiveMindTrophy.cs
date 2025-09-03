@@ -7,8 +7,21 @@ using Terraria.ObjectData;
 
 namespace CalamityVanilla.Content.Tiles.Furniture
 {
+    public class HiveMindTrophy : ModItem
+    {
+        public override void SetDefaults()
+        {
+            // Vanilla has many useful methods like these, use them! This substitutes setting Item.createTile and Item.placeStyle as well as setting a few values that are common across all placeable items
+            Item.DefaultToPlaceableTile(ModContent.TileType<HiveMindTrophyTile>());
+
+            Item.width = 32;
+            Item.height = 32;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = Item.buyPrice(0, 1);
+        }
+    }
     // Simple 3x3 tile that can be placed on a wall
-    public class HiveMindTrophy : ModTile
+    public class HiveMindTrophyTile : ModTile
     {
         public override void SetStaticDefaults()
         {

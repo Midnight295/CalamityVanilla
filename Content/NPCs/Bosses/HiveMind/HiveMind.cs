@@ -1,9 +1,9 @@
 ﻿using CalamityVanilla.Content.Items.Consumable;
 using CalamityVanilla.Content.Items.Equipment.Vanity;
-using CalamityVanilla.Content.Items.Placeable.Furniture.Relics;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
+using CalamityVanilla.Content.Tiles.Furniture;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -211,7 +211,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             // 4. Master Mode (relic first, pet last, everything else in between)
 
             // Trophies are spawned with 1/10 chance
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.Trophies.HiveMindTrophy>(), 10));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<HiveMindTrophy>(), 10));
 
             // All the Classic Mode drops here are based on "not expert", meaning we use .OnSuccess() to add them into the rule, which then gets added
             LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());

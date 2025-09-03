@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Projectiles.Hostile
+namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
 {
     public class Spores : ModProjectile
     {

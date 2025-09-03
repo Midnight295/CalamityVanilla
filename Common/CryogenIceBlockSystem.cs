@@ -1,5 +1,4 @@
 ﻿using CalamityVanilla.Content.NPCs.Bosses.Cryogen;
-using CalamityVanilla.Content.Projectiles.Hostile;
 using CalamityVanilla.Content.Tiles;
 using Microsoft.Xna.Framework;
 using System;
@@ -36,22 +35,27 @@ namespace CalamityVanilla.Common
     public class CryogenIceBlockSystem : ModSystem
     {
         public const int DEFAULT_ICE_TIMER = 2400;
+        public const int CrogenIceDataChunkSize = 3;
         public static List<CryogenIceData> CryogenIceBlocks = new List<CryogenIceData>();
         public override void OnWorldUnload()
         {
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                return;
-            for (int i = 0; i < CryogenIceBlocks.Count; i++)
+            CryogenIceBlocks.Clear();
+        }
+        public static void AddTime(int x, int y, int Time)
+        {
+            for(int i = 0; i < CryogenIceBlocks.Count; ++i)
             {
-                if (Main.tile[CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y].TileType == ModContent.TileType<CryogenIceTile>())
+                if (CryogenIceBlocks[i].X == x && CryogenIceBlocks[i].Y == y)
                 {
-                    WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y, false, false, true);
+                    CryogenIceBlocks[i] = new CryogenIceData(x,y,Time);
+                    return;
                 }
             }
-            CryogenIceBlocks.Clear();
+            CryogenIceBlocks.Add(new CryogenIceData(x, y, Time));
         }
         public override void PostUpdateWorld()
         {
+            Main.NewText(CryogenIceBlocks.Count);
             bool cryogenIsREAL = false;
             foreach(var npc in Main.ActiveNPCs)
             {
@@ -71,22 +75,31 @@ namespace CalamityVanilla.Common
                 }
                 if (CryogenIceBlocks[i].Time < 0 || (!cryogenIsREAL && Main.rand.NextBool(10)))
                 {
-                    WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y,false,false,true);
+                    //for(int x = 0; x < 3; x++)
+                    //{
+                    //    for (int y = 0; y < 3; x++)
+                    //    {
+                    //        WorldGen.KillTile(CryogenIceBlocks[i].X + x, CryogenIceBlocks[i].Y + y, false, false, true);
+                    //    }
+                    //}
+                    //NetMessage.SendTileSquare(-1, CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y,CrogenIceDataChunkSize,CrogenIceDataChunkSize);
+
+                    WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y, false, false, true);
                     NetMessage.SendTileSquare(-1, CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y);
                     CryogenIceBlocks.RemoveAt(i);
                 }
             }
         }
-        public override void SaveWorldData(TagCompound tag)
-        {
-            //tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;
-        }
-        public override void LoadWorldData(TagCompound tag)
-        {
-            if (tag.ContainsKey("CalamityVanilla:IceBlocks"))
-            {
-                CryogenIceBlocks = tag.Get<List<CryogenIceData>>("CalamityVanilla:IceBlocks");
-            }
-        }
+        //public override void SaveWorldData(TagCompound tag)
+        //{
+        //    tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;
+        //}
+        //public override void LoadWorldData(TagCompound tag)
+        //{
+        //    if (tag.ContainsKey("CalamityVanilla:IceBlocks"))
+        //    {
+        //        CryogenIceBlocks = tag.Get<List<CryogenIceData>>("CalamityVanilla:IceBlocks");
+        //    }
+        //}
     }
 }

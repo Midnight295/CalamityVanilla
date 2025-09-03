@@ -6,7 +6,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Projectiles.Hostile
+namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 {
     public class CryogenIceBlock : ModProjectile
     {
@@ -18,7 +18,7 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         public override void AI()
         {
             Projectile.rotation += Projectile.direction * 0.1f;
-            if (Projectile.Center.Distance(new Vector2(Projectile.ai[0], Projectile.ai[1])) < Projectile.velocity.Length())
+            if (Projectile.Center.Distance(new Vector2(Projectile.ai[0], Projectile.ai[1])) < Projectile.velocity.Length() || CryogenIceBlockSystem.CryogenIceBlocks.Count > 830)
             {
                 Projectile.Kill();
             }
@@ -30,8 +30,10 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
         public override void OnKill(int timeLeft)
         {
             Point placePos = Projectile.Center.ToTileCoordinates();
-            //WorldGen.PlaceTile(placePos.X, placePos.Y, TileID.MagicalIceBlock);
             SoundEngine.PlaySound(SoundID.NPCDeath15, Projectile.position);
+
+            if (CryogenIceBlockSystem.CryogenIceBlocks.Count > 830)
+                return;
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -44,7 +46,7 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
                         if (!Main.rand.NextBool(16))
                         {
                             WorldGen.PlaceTile(placePos.X + x, placePos.Y + y, ModContent.TileType<CryogenIceTile>(), plr: Main.myPlayer);
-                            CryogenIceBlockSystem.CryogenIceBlocks.Add(new CryogenIceData(placePos.X + x, placePos.Y + y, (int)Projectile.ai[2] + Main.rand.Next(0, 60)));
+                            CryogenIceBlockSystem.AddTime(placePos.X + x, placePos.Y + y, (int)Projectile.ai[2] + Main.rand.Next(0, 60));
                         }
                     }
                 }

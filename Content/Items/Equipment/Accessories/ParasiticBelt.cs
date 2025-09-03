@@ -1,6 +1,5 @@
 ﻿using CalamityVanilla.Common.Players;
 using CalamityVanilla.Content.Buffs;
-using CalamityVanilla.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
