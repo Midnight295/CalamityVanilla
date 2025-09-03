@@ -1,8 +1,8 @@
-﻿using Terraria.ID;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using CalamityVanilla.Content.Projectiles.Ranged;
 
 namespace CalamityVanilla.Content.Items.Weapons.Ranged
 {
@@ -30,6 +30,59 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-2,0);
+        }
+    }
+
+    public class MistArrow : ModProjectile
+    {
+        public override void SetDefaults()
+        {
+            Projectile.QuickDefaults();
+            Projectile.arrow = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.penetrate = 2;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 30;
+        }
+        public override void AI()
+        {
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.RainCloud);
+            d.velocity *= 0.1f;
+            d.velocity += Projectile.velocity * 0.2f;
+            d.alpha = 128;
+            d.noGravity = true;
+
+            if (Main.rand.NextBool(5))
+            {
+                Dust d2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Snow);
+                d2.velocity *= 0.1f;
+                d2.velocity += Projectile.velocity * 0.2f;
+                d2.noGravity = true;
+            }
+
+            Projectile.ai[0]++;
+            if (Projectile.ai[0] > 30)
+            {
+                Projectile.velocity.Y += 0.1f;
+            }
+        }
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 15; i++)
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.RainCloud);
+                d.noGravity = true;
+                d.velocity *= 1.5f;
+                d.alpha = 128;
+            }
+            for (int i = 0; i < 15; i++)
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Snow);
+                d.noGravity = true;
+                d.velocity *= 1.5f;
+            }
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using Terraria.ID;
-using Terraria;
-using Terraria.ModLoader;
+﻿using CalamityVanilla.Content.Items.Material;
 using Microsoft.Xna.Framework;
-using CalamityVanilla.Content.Projectiles.Ranged;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Microsoft.Xna.Framework.Graphics;
-using CalamityVanilla.Content.Items.Material;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace CalamityVanilla.Content.Items.Weapons.Ranged
 {

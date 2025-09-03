@@ -1,15 +1,12 @@
 ﻿using CalamityVanilla.Content.Items.Weapons.Ranged;
-using CalamityVanilla.Content.Projectiles.Ranged;
 using Microsoft.Xna.Framework;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Common
+namespace CalamityVanilla.Common.Players
 {
-    public class CVModPlayer : ModPlayer
+    public class GothicToothRegen : ModPlayer
     {
         public int GothicToothRegenCounter = 0;
         public override void PostUpdateBuffs()
@@ -20,9 +17,9 @@ namespace CalamityVanilla.Common
                 if (!Player.moonLeech)
                 {
                     int lifeRegen = 0;
-                    foreach(Projectile tooth in Main.ActiveProjectiles)
+                    foreach (Projectile tooth in Main.ActiveProjectiles)
                     {
-                        if(tooth.type == ModContent.ProjectileType<GothicTooth>() && tooth.owner == Player.whoAmI && tooth.ai[0] == 1 && Main.npc[(int)tooth.ai[1]].type != NPCID.TargetDummy)
+                        if (tooth.type == ModContent.ProjectileType<TheGothicTooth>() && tooth.owner == Player.whoAmI && tooth.ai[0] == 1 && Main.npc[(int)tooth.ai[1]].type != NPCID.TargetDummy)
                         {
                             lifeRegen++;
                         }
@@ -33,9 +30,9 @@ namespace CalamityVanilla.Common
                         lifeRegen = 30;
                     Player.statLife += lifeRegen;
                     CombatText.NewText(Player.Hitbox, CombatText.HealLife, lifeRegen);
-                    for(int i = 0; i < lifeRegen * 2; i++)
+                    for (int i = 0; i < lifeRegen * 2; i++)
                     {
-                        Vector2 rotation = Main.rand.NextVector2Circular(1,1);
+                        Vector2 rotation = Main.rand.NextVector2Circular(1, 1);
                         Dust d = Dust.NewDustPerfect(Player.Center + rotation * 40, DustID.VampireHeal);
                         d.velocity = -rotation * 3 + Player.velocity;
                         d.scale *= 1.3f;

@@ -1,11 +1,8 @@
 ﻿using CalamityVanilla.Content.Items.Weapons.Magic;
-using CalamityVanilla.Content.Projectiles.Magic;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
-using Terraria.Chat;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace CalamityVanilla

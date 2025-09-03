@@ -12,7 +12,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Projectiles
+namespace CalamityVanilla.Content.Projectiles.Hostile
 {
     public class HiveVine : ModProjectile
     {
@@ -25,14 +25,14 @@ namespace CalamityVanilla.Content.Projectiles
         public override bool PreDraw(ref Color lightColor)
         {
             Asset<Texture2D> tex = TextureAssets.Projectile[Type];
-            Rectangle rect = Projectile.frame == 0 ? new Rectangle(0, 0, 42, 50) : new Rectangle(0, 52 + (32 * (Projectile.frame - 1)), 42, 32);
-            Main.EntitySpriteDraw(tex.Value, Projectile.Bottom - Main.screenPosition, rect,lightColor * Projectile.Opacity, 0, new Vector2(rect.Width / 2, rect.Height),1,SpriteEffects.None);
+            Rectangle rect = Projectile.frame == 0 ? new Rectangle(0, 0, 42, 50) : new Rectangle(0, 52 + 32 * (Projectile.frame - 1), 42, 32);
+            Main.EntitySpriteDraw(tex.Value, Projectile.Bottom - Main.screenPosition, rect, lightColor * Projectile.Opacity, 0, new Vector2(rect.Width / 2, rect.Height), 1, SpriteEffects.None);
 
             return false;
         }
         public override void AI()
         {
-            if(Projectile.alpha > 0)
+            if (Projectile.alpha > 0)
             {
                 Projectile.alpha -= 15;
             }
@@ -57,7 +57,7 @@ namespace CalamityVanilla.Content.Projectiles
                 Projectile.frame = Projectile.ai[1] % 2 == 0 ? 1 : 2;
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + new Vector2(0, -30), Vector2.Zero, Type, Projectile.damage, Projectile.knockBack, Projectile.owner, ai1: Projectile.ai[1] - 1);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center + new Vector2(0, -30), Vector2.Zero, Type, Projectile.damage, Projectile.knockBack, Projectile.owner, ai1: Projectile.ai[1] - 1);
             }
         }
     }

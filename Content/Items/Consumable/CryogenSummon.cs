@@ -79,14 +79,7 @@ namespace CalamityVanilla.Content.Items.Consumable
 
                 .AddIngredient(ModContent.ItemType<CryogenSummonMold>())
                 .AddIngredient(ModContent.ItemType<EleumSoul>(), 6)
-                .AddIngredient(ItemID.IceBlock, 25)
-                .AddConsumeItemCallback((Recipe recipe, int type, ref int amount) =>
-                {
-                    if (type == ModContent.ItemType<CryogenSummonMold>())
-                    {
-                        amount = 0;
-                    }
-                })
+                .AddRecipeGroup("CalamityVanillaAnyIceBlock", 25)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

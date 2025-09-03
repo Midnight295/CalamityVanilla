@@ -251,7 +251,6 @@ Items: {
 	IceSculptureHorse: {
 		DisplayName: Horse Ice Sculpture
 		Tooltip: ""
-		Tooltip: Splits into bouncing eyes
 	}
 
 	IchorJavelin: {
@@ -279,9 +278,8 @@ Projectiles: {
 	BileBone.DisplayName: Bile Bone
 	IchorBlob.DisplayName: Ichor Blob
 	CloudArrow.DisplayName: Cloud Arrow
-	GothicTooth.DisplayName: Gothic Tooth
 	MistArrow.DisplayName: Mist Arrow
-	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Ball
+	CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Soul
 	Icicles.DisplayName: Icicles
 	FrostBoltProjectile.DisplayName: Frost Bolt
 	FlareBoltProjectile.DisplayName: Flare Bolt
@@ -290,21 +288,15 @@ Projectiles: {
 	FrigidflashHotBoltProjectile.DisplayName: Frigidflash Hot Bolt
 	GraniteTomeBolt.DisplayName: Granite Tome Bolt
 	Fleshnade.DisplayName: Fleshnade
-	BouncyFleshnade.DisplayName: Bouncy Fleshnade
-	StickyFleshnade.DisplayName: Sticky Fleshnade
-	Honeycombnade.DisplayName: Honeycombnade
 	MarbleTomeShield.DisplayName: Marble Tome Shield
-	Crystaline.DisplayName: Crystaline
 	MarbleRock.DisplayName: Marble Rock
-	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Ball Mini
+	CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Mini Soul
 	CrystalineShard.DisplayName: Crystaline Shard
 	TwiflightFeather.DisplayName: Twiflight Feather
-	ThrowingBrick.DisplayName: Throwing Brick
-	CursedDaggerProjectile.DisplayName: Cursed Dagger Projectile
+	CursedDaggerProjectile.DisplayName: Cursed Dagger
 	CursedDaggerExplosion.DisplayName: Cursed Dagger Explosion
-	SeafoamBomb.DisplayName: Seafoam Grenade
 	Seafoam.DisplayName: Seafoam
-	Seafoam2.DisplayName: Seafoam2
+	Seafoam2.DisplayName: Floating Seafoam
 	PerfectDarkCloud.DisplayName: Dark Spore Cloud
 	TheSnowman.DisplayName: The Snowman
 	TheSnowmanSnowballBig.DisplayName: Snowball
@@ -313,10 +305,19 @@ Projectiles: {
 	TheSnowmanSnowballTiny.DisplayName: Snowball
 	TheSnowmanPile.DisplayName: Miserable Little Pile of Snow
 	ParasiticBeltEffect.DisplayName: Parasitic Belt Effect
-	BouncingEyeballCluster.DisplayName: Bouncing Eyeball Cluster
-	BouncingEyeProj.DisplayName: Bouncing Eye Proj
+	BouncingEyeballCluster.DisplayName: Eyeball Cluster
+	BouncingEyeProj.DisplayName: Bouncing Eye
 	IcePillarSpawner.DisplayName: Ice Pillar Spawner
-	IchorJavelinProjectile.DisplayName: Ichor Javelin Projectile
+	IchorJavelinProjectile.DisplayName: Ichor Javelin
+	FleshnadeBee.DisplayName: Honeycombnade
+	FleshnadeBouncy.DisplayName: Bouncy Fleshnade
+	FleshnadeSticky.DisplayName: Sticky Fleshnade
+	TheGothicTooth.DisplayName: The Gothic Tooth
+	CrystalineProjectile.DisplayName: Crystaline
+	SeafoamBombProjectile.DisplayName: Seafoam Grenade
+	ThrowingBrickProjectile.DisplayName: Throwing Brick
+	IcebreakerProjectile.DisplayName: Icebreaker
+	TheSnowmanProjectile.DisplayName: The Snowman
 }
 
 Tiles: {

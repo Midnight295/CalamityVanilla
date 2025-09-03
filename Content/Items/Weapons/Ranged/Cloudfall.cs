@@ -1,8 +1,7 @@
-﻿using Terraria.ID;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using CalamityVanilla.Content.Projectiles.Ranged;
 
 namespace CalamityVanilla.Content.Items.Weapons.Ranged
 {
@@ -30,6 +29,32 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-2,0);
+        }
+    }
+
+    public class CloudArrow : ModProjectile
+    {
+        public override void SetDefaults()
+        {
+            Projectile.QuickDefaults();
+            Projectile.arrow = true;
+            Projectile.DamageType = DamageClass.Ranged;
+        }
+        public override void AI()
+        {
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Cloud);
+            d.velocity *= 0.1f;
+            d.alpha = 128;
+        }
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 15; i++)
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Cloud);
+                d.velocity *= 0.5f;
+                d.noGravity = !Main.rand.NextBool(3);
+            }
         }
     }
 }

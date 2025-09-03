@@ -79,7 +79,7 @@ namespace CalamityVanilla.Common
         }
         public override void SaveWorldData(TagCompound tag)
         {
-            tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;
+            //tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;
         }
         public override void LoadWorldData(TagCompound tag)
         {
