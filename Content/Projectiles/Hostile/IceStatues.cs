@@ -52,7 +52,6 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
             else if (Projectile.ai[2] == 30)
             {
                 SoundEngine.PlaySound(SoundID.Item1, Projectile.position);
-                Projectile.tileCollide = true;
                 Projectile.extraUpdates = 1;
                 Projectile.velocity = Projectile.Center.DirectionTo(Main.player[(int)Projectile.ai[0]].Center) * 20;
             }
@@ -61,6 +60,8 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
                 Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 if (Projectile.ai[2] > 200)
                 Projectile.velocity.Y += 0.2f;
+                if (!Projectile.tileCollide && !Collision.SolidCollision(Projectile.position,Projectile.width,Projectile.height))
+                    Projectile.tileCollide = true;
             }
         }
         public override void OnKill(int timeLeft)

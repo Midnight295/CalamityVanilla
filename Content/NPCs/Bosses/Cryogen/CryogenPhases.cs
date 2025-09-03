@@ -18,19 +18,38 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
     {
         private void FlyAndShoot_0()
         {
-
+            NPC.ai[2]--;
             if (NPC.ai[0] <= 0)
             {
                 NPC.velocity.Y += 0.3f;
                 NPC.velocity += NPC.Center.DirectionTo(target.Center) * 0.4f;
                 NPC.velocity = NPC.velocity.LengthClamp(4.5f, 0);
-
                 if(NPC.life < NPC.lifeMax * _phase2HealthMultiplier)
                 {
                     NPC.ai[0] = -30;
                     NPC.ai[1] = 0;
                     NPC.ai[2] = 0;
                     phase = 2;
+                }
+                if (NPC.ai[2] <= 0) // Ice Pillar
+                {
+                    NPC.ai[2] = 60 * 30;
+                    if(Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 endPoint = target.Center + target.velocity * new Vector2(160,1);
+                        for(int i = 0; i < 300; i++)
+                        {
+                            Point p = endPoint.ToTileCoordinates();
+                            p.Y += i;
+                            if (Main.tileSolid[Main.tile[p].TileType] && Main.tile[p].HasTile)
+                            {
+                                p.Y -= 3;
+                                endPoint.Y = p.ToWorldCoordinates().Y;
+                                break;
+                            }
+                        }
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(),NPC.Center,NPC.Center,ModContent.ProjectileType<IcePillarSpawner>(),0,0,-1,endPoint.X,endPoint.Y);
+                    }
                 }
             }
             else
@@ -46,9 +65,9 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                         {
                             hitAnything = true;
                             WorldGen.KillTile(x, y);
-                            if (Main.rand.NextBool(2) && Main.netMode != NetmodeID.MultiplayerClient)
+                            if (Main.rand.NextBool(6) && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(), Main.rand.NextVector2CircularEdge(6, 6), ModContent.ProjectileType<IceShrapnel>(), 12, 1, -1);
+                                Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(), new Point(x, y).ToWorldCoordinates().DirectionTo(target.Center).RotatedByRandom(0.1f) * 17, ModContent.ProjectileType<IceShrapnel>(), 12, 1, -1);
                             }
                         }
                     }
@@ -88,15 +107,13 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                //Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, NPC.DirectionTo(target.Center) * 16, ProjectileID.FrostBlastHostile, 24, 0);
-                
                 switch(NPC.ai[1] % 3)
                 {
                     case 0: // Ice blocks or do the slam thing instead
                         if (NPC.ai[0] is -190 or -180 or -170 or -100 or -90 or -80)
                         {
 
-                            if (NPC.ai[0] == -190 && Main.rand.NextBool(3))
+                            if (NPC.ai[0] == -190 && Main.rand.NextBool())
                             {
                                 NPC.ai[0] = -60;
                                 NPC.ai[2] = 0;
@@ -159,7 +176,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                         {
                             for (int i = 0; i < 15; i++)
                             {
-                                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Bottom, Main.rand.NextVector2Circular(30,10) - new Vector2(0,15), ModContent.ProjectileType<IceChunks>(), 20, 1);
+                                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Bottom, Main.rand.NextVector2Circular(10,10) - new Vector2(0,15), ModContent.ProjectileType<IceChunks>(), 20, 1);
                             }
                         }
                     }
@@ -176,169 +193,6 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                     NPC.ai[1] = 1;
                     NPC.ai[2] = 0;
                 }
-            }
-        }
-        private void SpikyIceBarrier_2()
-        {
-            if (NPC.ai[0] == -30)
-            {
-                SoundEngine.PlaySound(SoundID.Item160, NPC.Center);
-                NPC.rotation += NPC.direction * 0.2f;
-            }
-            NPC.ai[0]++;
-            if (NPC.ai[0] == 19 && NPC.noTileCollide)
-            {
-                NPC.ai[0] = 19;
-            }
-            if (NPC.ai[0] > 0)
-            {
-                NPC.velocity *= 0.9f;
-                NPC.rotation += MathF.Sin(NPC.ai[0] * 0.8f) * 0.01f;
-
-                if (NPC.ai[0] >= 60 && NPC.ai[0] % 60 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0, 8).RotatedBy(NPC.ai[0] * 0.01f), ModContent.ProjectileType<IceBomb>(), 30, 0, -1, Main.rand.Next(2), 8);
-                    Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0, -8).RotatedBy(NPC.ai[0] * 0.01f), ModContent.ProjectileType<IceBomb>(), 30, 0, -1, Main.rand.Next(2), 8);
-                }
-            }
-            else
-            {
-                if (!Collision.SolidCollision(NPC.position, NPC.width, NPC.height))
-                    NPC.noTileCollide = false;
-                NPC.velocity += NPC.Center.DirectionTo(target.Center) * (Collision.SolidCollision(NPC.position, NPC.width, NPC.height) ? 2f : -0.5f);
-            }
-            if (NPC.ai[0] == 20)
-            {
-                NPC.behindTiles = true;
-                NPC.noTileCollide = false;
-                SoundEngine.PlaySound(SoundID.DeerclopsIceAttack, NPC.Center);
-                // Make the ice barrier
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Point placePos = NPC.Center.ToTileCoordinates();
-                    int squaresize = 16;
-                    float sinMultipler = Main.rand.NextFloat(4, 8);
-                    for (int x = -squaresize; x <= squaresize; x++)
-                    {
-                        for (int y = -squaresize; y <= squaresize; y++)
-                        {
-                            if (new Vector2(placePos.X + x, placePos.Y + y).Distance(NPC.Center * (1 / 16f)) <= Math.Abs(MathF.Sin(new Vector2(placePos.X + x, placePos.Y + y).DirectionTo(NPC.Center * (1 / 16f)).ToRotation() * sinMultipler) * (squaresize - 8)) + 8)
-                            {
-                                WorldGen.PlaceTile(placePos.X + x, placePos.Y + y, ModContent.TileType<CryogenIceTile>(), plr: Main.myPlayer);
-                                CryogenIceBlockSystem.CryogenIceBlocks.Add(new Vector3(placePos.X + x, placePos.Y + y, CryogenIceBlockSystem.DEFAULT_ICE_TIMER * 5));
-                            }
-                        }
-                    }
-                    NetMessage.SendTileSquare(-squaresize, placePos.X - squaresize, placePos.Y - 1, (squaresize * 2) + 1, (squaresize * 2) + 1);
-                }
-            }
-        }
-        private void Phase2DPanic_3()
-        {
-            NPC.ai[0]++;
-            NPC.velocity += NPC.Center.DirectionFrom(target.Center).RotatedBy(MathF.Sin(NPC.ai[0]));
-            NPC.velocity = NPC.velocity.LengthClamp(12);
-            if (NPC.ai[0] > 50)
-            {
-                phase++;
-                NPC.ai[0] = 0;
-            }
-        }
-        private void Phase2Derping_4()
-        {
-            NPC.ai[0]++;
-            NPC.velocity += NPC.Center.DirectionTo(target.Center + new Vector2(0, 300 + (100 * MathF.Sin(NPC.ai[0] * 0.01f))).RotatedBy(NPC.ai[0] * 0.03f)) * 0.8f;
-            NPC.velocity = NPC.velocity.LengthClamp(12);
-            NPC.behindTiles = false;
-            if (NPC.ai[0] > 60 * 2)
-            {
-                phase = 5;
-                NPC.ai[0] = 0;
-                NPC.netUpdate = true;
-            }
-        }
-        private void Phase2Icicles_5()
-        {
-            NPC.ai[0]++;
-
-            NPC.velocity += NPC.Center.DirectionTo(target.Center + new Vector2(0,-350)) * (NPC.Center.Distance(target.Center) > 1000? new Vector2(1, 1) : new Vector2(0.2f, 1f));
-            NPC.velocity.Y = MathHelper.Clamp(NPC.velocity.Y, -5, 5);
-            NPC.velocity = NPC.velocity.LengthClamp(16);
-
-            if (NPC.ai[0] % 15 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Bottom, new Vector2(NPC.velocity.X * Main.rand.NextFloat(1), Main.rand.NextFloat(-2,4)), ModContent.ProjectileType<Icicles>(), 30, 1);
-                }
-            }
-            if (NPC.ai[0] > 250 && NPC.Center.Distance(target.Center) < 600)
-            {
-                phase = 6;
-                NPC.ai[0] = 0;
-                NPC.netUpdate = true;
-            }
-        }
-        private void Phase2IceBreaker_6()
-        {
-            NPC.ai[0]++;
-            if (NPC.ai[0] == 60)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    for (int i = 0; i < 16; i++)
-                    {
-                        Vector2 blockPlacement = (target.Center + target.velocity * 20) + Main.rand.NextVector2Circular(16 * 16, 16 * 16);
-                        Projectile.NewProjectileDirect(NPC.GetSource_FromThis(), NPC.Center, NPC.DirectionTo(blockPlacement) * 48, ModContent.ProjectileType<CryogenIceBlock>(), 0, 0, ai0: blockPlacement.X, ai1: blockPlacement.Y, ai2: CryogenIceBlockSystem.DEFAULT_ICE_TIMER / 2);
-                    }
-                }
-            }
-            if (NPC.ai[0] < 60)
-            {
-                NPC.velocity *= 0.98f;
-            }
-
-            if (NPC.ai[0] >= 60)
-            {
-                NPC.rotation += Math.Clamp((NPC.ai[0] - 60),0,240) * 0.001f * NPC.direction;
-                if (NPC.ai[0] > 260)
-                {
-                    bool hitAnything = false;
-                    for (int x = NPC.Left.ToTileCoordinates().X; x < NPC.Right.ToTileCoordinates().X; x++) // Destroy ice blocks
-                    {
-                        for (int y = NPC.Top.ToTileCoordinates().Y; y < NPC.Bottom.ToTileCoordinates().Y; y++)
-                        {
-                            if (Main.tile[x, y].TileType == ModContent.TileType<CryogenIceTile>())
-                            {
-                                hitAnything = true;
-                                WorldGen.KillTile(x, y);
-                                if (Main.rand.NextBool(2) && Main.netMode != NetmodeID.MultiplayerClient)
-                                {
-                                    Projectile.NewProjectile(NPC.GetSource_FromThis(), new Point(x, y).ToWorldCoordinates(), Main.rand.NextVector2CircularEdge(6, 6), ModContent.ProjectileType<IceShrapnel>(), 12, 1, -1);
-                                }
-                            }
-                        }
-                    }
-                    if (hitAnything)
-                    {
-                        NPC.velocity *= 0.9f;
-                        NPC.localAI[0] = 5;
-                    }
-                }
-                NPC.velocity *= 0.99f;
-                NPC.velocity -= NPC.Center.DirectionTo(target.Center) * 0.01f;
-            }
-            if (NPC.ai[0] == 300)
-            {
-                SoundEngine.PlaySound(SoundID.DeerclopsRubbleAttack, NPC.Center);
-                NPC.velocity = NPC.Center.DirectionTo(target.Center) * 64;
-            }
-
-            if (NPC.ai[0] > 360)
-            {
-                phase = 5;
-                NPC.ai[0] = 0;
-                NPC.netUpdate = true;
             }
         }
     }

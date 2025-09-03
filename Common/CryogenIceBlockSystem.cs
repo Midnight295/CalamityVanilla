@@ -14,19 +14,38 @@ using Terraria.ModLoader.IO;
 
 namespace CalamityVanilla.Common
 {
+    public struct CryogenIceData
+    {
+        public ushort X;
+        public ushort Y;
+        public ushort Time;
+
+        public CryogenIceData(ushort x, ushort y, ushort time)
+        {
+            X = x;
+            Y = y;
+            Time = time;
+        }
+        public CryogenIceData(int x, int y, int time)
+        {
+            X = (ushort)x;
+            Y = (ushort)y;
+            Time = (ushort)time;
+        }
+    }
     public class CryogenIceBlockSystem : ModSystem
     {
         public const int DEFAULT_ICE_TIMER = 2400;
-        public static List<Vector3> CryogenIceBlocks = new List<Vector3>();
+        public static List<CryogenIceData> CryogenIceBlocks = new List<CryogenIceData>();
         public override void OnWorldUnload()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 return;
             for (int i = 0; i < CryogenIceBlocks.Count; i++)
             {
-                if (Main.tile[(int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y].TileType == ModContent.TileType<CryogenIceTile>())
+                if (Main.tile[CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y].TileType == ModContent.TileType<CryogenIceTile>())
                 {
-                    WorldGen.KillTile((int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y, false, false, true);
+                    WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y, false, false, true);
                 }
             }
             CryogenIceBlocks.Clear();
@@ -44,17 +63,16 @@ namespace CalamityVanilla.Common
             }
             for(int i = 0; i < CryogenIceBlocks.Count; i++)
             {
-                // x and y are the tile coords, z is the timer before it explodes !!!
-                CryogenIceBlocks[i] -= new Vector3(0, 0, 1);
-                if (Main.tile[(int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y].TileType != ModContent.TileType<CryogenIceTile>())
+                CryogenIceBlocks[i] = new CryogenIceData(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y, (ushort)(CryogenIceBlocks[i].Time - 1));
+                if (Main.tile[CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y].TileType != ModContent.TileType<CryogenIceTile>())
                 {
                     CryogenIceBlocks.RemoveAt(i);
                     return;
                 }
-                if (CryogenIceBlocks[i].Z < 0 || (!cryogenIsREAL && Main.rand.NextBool(10)))
+                if (CryogenIceBlocks[i].Time < 0 || (!cryogenIsREAL && Main.rand.NextBool(10)))
                 {
-                    WorldGen.KillTile((int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y,false,false,true);
-                    NetMessage.SendTileSquare(-1, (int)CryogenIceBlocks[i].X, (int)CryogenIceBlocks[i].Y);
+                    WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y,false,false,true);
+                    NetMessage.SendTileSquare(-1, CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y);
                     CryogenIceBlocks.RemoveAt(i);
                 }
             }
@@ -67,7 +85,7 @@ namespace CalamityVanilla.Common
         {
             if (tag.ContainsKey("CalamityVanilla:IceBlocks"))
             {
-                CryogenIceBlocks = tag.Get<List<Vector3>>("CalamityVanilla:IceBlocks");
+                CryogenIceBlocks = tag.Get<List<CryogenIceData>>("CalamityVanilla:IceBlocks");
             }
         }
     }

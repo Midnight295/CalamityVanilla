@@ -44,7 +44,7 @@ namespace CalamityVanilla.Content.Projectiles.Hostile
                         if (!Main.rand.NextBool(16))
                         {
                             WorldGen.PlaceTile(placePos.X + x, placePos.Y + y, ModContent.TileType<CryogenIceTile>(), plr: Main.myPlayer);
-                            CryogenIceBlockSystem.CryogenIceBlocks.Add(new Vector3(placePos.X + x, placePos.Y + y, (int)Projectile.ai[2] + Main.rand.Next(0, 60)));
+                            CryogenIceBlockSystem.CryogenIceBlocks.Add(new CryogenIceData(placePos.X + x, placePos.Y + y, (int)Projectile.ai[2] + Main.rand.Next(0, 60)));
                         }
                     }
                 }
