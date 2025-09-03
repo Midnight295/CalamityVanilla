@@ -8,10 +8,14 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items.Weapons.Ranged
+namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
 {
     public class ThrowingBrick : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 99;
+        }
         public override void SetDefaults()
         {
             Item.DefaultToThrownWeapon(ModContent.ProjectileType<Projectiles.Ranged.ThrowingBrick>(), 30, 10, true);

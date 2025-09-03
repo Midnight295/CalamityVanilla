@@ -16,6 +16,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
 {
     public class Crystaline : ModProjectile
     {
+        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/Throwing/Crystaline";
         public override void SetDefaults()
         {
             Projectile.QuickDefaults(false,16);

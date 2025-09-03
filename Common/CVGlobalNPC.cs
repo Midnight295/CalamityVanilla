@@ -1,6 +1,7 @@
 ﻿using CalamityVanilla.Common.ItemDropRules.DropConditions;
 using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
+using CalamityVanilla.Content.Items.Weapons.Ranged.Throwing;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;

@@ -59,8 +59,6 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
                     Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.CursedTorch, speed);
                     d.noGravity = true;
                     d.scale = Main.rand.NextFloat(0.8f, 1.2f);
-
-                    
                 }
             }
             if (Projectile.ai[0] > 30)
@@ -81,6 +79,11 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
                     d.velocity *= 0.95f;
                     d.scale = 1.2f;
                 }
+            }
+
+            if (Projectile.velocity.Y > 16f)
+            {
+                Projectile.velocity.Y = 16f;
             }
         }
 

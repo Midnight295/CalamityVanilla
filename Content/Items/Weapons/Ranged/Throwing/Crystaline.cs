@@ -8,13 +8,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items.Weapons.Ranged
+namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
 {
     public class Crystaline : ModItem
     {
         public override void SetDefaults()
         {
-            Item.DefaultToThrownWeapon(ModContent.ProjectileType<Projectiles.Ranged.Crystaline>(),23,12,true);
+            Item.DefaultToThrownWeapon(ModContent.ProjectileType<Projectiles.Ranged.Crystaline>(), 23, 12, true);
             Item.noUseGraphic = true;
             Item.damage = 12;
             Item.knockBack = 2;

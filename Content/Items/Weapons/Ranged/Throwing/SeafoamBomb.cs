@@ -2,10 +2,14 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items.Weapons.Ranged
+namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
 {
     public class SeafoamBomb : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 99;
+        }
         public override void SetDefaults()
         {
             Item.DefaultToThrownWeapon(ModContent.ProjectileType<Projectiles.Ranged.SeafoamBomb>(), 15, 10, true);

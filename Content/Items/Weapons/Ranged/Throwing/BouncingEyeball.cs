@@ -6,10 +6,14 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items.Weapons.Ranged
+namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
 {
     public class BouncingEyeball : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 99;
+        }
         public override void SetDefaults()
         {
             Item.DefaultToThrownWeapon(ModContent.ProjectileType<BouncingEyeballCluster>(), 20, 15, true);
@@ -26,7 +30,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
     public class BouncingEyeballCluster : ModProjectile
     {
-        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/BouncingEyeball";
+        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/Throwing/BouncingEyeball";
         public override void SetDefaults()
         {
             Projectile.QuickDefaults(false, 20);
@@ -76,7 +80,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             }
 
             int eyeCount = Main.rand.Next(2, 5);
-            for (int  j = 0; j < eyeCount; j++)
+            for (int j = 0; j < eyeCount; j++)
             {
                 float rand = Main.rand.NextFloat(MathHelper.TwoPi);
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, (Projectile.velocity / 1.12f).RotatedBy(rand), ModContent.ProjectileType<BouncingEyeProj>(), 10, 0, ai1: j % 3);
@@ -122,7 +126,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
         public override void AI()
         {
-            
+
             //Main.NewText(Projectile.timeLeft);
 
             int widthAndHeight;
@@ -134,7 +138,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
                 default: case 2: widthAndHeight = 8; Projectile.frame = 2; break;
             }
 
-            Projectile.width = widthAndHeight; 
+            Projectile.width = widthAndHeight;
             Projectile.height = widthAndHeight;
 
             Projectile.velocity.Y += 0.5f;

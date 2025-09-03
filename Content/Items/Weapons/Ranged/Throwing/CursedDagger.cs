@@ -1,17 +1,15 @@
-﻿using CalamityVanilla.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Items.Weapons.Ranged
+namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
 {
     public class CursedDagger : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 99;
+        }
         public override void SetDefaults()
         {
             Item.DefaultToThrownWeapon(ModContent.ProjectileType<Projectiles.Ranged.CursedDaggerProjectile>(), 15, 15, true);

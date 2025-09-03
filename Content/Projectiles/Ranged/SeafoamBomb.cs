@@ -18,7 +18,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
 {
     public class SeafoamBomb : ModProjectile
     {
-        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/SeafoamBomb";
+        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/Throwing/SeafoamBomb";
         public override void SetDefaults()
         {
             Projectile.QuickDefaults(false, 20);

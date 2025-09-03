@@ -17,6 +17,7 @@ namespace CalamityVanilla.Content.Projectiles.Ranged
 {
     public class ThrowingBrick : ModProjectile
     {
+        public override string Texture => "CalamityVanilla/Content/Items/Weapons/Ranged/Throwing/ThrowingBrick";
         public override void SetDefaults()
         {
             Projectile.QuickDefaults(false, 24);
