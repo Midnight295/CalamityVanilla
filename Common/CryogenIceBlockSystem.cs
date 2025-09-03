@@ -55,7 +55,6 @@ namespace CalamityVanilla.Common
         }
         public override void PostUpdateWorld()
         {
-            Main.NewText(CryogenIceBlocks.Count);
             bool cryogenIsREAL = false;
             foreach(var npc in Main.ActiveNPCs)
             {
