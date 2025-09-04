@@ -32,7 +32,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             Point placePos = Projectile.Center.ToTileCoordinates();
             SoundEngine.PlaySound(SoundID.NPCDeath15, Projectile.position);
 
-            if (CryogenIceBlockSystem.CryogenIceBlocks.Count > 830)
+            if (CryogenIceBlockSystem.CryogenIceBlocks.Count > 800)
                 return;
 
             if (Main.netMode != NetmodeID.MultiplayerClient)

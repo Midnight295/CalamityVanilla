@@ -18,13 +18,6 @@ namespace CalamityVanilla.Common
         public ushort X;
         public ushort Y;
         public ushort Time;
-
-        public CryogenIceData(ushort x, ushort y, ushort time)
-        {
-            X = x;
-            Y = y;
-            Time = time;
-        }
         public CryogenIceData(int x, int y, int time)
         {
             X = (ushort)x;
@@ -34,7 +27,7 @@ namespace CalamityVanilla.Common
     }
     public class CryogenIceBlockSystem : ModSystem
     {
-        public const int DEFAULT_ICE_TIMER = 2400;
+        public const int DEFAULT_ICE_TIMER = 1200;
         public const int CrogenIceDataChunkSize = 3;
         public static List<CryogenIceData> CryogenIceBlocks = new List<CryogenIceData>();
         public override void OnWorldUnload()
@@ -72,23 +65,17 @@ namespace CalamityVanilla.Common
                     CryogenIceBlocks.RemoveAt(i);
                     return;
                 }
-                if (CryogenIceBlocks[i].Time < 0 || (!cryogenIsREAL && Main.rand.NextBool(10)))
+                if (CryogenIceBlocks[i].Time <= 0 || (!cryogenIsREAL && Main.rand.NextBool(10)))
                 {
-                    //for(int x = 0; x < 3; x++)
-                    //{
-                    //    for (int y = 0; y < 3; x++)
-                    //    {
-                    //        WorldGen.KillTile(CryogenIceBlocks[i].X + x, CryogenIceBlocks[i].Y + y, false, false, true);
-                    //    }
-                    //}
-                    //NetMessage.SendTileSquare(-1, CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y,CrogenIceDataChunkSize,CrogenIceDataChunkSize);
-
                     WorldGen.KillTile(CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y, false, false, true);
                     NetMessage.SendTileSquare(-1, CryogenIceBlocks[i].X, CryogenIceBlocks[i].Y);
                     CryogenIceBlocks.RemoveAt(i);
                 }
             }
         }
+
+        // If there's a way to get all the ice blocks to go away before the world's saved and unloaded that'd be better.
+
         //public override void SaveWorldData(TagCompound tag)
         //{
         //    tag["CalamityVanilla:IceBlocks"] = CryogenIceBlocks;

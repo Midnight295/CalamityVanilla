@@ -31,14 +31,14 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
         }
         public override bool ShouldUpdatePosition()
         {
-            return false;
+            return true;
         }
         public override void AI()
         {
             float percent = Projectile.timeLeft / 120f;
             Projectile.position.X = MathHelper.Lerp(Projectile.ai[0], Projectile.velocity.X, percent) + Projectile.width;
             Projectile.position.Y = MathHelper.Lerp(Projectile.ai[1], Projectile.velocity.Y, percent) + Projectile.height;
-
+            Projectile.position -= Projectile.velocity;
             Projectile.position.Y -= MathF.Sin(percent * MathHelper.Pi) * 16 * 20;
             Projectile.rotation += Projectile.direction * 0.1f;
         }
@@ -58,7 +58,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             Asset<Texture2D> tex = TextureAssets.Projectile[Type];
             for (int i = 0; i < 10; i++)
             {
-                Main.spriteBatch.Draw(tex.Value, (Projectile.oldPos[i] + Projectile.Size / 2) - Main.screenPosition - (Projectile.velocity * i * 0.5f), null, (Cryogen.GetAuroraColor((int)(Projectile.whoAmI * 25 + (Projectile.timeLeft * 5)) + (i * 15)) * (1f - (i / 10f))) with { A = 0 }, Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
+                Main.spriteBatch.Draw(tex.Value, (Projectile.oldPos[i] + Projectile.Size / 2) - Main.screenPosition, null, (Cryogen.GetAuroraColor((int)(Projectile.whoAmI * 25 + (Projectile.timeLeft * 5)) + (i * 15)) * (1f - (i / 10f))) with { A = 0 }, Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
             }
             Main.spriteBatch.Draw(tex.Value, Projectile.Center - Main.screenPosition, null, new Color(1f, 1f, 1f, 1f), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
             return false;
