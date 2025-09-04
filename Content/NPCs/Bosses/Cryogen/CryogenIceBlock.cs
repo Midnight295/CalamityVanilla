@@ -35,6 +35,9 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             if (CryogenIceBlockSystem.CryogenIceBlocks.Count > 800)
                 return;
 
+            if (Projectile.Center.HasNaNs() || placePos.X < 0 || placePos.Y < 0 || !WorldGen.InWorld(placePos.X, placePos.Y))
+                return;
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int squaresize = Main.rand.Next(1, 3);
