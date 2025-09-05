@@ -257,6 +257,16 @@ Items: {
 		DisplayName: Ichor Javelin
 		Tooltip: Damage increases with each enemy pierced
 	}
+
+	SinisterIncubator: {
+		DisplayName: Sinister Incubator
+		Tooltip:
+			'''
+			Summons a Fungusmite to fight for you
+			Fungusmites react to aggression, firing biomass at their target each time you deal damage to an enemy directly
+			"They love sharks"
+			'''
+	}
 }
 
 Projectiles: {
@@ -318,6 +328,8 @@ Projectiles: {
 	ThrowingBrickProjectile.DisplayName: Throwing Brick
 	IcebreakerProjectile.DisplayName: Icebreaker
 	TheSnowmanProjectile.DisplayName: The Snowman
+	Fungusmite.DisplayName: Fungusmite
+	FungusmiteProjectile.DisplayName: Fungusmite Projectile
 }
 
 Tiles: {
@@ -334,5 +346,10 @@ Buffs: {
 	ParasiticBeltBuff: {
 		DisplayName: Parasitic Imbue
 		Description: Attacks are stronger and inflict Ichor
+	}
+
+	FungusmiteBuff: {
+		DisplayName: Fungusmite
+		Description: The Fungusmite will shower your enemies with bullets
 	}
 }
