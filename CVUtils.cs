@@ -228,5 +228,12 @@ namespace CalamityVanilla
             byte[] output = hash.ComputeHash(input);
             return output;
         }
+
+        public static float AngleDifference(float fromangle, float toangle)
+        {
+            float from = Math.Abs(fromangle % MathHelper.TwoPi);
+            float to = Math.Abs(toangle % MathHelper.TwoPi);
+            return Math.Abs(from - to);
+        }
     }
 }

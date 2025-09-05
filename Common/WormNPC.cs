@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿//☆🤍
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace CalamityVanilla.Common
         public int sheetsegments = 4;
 
         /// <summary>
-        /// If the worm has more segments than segments in the sprite sheet, this array of segments will be repeated instead.
+        /// If the worm has more segments than segments in the sprite sheet, this array of segments will be repeated instead. (This is a range of segments, so [1,3] also includes segment 2)
         /// </summary>
         public int[] repeatingsegments = new int[] {0};
 

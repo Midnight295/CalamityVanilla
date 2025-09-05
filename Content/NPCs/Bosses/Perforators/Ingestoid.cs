@@ -56,6 +56,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Perforators
 
             NPC.lifeMax = 100;
             NPC.defense = 30;
+            NPC.damage = 60;
 
             NPC.aiStyle = -1;
             NPC.noGravity = true;
@@ -70,19 +71,19 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Perforators
         public override void AI()
         {
 
-            NPC.TargetClosest();
             targetplayer = Main.player[NPC.target];
 
             if (NPC.ai[1] == (byte)WormSegment.Head)
             {
+                chaosnumber = CVUtils.RepeatableRandom((targetplayer.position + NPC.position).ToString());
+
                 switch (phase)
                 {
                     case IngestoidPhases.Idle: Idle(); break;
                     case IngestoidPhases.Chase: Chase(); break;
                     case IngestoidPhases.Wall: Wall(); break;
                 }
-
-                chaosnumber = CVUtils.RepeatableRandom((targetplayer.position + NPC.position).ToString());
+                NPC.rotation = Utils.AngleLerp(NPC.rotation, NPC.velocity.ToRotation() + MathHelper.PiOver2, 0.3f);
             }
 
             base.AI();

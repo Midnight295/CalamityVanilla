@@ -12,8 +12,17 @@ using Microsoft.Xna.Framework;
 
 namespace CalamityVanilla.Content.NPCs.Bosses.Perforators
 {
-    internal class Hematode : WormNPC
+    partial class Hematode : WormNPC
     {
+        byte[] chaosnumber = new byte[] { };
+        private enum HematodePhases
+        {
+            Idle = 0,
+            Chase = 1,
+            Wall = 2
+        }
+
+        HematodePhases phase = HematodePhases.Idle;
         public override void SetStaticDefaults()
         {
 
@@ -55,6 +64,28 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Perforators
 
             NPC.HitSound = ContentSamples.NpcsByNetId[NPCID.IceElemental].HitSound;
             NPC.DeathSound = ContentSamples.NpcsByNetId[NPCID.IceElemental].DeathSound;
+        }
+
+        Player targetplayer = Main.player[0];
+        public override void AI()
+        {
+
+            NPC.TargetClosest();
+            targetplayer = Main.player[NPC.target];
+
+            if (NPC.ai[1] == (byte)WormSegment.Head)
+            {
+                chaosnumber = CVUtils.RepeatableRandom((targetplayer.position + NPC.position).ToString());
+
+                switch (phase)
+                {
+                    case HematodePhases.Idle: Idle(); break;
+                    case HematodePhases.Chase: Idle(); break;
+                    case HematodePhases.Wall: Idle(); break;
+                }
+            }
+
+            base.AI();
         }
     }
 }
