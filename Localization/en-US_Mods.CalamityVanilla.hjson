@@ -11,6 +11,7 @@ NPCs: {
 	Hematode.DisplayName: Hematode
 	Ingestatode.DisplayName: Ingestatode
 	Malgestode.DisplayName: Malgestode
+	Polterghast.DisplayName: Polterghast
 }
 
 Items: {
