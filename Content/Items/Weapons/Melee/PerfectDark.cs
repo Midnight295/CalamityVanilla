@@ -102,6 +102,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
 
+            Projectile.frameCounter = Main.rand.Next(5 + 1);
             Projectile.frame = Main.rand.Next(3);
             Projectile.rotation = Main.rand.NextFloat(MathHelper.TwoPi);
         }
@@ -116,6 +117,15 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
                 Projectile.Kill();
                 return;
             }
+
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter > 5)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
+                if (Projectile.frame > 2)
+                    Projectile.frame = 0;
+            }    
 
             Projectile.velocity *= 0.98f;
             Projectile.rotation += Projectile.velocity.X * 0.02f;
