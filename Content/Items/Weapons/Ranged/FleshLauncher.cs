@@ -10,7 +10,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
     {
         public override void SetDefaults()
         {
-            Item.DefaultToRangedWeapon(ProjectileID.PurificationPowder, ItemID.Grenade, singleShotTime: 50, shotVelocity: 4f, hasAutoReuse: true);
+            Item.DefaultToRangedWeapon(ProjectileID.PurificationPowder, ItemID.Grenade, singleShotTime: 30, shotVelocity: 4f, hasAutoReuse: true);
             Item.width = 62;
             Item.height = 30;
             Item.damage = 10;
@@ -68,9 +68,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
             d.alpha = 128;
             Projectile.rotation += Projectile.velocity.X * 0.07f;
 
-            if (Projectile.ai[0] > 10)
+            if (Projectile.ai[0] > 8)
             {
-                Projectile.velocity.Y += 0.3f;
+                Projectile.velocity.Y += 0.4f;
                 Projectile.oldVelocity.Y += 0.3f;
             }
         }
@@ -84,9 +84,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
             if (Projectile.velocity.X != Projectile.oldVelocity.X)
             {
-                Projectile.velocity.X = -oldVelocity.X * 0.6f;
+                Projectile.velocity.X = -oldVelocity.X * 0.8f;
             }
-            Projectile.velocity.X *= 0.95f;
+            Projectile.velocity.X *= 0.97f;
             return false;
         }
 
@@ -123,10 +123,29 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
     public class FleshnadeSticky : Fleshnade
     {
+        public bool touchingTile = false;
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.velocity = Vector2.Zero;
+            touchingTile = true;
             return false;
+        }
+
+        public override void AI()
+        {
+            Projectile.ai[0]++;
+
+            //Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke);
+            d.velocity *= 0.1f;
+            d.alpha = 128;
+            Projectile.rotation += Projectile.velocity.X * 0.07f;
+
+            if (Projectile.ai[0] > 15 && !touchingTile)
+            {
+                Projectile.velocity.Y += 0.2f;
+                Projectile.oldVelocity.Y += 0.3f;
+            }
         }
 
         public override void OnKill(int timeLeft)
@@ -162,6 +181,23 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged
 
     public class FleshnadeBouncy : Fleshnade
     {
+        public override void AI()
+        {
+            Projectile.ai[0]++;
+
+            //Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke);
+            d.velocity *= 0.1f;
+            d.alpha = 128;
+            Projectile.rotation += Projectile.velocity.X * 0.07f;
+
+            if (Projectile.ai[0] > 10)
+            {
+                Projectile.velocity.Y += 0.3f;
+                Projectile.oldVelocity.Y += 0.3f;
+            }
+        }
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             if (Projectile.velocity.Y != Projectile.oldVelocity.Y)

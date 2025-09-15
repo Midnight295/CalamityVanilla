@@ -267,6 +267,11 @@ Items: {
 			"They love sharks"
 			'''
 	}
+
+	PyrobatStaff: {
+		DisplayName: Pyrobat Staff
+		Tooltip: Conjures hellstone bats that drip fire
+	}
 }
 
 Projectiles: {
@@ -330,6 +335,10 @@ Projectiles: {
 	TheSnowmanProjectile.DisplayName: The Snowman
 	Fungusmite.DisplayName: Fungusmite
 	FungusmiteProjectile.DisplayName: Fungusmite Projectile
+	Pyrobat.DisplayName: Pyrobat
+	PyrobatStaffHeldProjectile.DisplayName: Pyrobat Staff Held
+	Pyrobat2.DisplayName: Silly Pyrobat
+	PyrobatFlame.DisplayName: Pyrobat Flame
 }
 
 Tiles: {
