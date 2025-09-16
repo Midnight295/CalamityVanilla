@@ -1,5 +1,6 @@
 ﻿using CalamityVanilla.Common.ItemDropRules.DropConditions;
 using CalamityVanilla.Content.Items.Material;
+using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Items.Weapons.Ranged.Throwing;
 using Terraria;
@@ -51,6 +52,14 @@ namespace CalamityVanilla.Common
                 case NPCID.DemonEyeOwl:
                 case NPCID.DemonEyeSpaceship:
                     npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsBloodMoonAndNotFromStatue(), ModContent.ItemType<BouncingEyeball>(), 10, 5, 15));
+                    break;
+
+                case NPCID.WallofFlesh:
+                    LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+                    npcLoot.Add(notExpertRule);
+
+                    IItemDropRule wofLoot = ItemDropRule.OneFromOptions(1, ModContent.ItemType<FleshLauncher>(), ModContent.ItemType<PyrobatStaff>());
+                    notExpertRule.OnSuccess(wofLoot);
                     break;
             }
         }
