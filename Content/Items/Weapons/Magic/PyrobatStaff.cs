@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using ReLogic.Utilities;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -32,7 +34,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             Item.height = 48;
             Item.useTime = 60;
             Item.useAnimation = 60;
-            Item.UseSound = SoundID.Item95;
+            //Item.UseSound = SoundID.Item95;
             Item.SetWeaponValues(85, 8);
             Item.SetShopValues(ItemRarityColor.LightRed4, 60000);
             Item.noUseGraphic = true;
@@ -70,6 +72,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         public ref float ShootTimer => ref Projectile.ai[0];
         public int ShootCount = 0;
 
+        SlotId hissSound;
+        SoundStyle hissSoundStyle = new SoundStyle("Terraria/Sounds/Custom/dd2_sky_dragons_fury_circle_", stackalloc (int, float)[] { (0, 1f), (1, 1f), (2, 1f) });
+
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 2;
@@ -97,6 +102,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override void AI()
         {
+            //Lighting.AddLight(Projectile.Center, 1f, 0.55f, 0.25f);
+
             Projectile.frame = 0; // set frame to full
 
             // See ExampleDrillProjectile.cs for comments on code common to held projectiles. The comments in this file will focus on the unique aspects of this projectile.
@@ -106,6 +113,22 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             // HoldTimer counts how long the weapon has been used. It helps control how fast the weapon animates and shoots arrows.
             ShootTimer += 1f;
             int useTime = Projectile.timeLeft;
+
+            if (ShootTimer < 2) // rotate towards mouse with clamping
+            {
+                // Check if the sound is already playing...
+                if (!SoundEngine.TryGetActiveSound(hissSound, out var activeSound))
+                {
+                    // if it isn't, play the sound and remember the SlotId
+                    hissSound = SoundEngine.PlaySound(hissSoundStyle);
+                }
+
+                DrawOriginOffsetX = (player.direction == 1) ? -10 : 10;
+                DrawOriginOffsetY = -10;
+                //Projectile.rotation = MathHelper.Clamp((Main.MouseWorld - player.Center).ToRotation(), -20, 0) + ((player.direction == 1) ? MathHelper.PiOver4 : 3 * MathHelper.PiOver4) + (((Main.MouseWorld - player.Center).ToRotation() > 0 && player.direction == -1) ? MathHelper.Pi : 0);
+                Projectile.direction = player.direction;
+                Projectile.spriteDirection = Projectile.direction;
+            }
 
             if (ShootTimer < 40)
             {
@@ -122,6 +145,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
             else if (ShootTimer == 40)
             {
+                if (SoundEngine.TryGetActiveSound(hissSound, out ActiveSound? snd))
+                {
+                    snd.Stop();
+                }
+
                 for (int i = 0; i < 20; i++)
                 {
                     Vector2 pos = player.position + new Vector2(30, (player.direction == 1) ? 10 : -10).RotatedBy(Projectile.rotation).RotatedBy(-MathHelper.PiOver4).RotatedBy((player.direction == -1) ? -MathHelper.PiOver2 : 0);
@@ -130,7 +158,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
                     d.scale = Main.rand.NextFloat(0.5f, 1.6f);
                 }
 
-                if (ShootTimer < 20)
+                for (int i = 0; i < 20; i++)
                 {
                     Vector2 pos = player.position + new Vector2(30, (player.direction == 1) ? 10 : -10).RotatedBy(Projectile.rotation).RotatedBy(-MathHelper.PiOver4).RotatedBy((player.direction == -1) ? -MathHelper.PiOver2 : 0);
                     Dust d = Dust.NewDustDirect(pos, 30, 30, DustID.Smoke);
@@ -139,15 +167,15 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
                 }
 
                 // SPAWN BATS
-                SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+                SoundEngine.PlaySound(SoundID.Item14 with { Volume = 0.75f }, Projectile.position);
 
                 if (Main.rand.NextBool(5))
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X + (20 * player.direction), Projectile.position.Y - 10), new Vector2(5f * player.direction, 0f), ModContent.ProjectileType<Pyrobat2>(), Projectile.damage, Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X + (20 * player.direction), Projectile.position.Y + 10), new Vector2(5f * player.direction, 0f), ModContent.ProjectileType<Pyrobat2>(), Projectile.damage, Projectile.knockBack);
                 }
                 else
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X + (20 * player.direction), Projectile.position.Y - 10), new Vector2(5f * player.direction, 0f), ModContent.ProjectileType<Pyrobat>(), Projectile.damage, Projectile.knockBack);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X + (20 * player.direction), Projectile.position.Y + 10), new Vector2(5f * player.direction, 0f), ModContent.ProjectileType<Pyrobat>(), Projectile.damage, Projectile.knockBack);
                 }
             }
             else if (ShootTimer >= 40) // set frame to empty
@@ -159,21 +187,32 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
                 ShootTimer = 0f;
             }
 
-            if (ShootTimer < 2) // rotate towards mouse with clamping
-            {
-                DrawOriginOffsetX = (player.direction == 1) ? -10 : 10;
-                DrawOriginOffsetY = -10;
-                Projectile.rotation = MathHelper.Clamp((Main.MouseWorld - player.Center).ToRotation(), -20, 0) + ((player.direction == 1) ? MathHelper.PiOver4 : 3 * MathHelper.PiOver4) + (((Main.MouseWorld - player.Center).ToRotation() > 0 && player.direction == -1) ? MathHelper.Pi : 0);
-                Projectile.direction = player.direction;
-                Projectile.spriteDirection = Projectile.direction;
-            }
-
             //player.ChangeDir(Projectile.direction);
             player.heldProj = Projectile.whoAmI;
             player.SetDummyItemTime(2);
             Projectile.Center = playerCenter + new Vector2(20 * player.direction, 5);
             //Main.NewText(MathHelper.ToDegrees(Projectile.rotation));
+        }
 
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>(this.Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
+            Main.spriteBatch.Draw
+            (
+                texture,
+                new Vector2
+                (
+                    Projectile.position.X - Main.screenPosition.X + Projectile.width * 0.5f,
+                    Projectile.position.Y - Main.screenPosition.Y + Projectile.height + texture.Height * 0.5f - (texture.Height / 2) - 8f
+                ),
+                Utils.Frame(texture, 1, Main.projFrames[Projectile.type], 0, Projectile.frame),
+                Color.White,
+                Projectile.rotation,
+                texture.Size() * 0.5f,
+                Projectile.scale,
+                (Main.player[Projectile.owner].direction == 1) ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                0f
+            );
         }
     }
 
@@ -182,7 +221,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         public float startY;
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()
         {
@@ -191,7 +230,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.penetrate = -1;
-            Projectile.timeLeft = 60*5;
+            Projectile.timeLeft = 60*4;
             DrawOffsetX = -25;
             DrawOriginOffsetY = -20;
 
@@ -204,38 +243,71 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override void OnKill(int timeLeft)
         {
+            SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot, Projectile.position);
+            SoundEngine.PlaySound(SoundID.Item110, Projectile.position);
             for (int i = 0; i < 20; i++)
             {
                 Dust d = Dust.NewDustDirect(Projectile.position, 20, 20, DustID.Torch);
-                d.velocity *= Main.rand.NextFloat(0.3f, 1.5f);
-                d.scale = Main.rand.NextFloat(0.5f, 1.2f);
-                d.noGravity = Main.rand.NextBool(2);
+                d.velocity *= Main.rand.NextFloat(2.5f, 7.5f);
+                d.scale = Main.rand.NextFloat(1f, 2f);
+                d.noGravity = !Main.rand.NextBool(5);
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, 20, 20, DustID.Smoke);
+                d.velocity *= Main.rand.NextFloat(1.5f, 3.5f);
+                d.scale = Main.rand.NextFloat(1f, 2f);
+                d.noGravity = true;
+                d.alpha = 128;
             }
         }
         public override void AI()
         {
-            Lighting.AddLight(Projectile.Center, 1f, 0.75f, 0.25f);
+            //Lighting.AddLight(Projectile.Center, 1f, 0.55f, 0.25f);
 
-            if (++Projectile.frameCounter >= 5)
+            if (Projectile.timeLeft > 14)
             {
-                Projectile.frameCounter = 0;
-                Projectile.frame = ++Projectile.frame % Main.projFrames[Projectile.type];
-            }
+                Projectile.ai[0]++;
+                Projectile.position.Y = startY - Math.Abs((float)Math.Cos(Projectile.ai[0] / 6.25f) * 15f);
 
-            Projectile.ai[0]++;
-            Projectile.position.Y = startY + (float)Math.Sin(Projectile.ai[0] / 5f) * 15f;
+                if (++Projectile.frameCounter >= 5)
+                {
+                    Projectile.frameCounter = 0;
+                    Projectile.frame = ++Projectile.frame % (Main.projFrames[Projectile.type] - 2);
+                }
+            }
+            else if (Projectile.timeLeft >= 7)
+            {
+                Projectile.frame = 4; 
+                Projectile.velocity *= 0.9f;
+                //Projectile.velocity.Y = 0f;
+            }
+            else if (Projectile.timeLeft < 7)
+            {
+                Projectile.frame = 5;
+            }
 
             if (Projectile.ai[1]-- <= 0)
             {
+                SoundEngine.PlaySound(SoundID.LiquidsWaterLava with { Volume = 0.75f }, Projectile.position);
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<PyrobatFlame>(), Projectile.damage / 2, Projectile.knockBack);
                 Projectile.ai[1] = Main.rand.Next(15, 40);
             }
 
-            if (Main.rand.NextBool(2))
+            if (Main.rand.NextBool(4))
             {
                 Dust d = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width * 2f), (int)(Projectile.height * 2f), DustID.Torch);
                 d.noGravity = true;
                 d.scale = Main.rand.NextFloat(1f, 1.5f);
+            }
+
+            if (Main.rand.NextBool(2))
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width * 2f), (int)(Projectile.height * 2f), DustID.Smoke);
+                d.noGravity = true;
+                d.velocity *= 0.9f;
+                d.scale = Main.rand.NextFloat(0.5f, 1f);
+                d.alpha = 128;
             }
         }
 
@@ -243,6 +315,27 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Projectile.velocity.X = oldVelocity.X * -1f;
             return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>(this.Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
+            Main.spriteBatch.Draw
+            (
+                texture,
+                new Vector2
+                (
+                    Projectile.position.X - Main.screenPosition.X + Projectile.width * 0.5f,
+                    Projectile.position.Y - Main.screenPosition.Y + Projectile.height + texture.Height * 0.5f - (texture.Height / 9)
+                ),
+                Utils.Frame(texture, 1, Main.projFrames[Projectile.type], 0, Projectile.frame),
+                Color.White,
+                Projectile.rotation,
+                texture.Size() * 0.5f,
+                Projectile.scale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 
@@ -288,14 +381,42 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
                 Projectile.frame = ++Projectile.frame % Main.projFrames[Projectile.type];
             }
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
-                Dust d = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width * 1.5f), (int)(Projectile.height * 1.5f), DustID.Torch);
+                Dust d = Dust.NewDustDirect(Projectile.position + new Vector2(-1f, -1f), (int)(Projectile.width * 1.5f), (int)(Projectile.height * 1.5f), DustID.Torch);
                 d.scale = Main.rand.NextFloat(1f, 1.5f);
                 d.noGravity = true;
                 d.velocity.X *= 0.2f;
                 d.velocity.Y -= 1f;
             }
+
+            Dust d2 = Dust.NewDustDirect(Projectile.position + new Vector2(-1f, -1f), (int)(Projectile.width * 1.5f), (int)(Projectile.height * 1.5f), DustID.Smoke, SpeedY: -0.3f);
+            d2.noGravity = false;
+            d2.velocity.X *= 0.1f;
+            d2.velocity.Y -= 0.7f;
+            d2.scale = Main.rand.NextFloat(0.3f, 1f);
+            d2.alpha = 128;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>(this.Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
+            Main.spriteBatch.Draw
+            (
+                texture,
+                new Vector2
+                (
+                    Projectile.position.X - Main.screenPosition.X + Projectile.width * 0.5f,
+                    Projectile.position.Y - Main.screenPosition.Y + Projectile.height + texture.Height * 0.5f - (texture.Height / 4)
+                ),
+                Utils.Frame(texture, 1, Main.projFrames[Projectile.type], 0, Projectile.frame),
+                Color.White,
+                Projectile.rotation,
+                texture.Size() * 0.5f,
+                Projectile.scale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 }
