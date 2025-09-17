@@ -27,7 +27,7 @@ namespace CalamityVanilla.Common
     }
     public class CryogenIceBlockSystem : ModSystem
     {
-        public const int DEFAULT_ICE_TIMER = 1200;
+        public const int DEFAULT_ICE_TIMER = 2400;
         public const int CrogenIceDataChunkSize = 3;
         public static List<CryogenIceData> CryogenIceBlocks = new List<CryogenIceData>();
         public override void OnWorldUnload()

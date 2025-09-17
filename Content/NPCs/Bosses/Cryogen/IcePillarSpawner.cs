@@ -46,10 +46,10 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
         {
             if(Main.myPlayer == Projectile.owner)
             {
-                for(int i = 0;  i < 30; i++)
+                for(int i = 0;  i < 35; i++)
                 {
                     Vector2 BlockPlacement = Projectile.Center + new Vector2(Main.rand.Next(-i,i) * 2, (i * -32) + 32);
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.Center.DirectionTo(BlockPlacement) * 8,ModContent.ProjectileType<CryogenIceBlock>(),0,0,-1,BlockPlacement.X,BlockPlacement.Y,CryogenIceBlockSystem.DEFAULT_ICE_TIMER);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.Center.DirectionTo(BlockPlacement) * 8,ModContent.ProjectileType<CryogenIceBlockInvisible>(),0,0,-1,BlockPlacement.X,BlockPlacement.Y,CryogenIceBlockSystem.DEFAULT_ICE_TIMER * 2);
                 }
             }
         }
@@ -62,6 +62,21 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             }
             Main.spriteBatch.Draw(tex.Value, Projectile.Center - Main.screenPosition, null, new Color(1f, 1f, 1f, 1f), Projectile.rotation, tex.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
             return false;
+        }
+    }
+    public class CryogenIceBlockInvisible : CryogenIceBlock
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Projectile.hide = true;
+        }
+        public override void AI()
+        {
+            if (Projectile.Center.Distance(new Vector2(Projectile.ai[0], Projectile.ai[1])) < Projectile.velocity.Length() || CryogenIceBlockSystem.CryogenIceBlocks.Count > 830)
+            {
+                Projectile.Kill();
+            }
         }
     }
 }

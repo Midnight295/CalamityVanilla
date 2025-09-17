@@ -14,6 +14,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
         {
             Projectile.QuickDefaults(true, 32);
             Projectile.tileCollide = false;
+            Projectile.extraUpdates = 2;
         }
         public override void AI()
         {
@@ -21,20 +22,33 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             if (Projectile.Center.Distance(new Vector2(Projectile.ai[0], Projectile.ai[1])) < Projectile.velocity.Length() || CryogenIceBlockSystem.CryogenIceBlocks.Count > 830)
             {
                 Projectile.Kill();
+                SoundEngine.PlaySound(SoundID.NPCDeath15, Projectile.position);
             }
             Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.IceRod);
             d.velocity = Projectile.velocity;
             d.noGravity = true;
             d.scale = 1.5f;
+            Point centerPos = Projectile.Center.ToTileCoordinates();
+
+            if (!Collision.SolidCollision(Projectile.position, 32, 32))
+                Projectile.localAI[0] = 1;
+            if (Projectile.localAI[0] == 0)
+                return;
+
+            if (Projectile.Center.HasNaNs() || centerPos.X < 0 || centerPos.Y < 0 || !WorldGen.InWorld(centerPos.X, centerPos.Y))
+                return;
+            if (Main.tile[centerPos].HasTile && !Main.tileSolidTop[Main.tile[centerPos].TileType] && Main.tileSolid[Main.tile[centerPos].TileType] && Main.tile[centerPos].TileType != ModContent.TileType<CryogenIceTile>())
+            {
+                SoundEngine.PlaySound(SoundID.NPCDeath15, Projectile.position);
+                Projectile.Kill();
+            }
         }
         public override void OnKill(int timeLeft)
         {
-            Point placePos = Projectile.Center.ToTileCoordinates();
-            SoundEngine.PlaySound(SoundID.NPCDeath15, Projectile.position);
-
-            if (CryogenIceBlockSystem.CryogenIceBlocks.Count > 800)
+            if (timeLeft == 0)
                 return;
 
+            Point placePos = Projectile.Center.ToTileCoordinates();
             if (Projectile.Center.HasNaNs() || placePos.X < 0 || placePos.Y < 0 || !WorldGen.InWorld(placePos.X, placePos.Y))
                 return;
 

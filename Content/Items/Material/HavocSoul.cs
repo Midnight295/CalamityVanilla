@@ -28,6 +28,7 @@ namespace CalamityVanilla.Content.Items.Material
         public override void SetDefaults()
         {
             Item.CloneDefaults(ItemID.SoulofNight);
+            Item.useAnimation = 1;
         }
         public override void PostUpdate()
         {

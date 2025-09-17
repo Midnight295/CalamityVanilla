@@ -165,10 +165,9 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             NPC.Size = new Vector2(120);
             NPC.noTileCollide = true;
 
-            NPC.HitSound = ContentSamples.NpcsByNetId[NPCID.IceElemental].HitSound;
+            NPC.HitSound = SoundID.Item50; //ContentSamples.NpcsByNetId[NPCID.IceElemental].HitSound;
             NPC.DeathSound = ContentSamples.NpcsByNetId[NPCID.IceElemental].DeathSound;
         }
-
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Sets the description of this NPC that is listed in the bestiary
@@ -212,7 +211,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             switch (phase)
             {
                 case 0:
-                    FlyAndShoot_0();
+                    DashAndShoot_0();
                     break;
                 case 1:
                     SlamAttack_1();

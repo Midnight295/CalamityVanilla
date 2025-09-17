@@ -27,6 +27,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             Projectile.alpha = 255;
             Projectile.QuickDefaults(true, 64);
             Projectile.tileCollide = false;
+            Projectile.timeLeft = 60 * 10;
         }
         public override void AI()
         {
@@ -60,6 +61,9 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
                 Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 if (Projectile.ai[2] > 200)
                 Projectile.velocity.Y += 0.2f;
+                if (Projectile.velocity.Y > 20)
+                    Projectile.velocity.Y = 20;
+
                 if (!Projectile.tileCollide && !Collision.SolidCollision(Projectile.position,Projectile.width,Projectile.height))
                     Projectile.tileCollide = true;
             }

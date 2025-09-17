@@ -272,6 +272,15 @@ Items: {
 		DisplayName: Pyrobat Staff
 		Tooltip: Conjures hellstone bats that drip fire
 	}
+
+	MagicChisel: {
+		DisplayName: Magic Chisel
+		Tooltip:
+			'''
+			Summons a Microgen to provide light
+			‘Carve yourself a friend!’
+			'''
+	}
 }
 
 Projectiles: {
@@ -339,6 +348,8 @@ Projectiles: {
 	PyrobatStaffHeldProjectile.DisplayName: Pyrobat Staff Held
 	Pyrobat2.DisplayName: Silly Pyrobat
 	PyrobatFlame.DisplayName: Pyrobat Flame
+	MagicChiselPet.DisplayName: Magic Chisel Pet
+	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
 }
 
 Tiles: {
@@ -360,5 +371,10 @@ Buffs: {
 	FungusmiteBuff: {
 		DisplayName: Fungusmite
 		Description: The Fungusmite will shower your enemies with bullets
+	}
+
+	MagicChiselBuff: {
+		DisplayName: Microgen
+		Description: Ice to meet you!
 	}
 }
