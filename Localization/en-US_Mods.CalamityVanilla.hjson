@@ -370,7 +370,7 @@ Achievements: {
 	}
 
 	CryogenKilled: {
-		FriendlyName: Subzero
+		FriendlyName: Break the Ice
 		Description: Defeat Cryogen, the arctic fortress protected by a magic spell.
 	}
 }
