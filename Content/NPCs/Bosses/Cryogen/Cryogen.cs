@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Tiles.Furniture;
+using CalamityVanilla.Content.Items.Pets;
 
 namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 {
@@ -149,7 +150,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
             npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<CryogenRelic>()));
 
             // ItemDropRule.MasterModeDropOnAllPlayers for the pet
-            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ItemID.BrainOfCthulhuPetItem, 4));
+            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<MagicChisel>(), 4));
         }
         public override void SetDefaults()
         {
