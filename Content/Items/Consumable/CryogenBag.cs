@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Items.Equipment.Vanity;
+﻿using CalamityVanilla.Content.Items.Equipment.Other;
+using CalamityVanilla.Content.Items.Equipment.Vanity;
 using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.NPCs.Bosses.Cryogen;
@@ -41,6 +42,7 @@ namespace CalamityVanilla.Content.Items.Consumable
         {
             // We have to replicate the expert drops from MinionBossBody here
 
+            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<PermafrostHook>()));
             itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<CryogenMask>(), 7));
             itemLoot.Add(ItemDropRule.NotScalingWithLuck(ModContent.ItemType<TheSnowman>(), 5));
             itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<Icebreaker>(), ModContent.ItemType<HoarfrostBow>()));

@@ -281,6 +281,16 @@ Items: {
 			‘Carve yourself a friend!’
 			'''
 	}
+
+	PermafrostHook: {
+		DisplayName: Permafrost Hook
+		Tooltip:
+			'''
+			Grappling encases you in a block of ice
+			Ice breaks on collision or when pressing movement keys
+			'Am I glad he's frozen in there and that we're out here!'
+			'''
+	}
 }
 
 Projectiles: {
@@ -350,6 +360,7 @@ Projectiles: {
 	PyrobatFlame.DisplayName: Pyrobat Flame
 	MagicChiselPet.DisplayName: Magic Chisel Pet
 	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
+	PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
 }
 
 Tiles: {
