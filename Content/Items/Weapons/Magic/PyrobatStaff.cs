@@ -396,6 +396,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
             d2.velocity.Y -= 0.7f;
             d2.scale = Main.rand.NextFloat(0.3f, 1f);
             d2.alpha = 128;
+
+            if (Projectile.wet)
+            {
+                Projectile.Kill();
+            }
         }
 
         public override void PostDraw(Color lightColor)
