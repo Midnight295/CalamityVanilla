@@ -291,6 +291,11 @@ Items: {
 			'Am I glad he's frozen in there and that we're out here!'
 			'''
 	}
+
+	CarnageFlail: {
+		DisplayName: Carnage Flail
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -361,6 +366,7 @@ Projectiles: {
 	MagicChiselPet.DisplayName: Magic Chisel Pet
 	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
 	PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
+	CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
 }
 
 Tiles: {
