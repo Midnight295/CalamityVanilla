@@ -3,6 +3,7 @@ using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Items.Weapons.Ranged.Throwing;
+using CalamityVanilla.Content.Items.Weapons.Summon;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -42,7 +43,7 @@ namespace CalamityVanilla.Common
                     LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
                     npcLoot.Add(notExpertRule);
 
-                    IItemDropRule wofLoot = ItemDropRule.OneFromOptions(1, ModContent.ItemType<FleshLauncher>(), ModContent.ItemType<PyrobatStaff>());
+                    IItemDropRule wofLoot = ItemDropRule.OneFromOptions(1, ModContent.ItemType<FleshLauncher>(), ModContent.ItemType<PyrobatStaff>(), ModContent.ItemType<FighterJetRemote>());
                     notExpertRule.OnSuccess(wofLoot);
                     break;
             }

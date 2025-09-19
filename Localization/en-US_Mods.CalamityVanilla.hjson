@@ -293,8 +293,17 @@ Items: {
 	}
 
 	CarnageFlail: {
-		DisplayName: Carnage Flail
+		DisplayName: Carnage
 		Tooltip: ""
+	}
+
+	FighterJetRemote: {
+		DisplayName: Falcon Remote
+		Tooltip:
+			'''
+			Summons a fighter jet to fight for you
+			Fighter jets consume bullets from your inventory
+			'''
 	}
 }
 
@@ -367,6 +376,7 @@ Projectiles: {
 	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
 	PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
 	CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
+	FighterJetMinion.DisplayName: Fighter Jet Minion
 }
 
 Tiles: {
@@ -393,5 +403,10 @@ Buffs: {
 	MagicChiselBuff: {
 		DisplayName: Microgen
 		Description: Ice to meet you!
+	}
+
+	FighterJetBuff: {
+		DisplayName: Fighter Jet
+		Description: Ride into the danger zone
 	}
 }

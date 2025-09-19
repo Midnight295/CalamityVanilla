@@ -3,6 +3,7 @@ using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Items.Weapons.Ranged.Throwing;
+using CalamityVanilla.Content.Items.Weapons.Summon;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -17,7 +18,7 @@ namespace CalamityVanilla.Common
             switch (item.type)
             {
                 case ItemID.WallOfFleshBossBag:
-                    itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<FleshLauncher>(), ModContent.ItemType<PyrobatStaff>()));
+                    itemLoot.Add(ItemDropRule.OneFromOptions(1, ModContent.ItemType<FleshLauncher>(), ModContent.ItemType<PyrobatStaff>(), ModContent.ItemType<FighterJetRemote>()));
                     break;
             }
         }
