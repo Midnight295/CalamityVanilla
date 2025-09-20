@@ -374,7 +374,8 @@ Projectiles: {
 	PyrobatFlame.DisplayName: Pyrobat Flame
 	MagicChiselPet.DisplayName: Magic Chisel Pet
 	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
-	PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
+	PermafrostHookProjectile.DisplayName: Permafrost Hook
+	PermafrostHookIceBlock.DisplayName: Ice Block
 	CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
 	FighterJetMinion.DisplayName: Fighter Jet Minion
 }

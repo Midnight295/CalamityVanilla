@@ -1,8 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoMod.Cil;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,6 +35,16 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
 
     public class PermafrostHookProjectile : ModProjectile
     {
+        public override void Load()
+        {
+            IL_Projectile.AI_007_GrapplingHooks += FreezePlayerOnHookAttach;
+        }
+
+        public override void Unload()
+        {
+            IL_Projectile.AI_007_GrapplingHooks -= FreezePlayerOnHookAttach;
+        }
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.SingleGrappleHook[Type] = true;
@@ -38,6 +53,42 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.GemHookAmethyst);
+        }
+
+        private void FreezePlayerOnHookAttach(ILContext il)
+        {
+            ILCursor cursor = new ILCursor(il);
+
+            // Move the cursor to an area of code checking for maximum grapple range. Not what we're interested in.
+            if (!cursor.TryGotoNext(MoveType.Before, x => x.MatchLdcI4(ProjectileID.QueenSlimeHook)))
+                return;
+
+            // Move the cursor to an area of code trying to teleport with the Hook of Dissonance.
+            // Specifically, the cursor should be placed between an instruction for loading the projectile instance and an instruction for loading ProjectileID.QueenSlimeHook.
+            if (!cursor.TryGotoNext(MoveType.Before, x => x.MatchLdcI4(ProjectileID.QueenSlimeHook)))
+                return;
+            cursor.Index--;
+
+            // Insert our code.
+            cursor.EmitDelegate((Projectile projectile) =>
+            {
+                if (projectile.type == ModContent.ProjectileType<PermafrostHookProjectile>())
+                {
+                    Player player = Main.player[projectile.owner];
+                    Projectile.NewProjectileDirect(
+                        player.GetSource_ItemUse(player.QuickGrapple_GetItemToUse()),
+                        player.Center - new Vector2(24, 24),
+                        Vector2.Zero,
+                        ModContent.ProjectileType<PermafrostHookIceBlock>(),
+                        160,
+                        6,
+                        projectile.owner
+                    );
+                }
+            });
+
+            // Emit the projectile instance to restore the stack back to it original state.
+            cursor.EmitLdarg0();
         }
 
         public override bool? CanUseGrapple(Player player)
@@ -51,12 +102,17 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
                 }
             }
 
-            return hooksOut <= 1;
+            return hooksOut <= 0;
         }
 
-        public override void UseGrapple(Player player, ref int type)
+        public override bool? GrappleCanLatchOnTo(Player player, int x, int y)
         {
-            
+            if (Projectile.ai[0] == 2f && Projectile.Center.Distance(player.Center) < 64)
+            {
+                Projectile.ai[0] = 1;
+                return false;
+            }
+            return null;
         }
 
         public override float GrappleRange()
@@ -76,7 +132,14 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
 
         public override void GrapplePullSpeed(Player player, ref float speed)
         {
-            speed = 14;
+            Projectile? iceBlock = Main.projectile.FirstOrDefault(projectile => projectile.active && 
+                                                                      projectile.type == ModContent.ProjectileType<PermafrostHookIceBlock>() &&
+                                                                      projectile.owner == player.whoAmI);
+
+            if (iceBlock != null)
+                speed = Utils.Remap(iceBlock.ai[0], 0, 60, 0f, 16);
+            else
+                speed = 14;
         }
 
         public override bool PreDrawExtras()
@@ -107,8 +170,82 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
         }
     }
 
-    public class PermafrostHookIceBlockPlayer : ModPlayer
+    public class PermafrostHookIceBlock : ModProjectile
     {
-        public bool IsEncasedInIce { get; set; }
+        public ref float Timer => ref Projectile.ai[0];
+
+        public override void SetDefaults()
+        {
+            Projectile.Size = new Vector2(48, 48);
+            Projectile.friendly = true;
+            Projectile.netImportant = true;
+            Projectile.DamageType = DamageClass.Default;
+            Projectile.hide = true;
+            Projectile.Opacity = 0;
+        }
+
+        public override void AI()
+        {
+            Timer++;
+            float progress = Utils.GetLerpValue(0, 10, Timer, true);
+            progress = progress * progress;
+            Projectile.scale = MathHelper.Lerp(1.5f, 1f, progress);
+            Projectile.Opacity = MathHelper.Lerp(0, 0.75f, progress);
+
+            Player owner = Main.player[Projectile.owner];
+
+            bool isGrappling = owner.grapCount > 0;
+
+            if (isGrappling)
+            {
+                Projectile.Center = owner.Center;
+                Projectile.velocity = owner.velocity;
+                Projectile.ignoreWater = true;
+                Projectile.tileCollide = false;
+            }
+            else
+            {
+                Projectile.velocity.Y += 0.2f;
+                Projectile.velocity.Y = Math.Min(Projectile.velocity.Y, 16);
+                owner.Center = Projectile.Center;
+                owner.velocity = Projectile.velocity;
+                Projectile.ignoreWater = false;
+                Projectile.tileCollide = true;
+            }
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            Player owner = Main.player[Projectile.owner];
+            owner.SetImmuneTimeForAllTypes(owner.longInvince ? 120 : 60);
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            if (Projectile.velocity.Y != oldVelocity.Y && oldVelocity.Y > 5f)
+            {
+                Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
+                SoundEngine.PlaySound(SoundID.Item50, Projectile.Center);
+            }
+
+            if (Projectile.velocity.X != oldVelocity.X)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overPlayers.Add(index);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Asset<Texture2D> texture = TextureAssets.Projectile[Type];
+            Main.spriteBatch.Draw(texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(lightColor) * Projectile.Opacity, 0f, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0);
+            return false;
+        }
     }
 }
