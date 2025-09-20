@@ -169,7 +169,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                         // short pause between bullets
                         if (AI_Shoot_Timer-- <= 0)
                         {
-                            AI_Shoot_Timer = 56;
+                            AI_Shoot_Timer = 7 * Main.rand.Next(7, 12);
                         }
 
                         // shoot bullets!!!!
@@ -178,7 +178,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                             if (AI_Timer % 7 == 0 && lineOfSight)
                             {
                                 float shootSpeed = 8f;
-                                Vector2 shootDir = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
+                                Vector2 shootDir = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-5, 5)));
                                 Vector2 shootVelocity = shootDir * shootSpeed;
 
                                 Item item = ContentSamples.ItemsByType[ItemID.SDMG]; // used to automatically consume bullets with 66% chance not to consume ammo
@@ -258,11 +258,19 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             }
 
             Projectile.netUpdate = true;
+
+            //Main.chatMonitor.Clear();
+            //Main.NewText(target);
+            //Main.NewText(timeSinceSightCutOff);
         }
 
+
         // Checks if npc is closer than current targetNPC. If so, adjust targetNPC and closestTargetDistance.
+        public int timeSinceSightCutOff = 0;
         private void TryTargeting(NPC npc, ref float closestTargetDistance, ref NPC targetNPC)
         {
+            Player owner = Main.player[Projectile.owner];
+
             if (npc.CanBeChasedBy(this))
             {
                 float distanceToTargetNPC = Vector2.Distance(Projectile.Center, npc.Center);
@@ -271,8 +279,17 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 {
                     closestTargetDistance = distanceToTargetNPC; // Set a new closest distance value
                     targetNPC = npc;
+                    if (Collision.CanHit(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height)) 
+                    {
+                        timeSinceSightCutOff = 0;
+                    }
                 }
-                if (Main.player[Projectile.owner].Center.Distance(npc.Center) > startAttackRange)
+                // if 
+                if (!Collision.CanHit(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height) && !Collision.CanHit(owner.position, owner.width, owner.height, npc.position, npc.width, npc.height))
+                {
+                    timeSinceSightCutOff++;
+                }
+                if (owner.Center.Distance(npc.Center) > startAttackRange || timeSinceSightCutOff >= 30/* || !Collision.CanHit(owner.position, owner.width, owner.height, npc.position, npc.width, npc.height)*/)
                 {
                     targetNPC = null;
                 }
