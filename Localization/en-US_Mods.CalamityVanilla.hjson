@@ -302,7 +302,7 @@ Items: {
 		Tooltip:
 			'''
 			Summons a fighter jet to fight for you
-			Fighter jets consume bullets from your inventory
+			66% chance not to consume bullets
 			'''
 	}
 }
