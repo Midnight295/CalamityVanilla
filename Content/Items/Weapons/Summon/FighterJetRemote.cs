@@ -35,11 +35,42 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
             Item.rare = ItemRarityID.LightRed;
             Item.value = Item.sellPrice(0, 2, 50, 0);
+            Item.useAmmo = AmmoID.Bullet;
         }
+
+        public override bool CanConsumeAmmo(Item ammo, Player player)
+        {
+            return false;
+        }
+
+        public override bool? CanChooseAmmo(Item ammo, Player player)
+        {
+            if (ammo.type == ItemID.None)
+            {
+                return true;
+            }
+            return null;
+        }
+
+        //public static int CountAmmo()
+        //{
+        //    Player p = Main.player[Main.myPlayer];
+        //    var count = 0;
+        //    for (int i = 0; i < p.inventory.Length; ++i)
+        //    {
+        //        if (p.inventory[i].type == AmmoID.Bullet)
+        //        {
+        //            count += p.inventory[i].stack;
+        //        }
+        //    }
+        //    return count;
+        //}
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             position = Main.MouseWorld;
+            type = ModContent.ProjectileType<FighterJetMinion>();
+            velocity = Vector2.Zero;
             base.ModifyShootStats(player, ref position, ref velocity, ref type, ref damage, ref knockback);
         }
 
@@ -87,6 +118,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         public ref float AI_Timer => ref Projectile.ai[0];
         public ref float AI_State => ref Projectile.ai[1];
 
+        SoundStyle EmptyReload = new SoundStyle("CalamityVanilla/Assets/Sounds/EmptyReload_", 2);
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
@@ -110,6 +143,19 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             Projectile.penetrate = -1;
             DrawOriginOffsetY = 7;
         }
+        public int CountAmmo()
+        {
+            Player p = Main.player[Projectile.owner];
+            var count = 0;
+            for (int i = 0; i < p.inventory.Length - 1; ++i)
+            {
+                if (p.inventory[i].ammo == AmmoID.Bullet)
+                {
+                    count += p.inventory[i].stack;
+                }
+            }
+            return count;
+        }
 
         public override bool? CanCutTiles() => false;
         public override bool MinionContactDamage() => false;
@@ -119,6 +165,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         public int AI_Shoot_Timer = 0;
         
         public int startAttackRange = 950;
+
+        public int timeAfterEmpty = 10;
+        public bool countingAfterEmpty = true;
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
@@ -133,13 +182,13 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             float closestTargetDistance = startAttackRange;
             NPC targetNPC = null;
             // Prioritize the owner's minion attack target. (Right click or whip feature)
-            if (Projectile.OwnerMinionAttackTargetNPC != null)
+            if (Projectile.OwnerMinionAttackTargetNPC != null && CountAmmo() > 0)
             {
                 TryTargeting(Projectile.OwnerMinionAttackTargetNPC, ref closestTargetDistance, ref targetNPC);
             }
 
             // If no minion attack target or if it was out of range, find the closest enemy to target.
-            if (targetNPC == null)
+            if (targetNPC == null && CountAmmo() > 0)
             {
                 foreach (var npc in Main.ActiveNPCs)
                 {
@@ -155,6 +204,20 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             {
                 case (float)State.Idle:
                     target = owner;
+                    if (Main.myPlayer == Projectile.owner && CountAmmo() == 0) // play EmptyReload sound after running out of ammo
+                    {
+                        if (timeAfterEmpty > 0 && countingAfterEmpty)
+                        {
+                            timeAfterEmpty--;
+                        }
+                        if (timeAfterEmpty <= 0 && countingAfterEmpty)
+                        {
+                            SoundEngine.PlaySound(EmptyReload with { Volume = Main.rand.NextFloat(0.6f, 0.95f), MaxInstances = 5, PitchVariance = 0.2f, Pitch = 0.1f });
+                            timeAfterEmpty = 0;
+                            countingAfterEmpty = false;
+                        }
+                    }
+
                     break;
 
                 case (float)State.Attack:
@@ -162,20 +225,22 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                     speed = 0.45f;
                     spaceFromOtherJets = 1f;
 
-                    if (Main.myPlayer == Projectile.owner)
+                    if (Main.myPlayer == Projectile.owner && CountAmmo() > 0)
                     {
+                        countingAfterEmpty = true;
+                        timeAfterEmpty = Main.rand.Next(1, 30);
                         bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, target.position, target.width, target.height);
 
                         // short pause between bullets
                         if (AI_Shoot_Timer-- <= 0)
                         {
-                            AI_Shoot_Timer = 7 * Main.rand.Next(7, 12);
+                            AI_Shoot_Timer = 8 * Main.rand.Next(7, 12);
                         }
 
                         // shoot bullets!!!!
-                        if (AI_Shoot_Timer > 35)
+                        if (AI_Shoot_Timer > 40)
                         {
-                            if (AI_Timer % 7 == 0 && lineOfSight)
+                            if (AI_Timer % 8 == 0 && lineOfSight)
                             {
                                 float shootSpeed = 8f;
                                 Vector2 shootDir = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-5, 5)));
@@ -187,7 +252,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
 
                                 SoundEngine.PlaySound(SoundID.Item11 with { Volume = 0.7f }, Projectile.Center);
-                                Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X - 4f, Projectile.Center.Y), shootVelocity, projToShoot, Projectile.damage, 3, Projectile.owner);
+                                int p = Projectile.NewProjectile(Projectile.GetSource_FromThis(), new Vector2(Projectile.Center.X - 4f, Projectile.Center.Y), shootVelocity, projToShoot, Projectile.damage, 3, Projectile.owner);
+                                ProjectileID.Sets.MinionShot[Main.projectile[p].type] = true;
                             }
                         }
                     }
@@ -260,8 +326,10 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             Projectile.netUpdate = true;
 
             //Main.chatMonitor.Clear();
+            //Main.NewText(timeAfterEmpty);
             //Main.NewText(target);
             //Main.NewText(timeSinceSightCutOff);
+            //Main.NewText(CountAmmo());
         }
 
 

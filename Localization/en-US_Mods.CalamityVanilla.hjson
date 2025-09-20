@@ -302,7 +302,8 @@ Items: {
 		Tooltip:
 			'''
 			Summons a fighter jet to fight for you
-			66% chance not to consume bullets
+			Requires bullets to summon and attack
+			66% chance not to consume ammo
 			'''
 	}
 }
@@ -374,10 +375,10 @@ Projectiles: {
 	PyrobatFlame.DisplayName: Pyrobat Flame
 	MagicChiselPet.DisplayName: Magic Chisel Pet
 	CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
-	PermafrostHookProjectile.DisplayName: Permafrost Hook
-	PermafrostHookIceBlock.DisplayName: Ice Block
+	PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
 	CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
 	FighterJetMinion.DisplayName: Fighter Jet Minion
+	PermafrostHookIceBlock.DisplayName: Permafrost Hook Ice Block
 }
 
 Tiles: {
