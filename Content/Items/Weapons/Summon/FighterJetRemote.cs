@@ -118,7 +118,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
         public int AI_Shoot_Timer = 0;
         
-        public int startAttackRange = 850;
+        public int startAttackRange = 950;
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
@@ -194,7 +194,6 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                     break;
             }
 
-            
             AI_Timer++;
             if (AI_Timer > 1)
             {
@@ -239,6 +238,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 if (dist > 200f) { speed = 0.75f; }
                 Projectile.velocity += speed * dir + target.velocity/30f;
                 Projectile.rotation = (Projectile.velocity).ToRotation();
+
+                if (dist > 2000f)
+                {
+                    Projectile.Center = owner.Center;
+                }
             }
 
             // cool fire trail
@@ -263,7 +267,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             {
                 float distanceToTargetNPC = Vector2.Distance(Projectile.Center, npc.Center);
                 // Is this enemy closer than others? Is it in line of sight?
-                if (distanceToTargetNPC < closestTargetDistance && Collision.CanHit(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height))
+                if (distanceToTargetNPC < closestTargetDistance)
                 {
                     closestTargetDistance = distanceToTargetNPC; // Set a new closest distance value
                     targetNPC = npc;
