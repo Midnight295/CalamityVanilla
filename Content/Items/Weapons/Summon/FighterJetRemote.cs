@@ -1,5 +1,6 @@
 ﻿using CalamityVanilla.Common.Players;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Design;
 using rail;
 using System;
 using Terraria;
@@ -17,7 +18,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         {
             Item.width = 26;
             Item.height = 30;
-            Item.damage = 26;
+            Item.damage = 9;
             Item.DamageType = DamageClass.Summon;
             Item.mana = 20;
             Item.useTime = 36;
@@ -43,13 +44,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
             return false;
         }
 
-        public override bool? CanChooseAmmo(Item ammo, Player player)
+        public override bool NeedsAmmo(Player player)
         {
-            if (ammo.type == ItemID.None)
-            {
-                return true;
-            }
-            return null;
+            return false;
         }
 
         //public static int CountAmmo()
@@ -222,7 +219,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
                 case (float)State.Attack:
                     target = targetNPC;
-                    speed = 0.45f;
+                    speed = 0.3f;
                     spaceFromOtherJets = 1f;
 
                     if (Main.myPlayer == Projectile.owner && CountAmmo() > 0)
@@ -231,22 +228,23 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                         timeAfterEmpty = Main.rand.Next(1, 30);
                         bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, target.position, target.width, target.height);
 
+                        int fireRate = 10;
                         // short pause between bullets
                         if (AI_Shoot_Timer-- <= 0)
                         {
-                            AI_Shoot_Timer = 8 * Main.rand.Next(7, 12);
+                            AI_Shoot_Timer = fireRate * Main.rand.Next(7, 12);
                         }
 
                         // shoot bullets!!!!
-                        if (AI_Shoot_Timer > 40)
+                        if (AI_Shoot_Timer > fireRate * 5)
                         {
-                            if (AI_Timer % 8 == 0 && lineOfSight)
+                            if (AI_Timer % fireRate == 0 && lineOfSight)
                             {
                                 float shootSpeed = 8f;
-                                Vector2 shootDir = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-5, 5)));
+                                Vector2 shootDir = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX).RotatedBy(MathHelper.ToRadians(Main.rand.Next(-10, 10)));
                                 Vector2 shootVelocity = shootDir * shootSpeed;
 
-                                Item item = ContentSamples.ItemsByType[ItemID.SDMG]; // used to automatically consume bullets with 66% chance not to consume ammo
+                                Item item = ContentSamples.ItemsByType[ItemID.Minishark]; // used to automatically consume bullets with 33% chance not to consume ammo
 
                                 owner.PickAmmo(item, out int projToShoot, out shootSpeed, out int damage, out float knockBack, out int usedAmmoItemId);
 
@@ -269,15 +267,15 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 Vector2 distVector = Projectile.Center - target.Center + new Vector2(0, heightAboveTarget);
 
                 // if too close or too fast, slow down
-                if (dist < 400f || Projectile.velocity.LengthSquared() > 16f)
+                if (dist < 600f || Projectile.velocity.LengthSquared() > 12f)
                 {
                     Projectile.velocity *= 0.96f;
                 }
 
-                // move away from target if intersecting with target's hitbox
-                if (Projectile.Hitbox.Intersects(target.Hitbox))
+                // move away from target if too close
+                if (Projectile.Center.Distance(target.Center) < (target != owner ? 200f : 40f))
                 {
-                    Projectile.velocity += new Vector2(0.5f, 0).RotatedBy(Projectile.rotation);
+                    Projectile.velocity += new Vector2(0.5f, 0).RotatedBy(Projectile.rotation).RotatedBy(MathHelper.ToRadians(30 + Projectile.velocity.LengthSquared()/ (target != owner ? 12f : 24f)));
                 }
 
                 // keep distance from other minions
@@ -289,7 +287,12 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 {
                     if (projectile.type == ModContent.ProjectileType<FighterJetMinion>() && projectile.identity != Projectile.identity && projectile.Hitbox.Intersects(Projectile.Hitbox))
                     {
-                        Projectile.position += new Vector2(spaceFromOtherJets * Math.Sign(Projectile.Center.X - projectile.Center.X), spaceFromOtherJets * Math.Sign(Projectile.Center.Y - projectile.Center.Y));
+                        float velocityMult = 1.5f;
+                        float moveX = velocityMult * spaceFromOtherJets * Math.Sign(Projectile.Center.X - projectile.Center.X);
+                        float moveY = velocityMult * spaceFromOtherJets * Math.Sign(Projectile.Center.Y - projectile.Center.Y);
+                        //Projectile.velocity = Vector2.Lerp(Projectile.velocity, new Vector2(moveX, moveY) * 3f, 0.2f);
+
+                        Projectile.position += new Vector2(moveX, moveY);
                     }
 
                     if (projectile.type == ModContent.ProjectileType<FighterJetMinion>() && projectile.identity != Projectile.identity && Projectile.Center.Distance(projectile.Center) < 100f)
@@ -301,7 +304,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                     }
                 }
 
-                if (dist > 200f) { speed = 0.75f; }
+                if (dist > 200f) { speed = 0.5f; }
                 Projectile.velocity += speed * dir + target.velocity/30f;
                 Projectile.rotation = (Projectile.velocity).ToRotation();
 
@@ -352,12 +355,14 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                         timeSinceSightCutOff = 0;
                     }
                 }
-                // if 
+                // if line of sight is cut, increment timeSinceSightCutOff
                 if (!Collision.CanHit(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height) && !Collision.CanHit(owner.position, owner.width, owner.height, npc.position, npc.width, npc.height))
                 {
                     timeSinceSightCutOff++;
                 }
-                if (owner.Center.Distance(npc.Center) > startAttackRange || timeSinceSightCutOff >= 30/* || !Collision.CanHit(owner.position, owner.width, owner.height, npc.position, npc.width, npc.height)*/)
+
+                //loses interest in target if line of sight is cut off for too long, the lower the number timeSinceSightCutOff being compared to is, the faster they lose interest
+                if (owner.Center.Distance(npc.Center) > startAttackRange || timeSinceSightCutOff >= 45/* || !Collision.CanHit(owner.position, owner.width, owner.height, npc.position, npc.width, npc.height)*/)
                 {
                     targetNPC = null;
                 }

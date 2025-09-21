@@ -302,8 +302,8 @@ Items: {
 		Tooltip:
 			'''
 			Summons a fighter jet to fight for you
-			Requires bullets to summon and attack
-			66% chance not to consume ammo
+			Requires bullets to attack
+			33% chance not to consume ammo
 			'''
 	}
 }
