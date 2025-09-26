@@ -107,7 +107,7 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
 
         public override bool? GrappleCanLatchOnTo(Player player, int x, int y)
         {
-            if (Projectile.ai[0] == 2f && Projectile.Center.Distance(player.Center) < 64)
+            if (Projectile.ai[0] == 2f && Projectile.Center.Distance(player.Center) < 102)
             {
                 Projectile.ai[0] = 1;
                 return false;
@@ -137,7 +137,7 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
                                                                       projectile.owner == player.whoAmI);
 
             if (iceBlock != null)
-                speed = Utils.Remap(iceBlock.ai[0], 0, 60, 0f, 16);
+                speed = Utils.Remap(iceBlock.ai[0], 0, 60, 0f, 32);
             else
                 speed = 14;
         }
@@ -176,7 +176,7 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
 
         public override void SetDefaults()
         {
-            Projectile.Size = new Vector2(48, 48);
+            Projectile.Size = new Vector2(64, 64);
             Projectile.friendly = true;
             Projectile.netImportant = true;
             Projectile.DamageType = DamageClass.Default;
@@ -207,16 +207,41 @@ namespace CalamityVanilla.Content.Items.Equipment.Other
             {
                 Projectile.velocity.Y += 0.2f;
                 Projectile.velocity.Y = Math.Min(Projectile.velocity.Y, 16);
-                owner.Center = Projectile.Center;
-                owner.velocity = Projectile.velocity;
+
                 Projectile.ignoreWater = false;
                 Projectile.tileCollide = true;
+
+                if (Projectile.velocity.Y == 0f)
+                {
+                    Collision.StepDown(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref owner.stepSpeed, ref Projectile.gfxOffY);
+                }
+                if (Projectile.velocity.Y >= 0f)
+                {
+                    Collision.StepUp(ref Projectile.position, ref Projectile.velocity, Projectile.width, Projectile.height, ref owner.stepSpeed, ref Projectile.gfxOffY, (int)owner.gravDir, false);
+                }
+
+                owner.Center = Projectile.Center;
+                owner.velocity = Projectile.velocity;
             }
         }
 
         public override void OnKill(int timeLeft)
         {
             Player owner = Main.player[Projectile.owner];
+
+            SoundEngine.PlaySound(SoundID.Item27, Projectile.Center);
+            
+            for (int i = 0; i < 32; i++)
+            {
+                Dust dust = Dust.NewDustDirect(
+                    Projectile.position, Projectile.width, Projectile.height,
+                    DustID.Ice,
+                    Scale: 1.5f
+                );
+                //dust.noGravity = true;
+                dust.velocity *= 0.5f;
+            }    
+
             owner.SetImmuneTimeForAllTypes(owner.longInvince ? 120 : 60);
         }
 
