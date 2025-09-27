@@ -76,7 +76,7 @@ namespace CalamityVanilla.Common.Players
 
         public override void EmitEnchantmentVisualsAt(Projectile projectile, Vector2 boxPosition, int boxWidth, int boxHeight)
         {
-            if (beltIchorImbue && (projectile.DamageType.CountsAsClass<MeleeDamageClass>() || (projectile.DamageType.CountsAsClass<RangedDamageClass>() || projectile.DamageType.CountsAsClass<MagicDamageClass>() || ProjectileID.Sets.IsAWhip[projectile.type]) && !projectile.noEnchantments))
+            if (projectile.friendly == true && projectile.owner == Main.myPlayer && beltIchorImbue && (projectile.DamageType.CountsAsClass<MeleeDamageClass>() || (projectile.DamageType.CountsAsClass<RangedDamageClass>() || projectile.DamageType.CountsAsClass<MagicDamageClass>() || ProjectileID.Sets.IsAWhip[projectile.type]) && !projectile.noEnchantments))
             {
                 if (Main.rand.NextBool(1))
                 {

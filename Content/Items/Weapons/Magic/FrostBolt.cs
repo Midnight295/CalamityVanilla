@@ -15,9 +15,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
         {
             Item.width = 28;
             Item.height = 30;
-            Item.damage = 19;
+            Item.damage = 21;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 21;
+            Item.mana = 15;
             Item.useTime = 7;
             Item.useAnimation = 7;
             Item.useStyle = ItemUseStyleID.Shoot;

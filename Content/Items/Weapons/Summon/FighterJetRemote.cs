@@ -18,7 +18,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         {
             Item.width = 26;
             Item.height = 30;
-            Item.damage = 9;
+            Item.damage = 13;
             Item.DamageType = DamageClass.Summon;
             Item.mana = 20;
             Item.useTime = 36;

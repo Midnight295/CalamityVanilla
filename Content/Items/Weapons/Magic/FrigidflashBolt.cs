@@ -52,10 +52,12 @@ namespace CalamityVanilla.Content.Items.Weapons.Magic
 
         public override void AddRecipes()
         {
-            CreateRecipe().AddTile(TileID.DemonAltar)
+            CreateRecipe().AddTile(TileID.MythrilAnvil)
                 .AddIngredient<FrostBolt>()
                 .AddIngredient<FlareBolt>()
-                .AddIngredient(ItemID.Ectoplasm, 5)
+                .AddIngredient(ItemID.SoulofFright, 10)
+                .AddIngredient(ItemID.SoulofMight, 10)
+                .AddIngredient(ItemID.SoulofSight, 10)
                 .Register();
         }
     }

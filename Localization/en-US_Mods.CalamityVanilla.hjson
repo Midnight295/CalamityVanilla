@@ -215,7 +215,10 @@ Items: {
 
 	PerfectDark: {
 		DisplayName: Perfect Dark
-		Tooltip: Its baleful blade releases choking, noxious gas
+		Tooltip: 
+			'''Releases noxious gas on swing
+			‘I know how much you don’t like smelly smells…’
+			'''
 	}
 
 	TheSnowman: {
