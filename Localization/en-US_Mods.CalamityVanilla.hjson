@@ -215,8 +215,9 @@ Items: {
 
 	PerfectDark: {
 		DisplayName: Perfect Dark
-		Tooltip: 
-			'''Releases noxious gas on swing
+		Tooltip:
+			'''
+			Releases noxious gas on swing
 			‘I know how much you don’t like smelly smells…’
 			'''
 	}
@@ -309,6 +310,16 @@ Items: {
 			33% chance not to consume ammo
 			'''
 	}
+
+	SoulBottleSpite: {
+		DisplayName: Soul of Spite in a Bottle
+		Tooltip: ""
+	}
+
+	SoulBottleWhite: {
+		DisplayName: Soul of White in a Bottle
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -387,6 +398,8 @@ Projectiles: {
 Tiles: {
 	SinisterRoot.MapEntry: Sinister Root
 	IceSculptures.MapEntry: Mods.CalamityVanilla.Tiles.IceSculptures.MapEntry
+	SoulBottleSpiteTile.MapEntry: Soul of Spite in a Bottle
+	SoulBottleWhiteTile.MapEntry: Soul of White in a Bottle
 }
 
 DropConditions: {

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -39,16 +40,9 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
         public override void SetDefaults()
         {
             Projectile.QuickDefaults(false, 24);
-            //Projectile.penetrate = 3;
-        }
-        public override void SetStaticDefaults()
-        {
-            //ProjectileID.Sets.TrailingMode[Type] = 2;
-            //ProjectileID.Sets.TrailCacheLength[Type] = 10;
         }
         public override void OnKill(int timeLeft)
         {
-            //SoundEngine.PlaySound(SoundID.Tink, Projectile.position);
             SoundEngine.PlaySound(SoundID.Item127 with { PitchVariance = 0.5f }, Projectile.position);
             for (int i = 0; i < 15; i++)
             {
@@ -93,17 +87,63 @@ namespace CalamityVanilla.Content.Items.Weapons.Ranged.Throwing
                 {
                     if (Main.tile[tileCoord.X + i, tileCoord.Y + j].TileType == ModContent.TileType<CryogenIceTile>() || Main.tile[tileCoord.X + i, tileCoord.Y + j].TileType is TileID.Glass or TileID.BreakableIce or TileID.MagicalIceBlock or TileID.Waterfall or TileID.Lavafall or TileID.Honeyfall or TileID.SandFallBlock or TileID.Confetti or TileID.ConfettiBlack or TileID.BlueStarryGlassBlock or TileID.GoldStarryGlassBlock or TileID.SnowFallBlock)
                     {
-                        if (Math.Abs(i) < 2 && Math.Abs(j) < 2) // 100% chance to break inner radius
+                        // create liquid if tile destroyed is a liquidfall block
+                        Tile tile = Main.tile[tileCoord.X + i, tileCoord.Y + j];
+                        byte amt = 100;
+                        switch (Main.tile[tileCoord.X + i, tileCoord.Y + j].TileType)
                         {
-                            WorldGen.KillTile(tileCoord.X + i, tileCoord.Y + j);
+                            case TileID.Waterfall:
+                                tile.LiquidType = LiquidID.Water;
+                                tile.LiquidAmount = amt;
+                                Liquid.AddWater(tileCoord.X + i, tileCoord.Y + j);
+                                if (Main.netMode == NetmodeID.Server) { NetMessage.sendWater(tileCoord.X + i, tileCoord.Y + j); }
+                                break;
+                            case TileID.Lavafall:
+                                tile.LiquidType = LiquidID.Lava;
+                                tile.LiquidAmount = amt;
+                                Liquid.AddWater(tileCoord.X + i, tileCoord.Y + j);
+                                if (Main.netMode == NetmodeID.Server) { NetMessage.sendWater(tileCoord.X + i, tileCoord.Y + j); }
+                                break;
+                            case TileID.Honeyfall:
+                                tile.LiquidType = LiquidID.Honey;
+                                tile.LiquidAmount = amt;
+                                Liquid.AddWater(tileCoord.X + i, tileCoord.Y + j);
+                                if (Main.netMode == NetmodeID.Server) { NetMessage.sendWater(tileCoord.X + i, tileCoord.Y + j); }
+                                break;
+                        }
+
+                        // normal item drop code will not run if tile is a liquidfall block
+                        bool isLiquidFall = false; 
+                        if (Main.tile[tileCoord.X + i, tileCoord.Y + j].TileType is TileID.Waterfall or TileID.Lavafall or TileID.Honeyfall)
+                        {
+                            isLiquidFall = true;
+                        }
+
+
+                        Vector2 worldCoord = new Vector2(tileCoord.X + i, tileCoord.Y + j).ToWorldCoordinates();
+                        EntitySource_TileBreak source = new EntitySource_TileBreak(tileCoord.X + i, tileCoord.Y + j);
+
+                        // 100% chance to break inner radius
+                        if (Math.Abs(i) < 2 && Math.Abs(j) < 2) 
+                        {
+                            WorldGen.KillTile(tileCoord.X + i, tileCoord.Y + j, noItem: isLiquidFall);
+                            if (isLiquidFall) 
+                            {
+                                int item = Item.NewItem(source, worldCoord, 1, 1, ItemID.Glass);
+                                //Main.item[item].rare = ItemRarityID.Blue;
+                                //ItemID.Sets.IsLavaImmuneRegardlessOfRarity[item] = true;
+                            }
                         }
                         else
                         {
-                            if (Main.rand.Next(0, 10) > 3) // chance to break outer radius
+                            // chance to break outer radius
+                            if (Main.rand.Next(0, 10) > 3) 
                             {
-                                WorldGen.KillTile(tileCoord.X + i, tileCoord.Y + j);
+                                WorldGen.KillTile(tileCoord.X + i, tileCoord.Y + j, noItem: isLiquidFall);
+                                if (isLiquidFall) { Item.NewItem(source, worldCoord, 1, 1, ItemID.Glass); }
                             }
                         }
+
                         Projectile.velocity = Projectile.oldVelocity;
                         if (Projectile.ai[0] < rand && !hitTile)
                         {
