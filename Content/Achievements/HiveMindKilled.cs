@@ -1,4 +1,5 @@
 ﻿using CalamityVanilla.Content.NPCs.Bosses.HiveMind;
+using Terraria.Achievements;
 using Terraria.ModLoader;
 
 namespace CalamityVanilla.Content.Achievements;
@@ -7,7 +8,10 @@ public class HiveMindKilled : ModAchievement
 {
     public override void SetStaticDefaults()
     {
-        AddNPCKilledCondition(ModContent.NPCType<HiveMind>());
+        //Filters this achievement as part of the "Slayer" achievement category.
+        Achievement.SetCategory(AchievementCategory.Slayer);
+
+        AddNPCKilledCondition("HiveMindKillCondition", ModContent.NPCType<HiveMind>());
     }
 
     // By default a ModAchievement will be placed at the end of the achievement ordering.
