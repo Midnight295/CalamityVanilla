@@ -8,6 +8,6 @@ using Terraria.ModLoader;
 namespace CalamityVanilla
 {
 	public partial class CalamityVanilla : Mod
-	{
+	{   
 	}
 }

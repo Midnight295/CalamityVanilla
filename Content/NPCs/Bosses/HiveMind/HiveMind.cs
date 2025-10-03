@@ -247,7 +247,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             NPC.behindTiles = true;
             NPC.noGravity = false;
             phase = 0;
-            Music = MusicID.Boss3;
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/HiveMind");
             NPC.Size = new Vector2(150);
             NPC.noTileCollide = false;
         }

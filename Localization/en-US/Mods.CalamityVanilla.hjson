@@ -320,6 +320,11 @@ Items: {
 		DisplayName: Soul of White in a Bottle
 		Tooltip: ""
 	}
+
+	HiveMindMusicBox: {
+		DisplayName: Music Box (Hive Mind)
+		Tooltip: Plays 'Infestation' by ENNWAY!
+	}
 }
 
 Projectiles: {
