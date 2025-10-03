@@ -1,0 +1,311 @@
+HiveMindSummon: {
+	DisplayName: Sinister Root
+	Tooltip: Summons the Hive Mind
+}
+
+MyceliumStaff: {
+	DisplayName: Mycelium Staff
+	Tooltip: Grows mushrooms that burst into spores
+}
+
+BlossomFlux: {
+	DisplayName: Blossom Flux
+	Tooltip:
+		'''
+		Rapidly fires arrows and spore bombs
+		Wooden arrows are converted into crystal leaves
+		'''
+}
+
+CryogenSummon: {
+	DisplayName: Cryo Key
+	Tooltip: Summons Cryogen
+}
+
+CryogenSummonMold: {
+	DisplayName: Cryo Key Mold
+	Tooltip:
+		'''
+		Can be used infinitely
+		Used to craft a Cryo Key
+		'''
+}
+
+Icebreaker: {
+	DisplayName: Icebreaker
+	Tooltip: ""
+}
+
+BileBelcher: {
+	DisplayName: Bile Belcher
+	Tooltip: Slows down as your mana depletes
+}
+
+Cloudfall: {
+	DisplayName: Cloudfall Bow
+	Tooltip: Wooden arrows turn into cloud arrows
+}
+
+TheGothic: {
+	DisplayName: The Gothic
+	Tooltip: Fires a spread of life stealing vampire teeth
+}
+
+CryogenMask: {
+	DisplayName: Cryogen Mask
+	Tooltip: ""
+}
+
+HiveMindMask: {
+	DisplayName: Hive Mind Mask
+	Tooltip: ""
+}
+
+PerforatorsMask: {
+	DisplayName: Perforators Mask
+	Tooltip: ""
+}
+
+HoarfrostBow: {
+	DisplayName: Hoarfrost Bow
+	Tooltip: Converts wooden arrows into mist arrows
+}
+
+CatastropheClaymore: {
+	DisplayName: Catastrophe Claymore
+	Tooltip: Launches a spread of elemental flames
+}
+
+EleumSoul: {
+	DisplayName: Soul of White
+	Tooltip: "'The essence of frosty creatures'"
+}
+
+HavocSoul: {
+	DisplayName: Soul of Spite
+	Tooltip: "'The essence of hellish creatures'"
+}
+
+FrostBolt: {
+	DisplayName: Frost Blitz
+	Tooltip: Casts a slurry of ice bolts
+}
+
+FlareBolt: {
+	DisplayName: Flare Blast
+	Tooltip: Casts a piercing fire bolt
+}
+
+FrigidflashBolt: {
+	DisplayName: Flarefrost Missiles
+	Tooltip: Casts swift bolts of cold and heat
+}
+
+GraniteTome: {
+	DisplayName: Granite Surge
+	Tooltip: Casts lightning barrages
+}
+
+FleshLauncher: {
+	DisplayName: Flesh Launcher
+	Tooltip:
+		'''
+		Consumes grenades
+		'Yes, even Beenades!'
+		'''
+}
+
+MarbleTome: {
+	DisplayName: Marble Tome
+	Tooltip: ""
+}
+
+Crystaline: {
+	DisplayName: Crystaline
+	Tooltip: Throws a splitting knife
+}
+
+GoblinScrap: {
+	DisplayName: Goblin Scrap
+	Tooltip: ""
+}
+
+MoneyShot: {
+	DisplayName: Money Shot
+	Tooltip:
+		'''
+		Uses coins for ammo
+		higher value coins do more damage
+		'''
+}
+
+Twiflight: {
+	DisplayName: Twiflight
+	Tooltip: Shoots a spread of twilight feathers
+}
+
+ThrowingBrick: {
+	DisplayName: Throwing Brick
+	Tooltip: "'Keep away from glass'"
+}
+
+CursedDagger: {
+	DisplayName: Cursed Dagger
+	Tooltip:
+		'''
+		Throws an exploding dagger
+		The inferno wears off after exploding
+		'''
+}
+
+SeafoamBomb: {
+	DisplayName: Seafoam Grenade
+	Tooltip:
+		'''
+		Explodes into seafoam
+		'Mmmm, salty!'
+		'''
+}
+
+CryogenBag: {
+	DisplayName: Treasure Bag (Cryogen)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+CryogenTrophy: {
+	DisplayName: Cryogen Trophy
+	Tooltip: ""
+}
+
+HiveMindBag: {
+	DisplayName: Treasure Bag (Hive Mind)
+	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
+}
+
+HiveMindTrophy: {
+	DisplayName: Hive Mind Trophy
+	Tooltip: ""
+}
+
+CryogenRelic: {
+	DisplayName: Cryogen Relic
+	Tooltip: ""
+}
+
+HiveMindRelic: {
+	DisplayName: Hive Mind Relic
+	Tooltip: ""
+}
+
+PerfectDark: {
+	DisplayName: Perfect Dark
+	Tooltip:
+		'''
+		Releases noxious gas on swing
+		�I know how much you don�t like smelly smells��
+		'''
+}
+
+TheSnowman: {
+	DisplayName: The Snowman
+	Tooltip: Collapses into snowballs when dropped
+}
+
+ParasiticBelt: {
+	DisplayName: Parasitic Belt
+	Tooltip: Attacks deal 15% more damage and inflict Ichor when below 50% health
+}
+
+BouncingEyeball: {
+	DisplayName: Eyeball Cluster
+	Tooltip: Splits into bouncing eyes
+}
+
+IceSculptureAngel: {
+	DisplayName: Angel Ice Sculpture
+	Tooltip: ""
+}
+
+IceSculptureArmor: {
+	DisplayName: Armor Ice Sculpture
+	Tooltip: ""
+}
+
+IceSculptureHelix: {
+	DisplayName: Helix Ice Sculpture
+	Tooltip: ""
+}
+
+IceSculptureHorse: {
+	DisplayName: Horse Ice Sculpture
+	Tooltip: ""
+}
+
+IchorJavelin: {
+	DisplayName: Ichor Javelin
+	Tooltip: Damage increases with each enemy pierced
+}
+
+SinisterIncubator: {
+	DisplayName: Sinister Incubator
+	Tooltip:
+		'''
+		Summons a Fungusmite to fight for you
+		Fungusmites react to aggression, firing biomass at their target each time you deal damage to an enemy directly
+		"They love sharks"
+		'''
+}
+
+PyrobatStaff: {
+	DisplayName: Pyrobat Staff
+	Tooltip: Conjures hellstone bats that drip fire
+}
+
+MagicChisel: {
+	DisplayName: Magic Chisel
+	Tooltip:
+		'''
+		Summons a Microgen to provide light
+		'Carve yourself a friend!'
+		'''
+}
+
+PermafrostHook: {
+	DisplayName: Permafrost Hook
+	Tooltip:
+		'''
+		Grappling encases you in a block of ice
+		Ice breaks on collision or when pressing movement keys
+		'Am I glad he's frozen in there and that we're out here!'
+		'''
+}
+
+CarnageFlail: {
+	DisplayName: Carnage
+	Tooltip: ""
+}
+
+FighterJetRemote: {
+	DisplayName: Falcon Remote
+	Tooltip:
+		'''
+		Summons a fighter jet to fight for you
+		Requires bullets to attack
+		33% chance not to consume ammo
+		'''
+}
+
+SoulBottleSpite: {
+	DisplayName: Soul of Spite in a Bottle
+	Tooltip: ""
+}
+
+SoulBottleWhite: {
+	DisplayName: Soul of White in a Bottle
+	Tooltip: ""
+}
+
+HiveMindMusicBox: {
+	DisplayName: Music Box (Hive Mind)
+	Tooltip: Plays 'Infestation' by ENNWAY!
+}

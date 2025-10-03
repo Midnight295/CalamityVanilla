@@ -1,0 +1,29 @@
+HiveMind: {
+	DisplayName: Hive Mind
+	Bestiary: A despicable shroom-like behemoth responsible for the vile fungi decorating the Corruption soil. It releases aggressive spores when damaged.
+}
+
+HiveMindSwooper: {
+	DisplayName: Hive Swooper
+	Bestiary: Released from the Hive Mind, these nasty, swooping spores serve their master to the very end.
+}
+
+HiveMindWeeper: {
+	DisplayName: Hive Weeper
+	Bestiary: These malevolent spores are summoned by the Hive, with their only goal being to rain hell on whoever their master deems a threat.
+}
+
+Perforator.DisplayName: Perforator
+
+Cryogen: {
+	DisplayName: Cryogen
+	Bestiary: An incredible feat of magical architecture, this intricate fortress of ice and steel serves to trap a lonely soul inside...
+}
+
+PerforatorBigWorm.DisplayName: Perforator Big Worm
+Ingestoid.DisplayName: Ingestoid
+Hemaniac.DisplayName: Hemaniac
+Malarasite.DisplayName: Malarasite
+Hematode.DisplayName: Hematode
+Ingestatode.DisplayName: Ingestatode
+Malgestode.DisplayName: Malgestode

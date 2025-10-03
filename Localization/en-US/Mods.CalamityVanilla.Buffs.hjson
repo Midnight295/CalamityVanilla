@@ -1,0 +1,19 @@
+ParasiticBeltBuff: {
+	DisplayName: Parasitic Imbue
+	Description: Attacks are stronger and inflict Ichor
+}
+
+FungusmiteBuff: {
+	DisplayName: Fungusmite
+	Description: The Fungusmite will shower your enemies with bullets
+}
+
+MagicChiselBuff: {
+	DisplayName: Microgen
+	Description: Ice to meet you!
+}
+
+FighterJetBuff: {
+	DisplayName: Fighter Jet
+	Description: Ride into the danger zone
+}

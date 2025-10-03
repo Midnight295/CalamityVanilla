@@ -1,6 +1,6 @@
 HiveMindKilled: {
-		FriendlyName: Heed the Swarm
-		Description: Defeat the Hive Mind, the mycelial mastermind behind the sickly corruption's fungi.
+	FriendlyName: Heed the Swarm
+	Description: Defeat the Hive Mind, the mycelial mastermind behind the sickly corruption's fungi.
 }
 
 CryogenKilled: {

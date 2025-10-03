@@ -1,0 +1,70 @@
+SporeBomb.DisplayName: Spore Bomb
+Spores.DisplayName: Spores
+HiveVine.DisplayName: Hive Vine
+MyceliumShroom.DisplayName: Mycelium Shroom
+MyceliumSpore.DisplayName: Mycelium Spore
+BlossomFluxLeaf.DisplayName: Blossom Flux Leaf
+BlossomFluxBomb.DisplayName: Blossom Flux Bomb
+BlossomFluxSpores.DisplayName: Blossom Flux Spores
+CryogenIceBlock.DisplayName: Cryogen Ice Block
+IceBomb.DisplayName: Ice Bomb
+IceShrapnel.DisplayName: Ice Shrapnel
+IceStatues.DisplayName: Ice Statues
+Icebreaker.DisplayName: Icebreaker
+IcebreakerIcicles.DisplayName: Icebreaker Icicles
+IceChunks.DisplayName: Ice Chunks
+BileBone.DisplayName: Bile Bone
+IchorBlob.DisplayName: Ichor Blob
+CloudArrow.DisplayName: Cloud Arrow
+MistArrow.DisplayName: Mist Arrow
+CatastropheClaymoreBall.DisplayName: Catastrophe Claymore Soul
+Icicles.DisplayName: Icicles
+FrostBoltProjectile.DisplayName: Frost Bolt
+FlareBoltProjectile.DisplayName: Flare Bolt
+FlareBlastProjectile.DisplayName: Flare Blast
+FrigidflashColdBoltProjectile.DisplayName: Frigidflash Cold Bolt
+FrigidflashHotBoltProjectile.DisplayName: Frigidflash Hot Bolt
+GraniteTomeBolt.DisplayName: Granite Tome Bolt
+Fleshnade.DisplayName: Fleshnade
+MarbleTomeShield.DisplayName: Marble Tome Shield
+MarbleRock.DisplayName: Marble Rock
+CatastropheClaymoreBallMini.DisplayName: Catastrophe Claymore Mini Soul
+CrystalineShard.DisplayName: Crystaline Shard
+TwiflightFeather.DisplayName: Twiflight Feather
+CursedDaggerProjectile.DisplayName: Cursed Dagger
+CursedDaggerExplosion.DisplayName: Cursed Dagger Explosion
+Seafoam.DisplayName: Seafoam
+Seafoam2.DisplayName: Floating Seafoam
+PerfectDarkCloud.DisplayName: Dark Spore Cloud
+TheSnowman.DisplayName: The Snowman
+TheSnowmanSnowballBig.DisplayName: Snowball
+TheSnowmanSnowballMedium.DisplayName: Snowball
+TheSnowmanSnowballSmall.DisplayName: Snowball
+TheSnowmanSnowballTiny.DisplayName: Snowball
+TheSnowmanPile.DisplayName: Miserable Little Pile of Snow
+ParasiticBeltEffect.DisplayName: Parasitic Belt Effect
+BouncingEyeballCluster.DisplayName: Eyeball Cluster
+BouncingEyeProj.DisplayName: Bouncing Eye
+IcePillarSpawner.DisplayName: Ice Pillar Spawner
+IchorJavelinProjectile.DisplayName: Ichor Javelin
+FleshnadeBee.DisplayName: Honeycombnade
+FleshnadeBouncy.DisplayName: Bouncy Fleshnade
+FleshnadeSticky.DisplayName: Sticky Fleshnade
+TheGothicTooth.DisplayName: The Gothic Tooth
+CrystalineProjectile.DisplayName: Crystaline
+SeafoamBombProjectile.DisplayName: Seafoam Grenade
+ThrowingBrickProjectile.DisplayName: Throwing Brick
+IcebreakerProjectile.DisplayName: Icebreaker
+TheSnowmanProjectile.DisplayName: The Snowman
+Fungusmite.DisplayName: Fungusmite
+FungusmiteProjectile.DisplayName: Fungusmite Projectile
+Pyrobat.DisplayName: Pyrobat
+PyrobatStaffHeldProjectile.DisplayName: Pyrobat Staff Held
+Pyrobat2.DisplayName: Silly Pyrobat
+PyrobatFlame.DisplayName: Pyrobat Flame
+MagicChiselPet.DisplayName: Magic Chisel Pet
+CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
+PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
+CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
+FighterJetMinion.DisplayName: Fighter Jet Minion
+PermafrostHookIceBlock.DisplayName: Permafrost Hook Ice Block
