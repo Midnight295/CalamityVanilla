@@ -1,0 +1,9 @@
+HiveMindKilled: {
+		FriendlyName: Heed the Swarm
+		Description: Defeat the Hive Mind, the mycelial mastermind behind the sickly corruption's fungi.
+}
+
+CryogenKilled: {
+	FriendlyName: Break the Ice
+	Description: Defeat Cryogen, the arctic fortress protected by a magic spell.
+}
