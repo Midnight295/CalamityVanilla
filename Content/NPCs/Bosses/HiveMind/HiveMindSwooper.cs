@@ -171,7 +171,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
 
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCorruption,              
-                new FlavorTextBestiaryInfoElement("Released from the Hive Mind, these nasty, swooping spores serve their master to the very end.")
+                new FlavorTextBestiaryInfoElement($"Mods.CalamityVanilla.NPCs.HiveMindSwooper.Bestiary")
             });
         }
     }

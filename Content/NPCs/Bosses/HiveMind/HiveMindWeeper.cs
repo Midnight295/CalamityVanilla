@@ -171,7 +171,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
 
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCorruption,
-                new FlavorTextBestiaryInfoElement("These malevolent spores are summoned by the Hive, with their only goal being to rain hell on whoever their master deems a threat.")
+                new FlavorTextBestiaryInfoElement($"Mods.CalamityVanilla.NPCs.HiveMindWeeper.Bestiary")
             });
         }
     }

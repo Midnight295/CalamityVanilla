@@ -247,7 +247,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             NPC.behindTiles = true;
             NPC.noGravity = false;
             phase = 0;
-            Music = MusicID.Boss3;
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/HiveMind");
             NPC.Size = new Vector2(150);
             NPC.noTileCollide = false;
         }
@@ -257,7 +257,8 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             // Sets the description of this NPC that is listed in the bestiary
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCorruption,
-                new FlavorTextBestiaryInfoElement("A despicable shroom-like behemoth responsible for the vile fungi decorating the Corruption soil. It releases aggressive spores when damaged.")
+                new FlavorTextBestiaryInfoElement($"Mods.CalamityVanilla.NPCs.HiveMind.Bestiary")
+                
             });
         }
 
