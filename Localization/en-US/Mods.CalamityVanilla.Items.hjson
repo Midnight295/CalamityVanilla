@@ -312,10 +312,15 @@ HiveMindMusicBox: {
 
 PrismPiercer: {
 	DisplayName: Prism Piercer
-	Tooltip: ""
+	Tooltip:
+		'''
+		Causes stars to fall from the sky
+		Releases blades of light on contact
+		'Taste the rainbow!'
+		'''
 }
 
 WindowPain: {
 	DisplayName: Window Pain
-	Tooltip: "Breaks into shards on contact"
+	Tooltip: Breaks into shards on contact
 }
