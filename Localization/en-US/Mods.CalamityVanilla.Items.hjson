@@ -324,3 +324,8 @@ WindowPain: {
 	DisplayName: Window Pain
 	Tooltip: Breaks into shards on contact
 }
+
+CryogenMusicBox: {
+	DisplayName: Cryogen Music Box
+	Tooltip: ""
+}
