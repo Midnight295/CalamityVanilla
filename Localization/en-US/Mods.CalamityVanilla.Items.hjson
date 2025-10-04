@@ -309,3 +309,13 @@ HiveMindMusicBox: {
 	DisplayName: Music Box (Hive Mind)
 	Tooltip: Plays 'Infestation' by ENNWAY!
 }
+
+PrismPiercer: {
+	DisplayName: Prism Piercer
+	Tooltip: ""
+}
+
+WindowPain: {
+	DisplayName: Window Pain
+	Tooltip: "Breaks into shards on contact"
+}
