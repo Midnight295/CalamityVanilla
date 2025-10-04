@@ -326,6 +326,6 @@ WindowPain: {
 }
 
 CryogenMusicBox: {
-	DisplayName: Cryogen Music Box
-	Tooltip: ""
+	DisplayName: Music Box (Cryogen)
+	Tooltip: Plays 'Sub-Zero' by ENNWAY!
 }
