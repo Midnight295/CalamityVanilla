@@ -315,7 +315,7 @@ PrismPiercer: {
 	Tooltip:
 		'''
 		Causes stars to fall from the sky
-		Releases blades of light on contact
+		Breaks into homing shards on contact
 		'Taste the rainbow!'
 		'''
 }
