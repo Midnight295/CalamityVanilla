@@ -309,3 +309,23 @@ HiveMindMusicBox: {
 	DisplayName: Music Box (Hive Mind)
 	Tooltip: Plays 'Infestation' by ENNWAY!
 }
+
+PrismPiercer: {
+	DisplayName: Prism Piercer
+	Tooltip:
+		'''
+		Causes stars to fall from the sky
+		Releases blades of light on contact
+		'Taste the rainbow!'
+		'''
+}
+
+WindowPain: {
+	DisplayName: Window Pain
+	Tooltip: Breaks into shards on contact
+}
+
+CryogenMusicBox: {
+	DisplayName: Cryogen Music Box
+	Tooltip: ""
+}

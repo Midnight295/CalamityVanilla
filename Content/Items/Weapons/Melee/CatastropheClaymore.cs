@@ -94,7 +94,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Melee
     }
     public class CatastropheClaymoreGlow : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(Terraria.DataStructures.PlayerDrawLayers.HeldItem);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.HeldItem);
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             return drawInfo.drawPlayer.HeldItem.type == ModContent.ItemType<CatastropheClaymore>() && drawInfo.drawPlayer.ItemAnimationActive;

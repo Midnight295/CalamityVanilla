@@ -4,6 +4,6 @@ HiveMindKilled: {
 }
 
 CryogenKilled: {
-	FriendlyName: Break the Ice
+	FriendlyName: Breaking the Ice
 	Description: Defeat Cryogen, the arctic fortress protected by a magic spell.
 }

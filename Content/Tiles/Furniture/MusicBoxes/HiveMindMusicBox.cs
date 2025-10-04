@@ -12,7 +12,6 @@ namespace CalamityVanilla.Content.Tiles.Furniture.MusicBoxes
     {
         public override void SetStaticDefaults()
         {   
-            //TODO: Change the asset path to HiveMind music when the track for it exists.
             MusicLoader.AddMusicBox(
             Mod,
             MusicLoader.GetMusicSlot(Mod, "Assets/Music/HiveMind"),

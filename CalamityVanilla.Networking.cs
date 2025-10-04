@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Items.Weapons.Magic;
+﻿using CalamityVanilla.Common.Interfaces;
+using CalamityVanilla.Content.Items.Weapons.Magic;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -11,7 +12,8 @@ namespace CalamityVanilla
     {
         public enum PacketType : byte
         {
-            SpawnGraniteTomeBoltSparks
+            SpawnGraniteTomeBoltSparks,
+            SyncedOnHitNPC
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -31,6 +33,9 @@ namespace CalamityVanilla
                         break;
                     }
                     GraniteTomeBolt.SpawnParticles(position);
+                    break;
+                    case PacketType.SyncedOnHitNPC:
+                        SyncedOnHitNPCItem.RecieveOnHitNPC(reader,whoAmI);
                     break;
                 default:
                     break;
