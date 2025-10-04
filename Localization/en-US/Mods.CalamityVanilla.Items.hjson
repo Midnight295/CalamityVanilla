@@ -309,3 +309,8 @@ HiveMindMusicBox: {
 	DisplayName: Music Box (Hive Mind)
 	Tooltip: Plays 'Infestation' by ENNWAY!
 }
+
+ForsakenSaber: {
+	DisplayName: Forsaken Saber
+	Tooltip: Summons a boulder on enemy hits that falls from the sky
+}
