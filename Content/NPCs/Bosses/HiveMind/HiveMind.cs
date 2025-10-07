@@ -1,4 +1,5 @@
-﻿using CalamityVanilla.Content.Items.Consumable;
+﻿using CalamityVanilla.Common;
+using CalamityVanilla.Content.Items.Consumable;
 using CalamityVanilla.Content.Items.Equipment.Vanity;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Melee;
@@ -234,6 +235,13 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
 
             // ItemDropRule.MasterModeDropOnAllPlayers for the pet
             npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ItemID.BrainOfCthulhuPetItem, 4));
+        }
+
+        public override void OnKill()
+        {
+            BossDownedSystem.DownedHiveMind = true;
+            if (Main.netMode == NetmodeID.Server)
+                NetMessage.SendData(MessageID.WorldData);
         }
 
         public override void SetDefaults()

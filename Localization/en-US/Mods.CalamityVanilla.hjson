@@ -1,1 +1,5 @@
-
+Emotes: {
+	CryogenEmote.Command: cryogen
+	GutofCthulhuEmote.Command: gutofcthulhu
+	HiveMindEmote.Command: hivemind
+}
