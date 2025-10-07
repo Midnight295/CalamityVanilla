@@ -15,6 +15,7 @@ using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Tiles.Furniture;
 using CalamityVanilla.Content.Items.Pets;
+using CalamityVanilla.Common;
 
 namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 {
@@ -151,6 +152,12 @@ namespace CalamityVanilla.Content.NPCs.Bosses.Cryogen
 
             // ItemDropRule.MasterModeDropOnAllPlayers for the pet
             npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<MagicChisel>(), 4));
+        }
+        public override void OnKill()
+        {
+            BossDownedSystem.DownedCryogen = true;
+            if (Main.netMode == NetmodeID.Server)
+                NetMessage.SendData(MessageID.WorldData);
         }
         public override void SetDefaults()
         {
