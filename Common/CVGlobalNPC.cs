@@ -1,11 +1,14 @@
 ﻿using CalamityVanilla.Common.ItemDropRules.DropConditions;
+using CalamityVanilla.Content.Emotes;
 using CalamityVanilla.Content.Items.Material;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
 using CalamityVanilla.Content.Items.Weapons.Ranged.Throwing;
 using CalamityVanilla.Content.Items.Weapons.Summon;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -52,6 +55,17 @@ namespace CalamityVanilla.Common
             {
                 npcLoot.Add(ItemDropRule.ByCondition(new Conditions.IsBloodMoonAndNotFromStatue(), ModContent.ItemType<BouncingEyeball>(), 10, 5, 15));
             }
+        }
+
+        public override int? PickEmote(NPC npc, Player closestPlayer, List<int> emoteList, WorldUIAnchor otherAnchor)
+        {
+            if (Main.rand.NextBool(3) && BossDownedSystem.DownedGutOfCthulhu)
+                emoteList.Add(ModContent.EmoteBubbleType<GutofCthulhuEmote>());
+            if (Main.rand.NextBool(3) && BossDownedSystem.DownedHiveMind)
+                emoteList.Add(ModContent.EmoteBubbleType<HiveMindEmote>());
+            if (Main.rand.NextBool(3) && BossDownedSystem.DownedCryogen)
+                emoteList.Add(ModContent.EmoteBubbleType<CryogenEmote>());
+            return base.PickEmote(npc, closestPlayer, emoteList, otherAnchor);
         }
     }
 }
