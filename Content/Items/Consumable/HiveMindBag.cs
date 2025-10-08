@@ -21,6 +21,11 @@ namespace CalamityVanilla.Content.Items.Consumable
             // It will also let our boss bag drop dev armor..
             ItemID.Sets.BossBag[Type] = true;
 
+            // This prevents our boss bag from dropping developer armor.
+            // Since Queen Slime does not drop developer armor, it only makes sense
+            // That The Hive Mind does not drop dev armor, as they are on the same tier.
+            ItemID.Sets.PreHardmodeLikeBossBag[Type] = true;
+
             Item.ResearchUnlockCount = 3;
         }
 
