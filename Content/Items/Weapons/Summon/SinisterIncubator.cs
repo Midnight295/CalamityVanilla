@@ -10,6 +10,16 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 {
     public class SinisterIncubator : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            // Since the open box frame is the first frame, we can set a drawAnimation 
+            // that never increments to mimic the box opening on use, since
+            // we manually override the item's drawing in inventory and world.
+            DrawAnimationVertical drawAnim = new DrawAnimationVertical(1, 2);
+            drawAnim.NotActuallyAnimating = true;
+            Main.RegisterItemAnimation(Type, drawAnim);
+            
+        }
         public override void SetDefaults()
         {
             Item.width = 37;
@@ -29,6 +39,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
+            
 
             Item.rare = ItemRarityID.Pink;
             Item.value = Item.sellPrice(0,2,10,0);
@@ -43,7 +54,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             player.AddBuff(Item.buffType, 2);
-
+            
             Projectile projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, Main.myPlayer);
             projectile.originalDamage = Item.damage;
 
@@ -54,11 +65,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         {
             spriteBatch.Draw(TextureAssets.Item[Type].Value,
                 position,
-                new Rectangle(0, 0, 34, 36),
+                new Rectangle(0, 44, 48, 44),
                 drawColor,
                 0f,
                 new Vector2(17, 18),
-                scale * 2f,
+                scale * 1.4f,
                 SpriteEffects.None,
                 0f);
             return false;
@@ -68,7 +79,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         {
             spriteBatch.Draw(TextureAssets.Item[Type].Value,
                 Item.Center - Main.screenPosition,
-                new Rectangle(0, 0, 34, 36),
+                new Rectangle(0, 44, 48, 44),
                 alphaColor,
                 rotation,
                 new Vector2(17, 18),
