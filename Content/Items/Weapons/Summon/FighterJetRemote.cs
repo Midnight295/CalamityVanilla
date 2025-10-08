@@ -308,6 +308,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 Projectile.velocity += speed * dir + target.velocity/30f;
                 Projectile.rotation = (Projectile.velocity).ToRotation();
 
+                // teleport to player if too far away
                 if (dist > 2000f)
                 {
                     Projectile.Center = owner.Center;

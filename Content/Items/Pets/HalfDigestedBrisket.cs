@@ -16,6 +16,7 @@ namespace CalamityVanilla.Content.Items.Pets
         public override void SetDefaults()
         {
             Item.DefaultToVanitypet(ModContent.ProjectileType<StomachBugPet>(), ModContent.BuffType<StomachBugBuff>());
+            Item.master = true;
         }
 
         public override void UseStyle(Player player, Rectangle heldItemFrame)
@@ -88,7 +89,7 @@ namespace CalamityVanilla.Content.Items.Pets
 
             if (Projectile.Center.Distance(owner.Center) > 2000)
             {
-                Projectile.Center = owner.position;
+                Projectile.Center = owner.Center;
             }
 
             if (Projectile.velocity.HasNaNs())
@@ -117,8 +118,9 @@ namespace CalamityVanilla.Content.Items.Pets
 
             Projectile.velocity = Projectile.DirectionTo(position) * MathHelper.Lerp(0, 5, Projectile.Distance(Nextposition) * 0.02f);
             Projectile.velocity = Projectile.velocity.LengthClamp(22);
+            Projectile.rotation = Projectile.velocity.Length() / 30f * Projectile.direction;
 
-            if (++Projectile.frameCounter == 8)
+            if (++Projectile.frameCounter == 3)
             {
                 ++Projectile.frame;
                 Projectile.frameCounter = 0;

@@ -331,7 +331,7 @@ CryogenMusicBox: {
 }
 
 HalfDigestedBrisket: {
-	DisplayName: Half Digested Brisket
+	DisplayName: Half-Digested Brisket
 	Tooltip:
 		'''
 		Summons a Stomach Bug
