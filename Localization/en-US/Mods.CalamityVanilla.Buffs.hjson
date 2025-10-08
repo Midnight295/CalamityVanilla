@@ -17,3 +17,8 @@ FighterJetBuff: {
 	DisplayName: Fighter Jet
 	Description: Ride into the danger zone
 }
+
+StomachBugBuff: {
+	DisplayName: Stomach Bug
+	Description: Don't let this bug ya!
+}

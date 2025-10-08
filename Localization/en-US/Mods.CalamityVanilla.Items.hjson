@@ -329,3 +329,12 @@ CryogenMusicBox: {
 	DisplayName: Music Box (Cryogen)
 	Tooltip: Plays 'Sub-Zero' by ENNWAY!
 }
+
+HalfDigestedBrisket: {
+	DisplayName: Half Digested Brisket
+	Tooltip:
+		'''
+		Summons a Stomach Bug
+		‘It eats what you eat!'
+		'''
+}
