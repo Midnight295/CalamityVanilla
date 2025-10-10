@@ -48,7 +48,7 @@ public class WindowPainAnimation : PlayerDrawLayer
         drawInfo.ItemLocation = Vector2.Zero;
     }
 }
-public class WindowPain : ModItem, iHasSyncedOnHitNPC
+public class WindowPain : ModItem, IHasSyncedOnHitNPC
 {
     public bool Shattered = false;
     public override void SetDefaults()

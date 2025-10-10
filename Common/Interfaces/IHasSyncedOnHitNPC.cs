@@ -9,19 +9,20 @@ namespace CalamityVanilla.Common.Interfaces;
 /// <summary>
 /// Only usable on Items and Projectiles
 /// </summary>
-public interface iHasSyncedOnHitNPC
+public interface IHasSyncedOnHitNPC
 {
     public void SyncedOnHitNPC(Player player, NPC target, int damageDone, bool crit, int hitDirection);
 }
+
 public class SyncedOnHitNPCItem : GlobalItem
 {
     public override bool AppliesToEntity(Item entity, bool lateInstantiation)
     {
-        return lateInstantiation && entity.ModItem is iHasSyncedOnHitNPC;
+        return lateInstantiation && entity.ModItem is IHasSyncedOnHitNPC;
     }
     public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (item.ModItem is iHasSyncedOnHitNPC i)
+        if (item.ModItem is IHasSyncedOnHitNPC i)
         {
             i.SyncedOnHitNPC(player, target, damageDone, hit.Crit, hit.HitDirection);
             if (Main.netMode != NetmodeID.SinglePlayer)
@@ -44,7 +45,7 @@ public class SyncedOnHitNPCItem : GlobalItem
         bool crit;
         bool rightHit;
         reader.ReadFlags(out crit, out rightHit);
-        if (p.HeldItem.ModItem is iHasSyncedOnHitNPC i)
+        if (p.HeldItem.ModItem is IHasSyncedOnHitNPC i)
             i.SyncedOnHitNPC(p, n, dd, crit, rightHit ? 1 : -1);
     }
 }

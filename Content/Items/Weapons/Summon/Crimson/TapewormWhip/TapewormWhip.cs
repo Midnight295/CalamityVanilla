@@ -210,7 +210,7 @@ internal sealed class TapewormWhipProjectile : ModProjectile
 
             Color color = Lighting.GetColor(element.ToTileCoordinates());
 
-            Main.EntitySpriteDraw(texture, currentDrawPos + wiggleOffset - Main.screenPosition, frame, color, rotation + rotationWiggle, origin, scale, flip, 0);
+            Main.EntitySpriteDraw(texture, currentDrawPos + wiggleOffset - Main.screenPosition, frame, color, rotation + rotationWiggle, origin, scale, flip);
 
             currentDrawPos += diff * segmentAdvanceFactor;
         }
@@ -259,7 +259,7 @@ public class TapewormWhipGlobalNPC : GlobalNPC
                     _ => ModContent.ItemType<TapewormWhipGiblet3>(),
                 };
 
-                int item = Item.NewItem(npc.GetSource_OnHit(projectile), npc.Center, type);
+                Item.NewItem(npc.GetSource_OnHit(projectile), npc.Center, type);
             }
         }
     }
