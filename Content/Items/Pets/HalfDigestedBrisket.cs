@@ -82,8 +82,7 @@ namespace CalamityVanilla.Content.Items.Pets
         }
 
         public override void OnSpawn(IEntitySource source)
-        {   
-          
+        {         
             Player owner = Main.player[Projectile.owner];
             Nextposition = owner.Center;
         }
@@ -116,8 +115,7 @@ namespace CalamityVanilla.Content.Items.Pets
                 Projectile.ai[0] += (owner.Distance(Projectile.Center) / 30f) * 0.1f;
             }
             Projectile.spriteDirection = Projectile.Center.X >= owner.Center.X ? -1 : 1;
-            Main.NewText(Projectile.ai[0]);
-            Main.NewText(owner.Distance(Projectile.Center) / 90f);
+
             if (Projectile.ai[0] >= 65)
             {
                 Projectile.ai[0] = 0;

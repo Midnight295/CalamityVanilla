@@ -1,0 +1,122 @@
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace CalamityVanilla.Content.Items.Pets
+{
+    public class FungiDish : ModItem
+    {
+        public override void SetDefaults()
+        {
+            Item.DefaultToVanitypet(ModContent.ProjectileType<FungoidPet>(), ModContent.BuffType<FungoidBuff>());
+            Item.master = true;
+        }
+
+        public override void UseStyle(Player player, Rectangle heldItemFrame)
+        {
+            base.UseStyle(player, heldItemFrame);
+
+            if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
+            {
+                player.AddBuff(Item.buffType, 3600);
+            }
+        }
+    }
+
+    public class FungoidBuff : ModBuff
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.buffNoTimeDisplay[Type] = true;
+            Main.vanityPet[Type] = true;
+        }
+        public override void Update(Player player, ref int buffIndex)
+        {
+            bool unused = false;
+            player.BuffHandle_SpawnPetIfNeededAndSetTime(buffIndex, ref unused, ModContent.ProjectileType<FungoidPet>());
+        }
+    }
+
+    public class FungoidPet : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 10;
+            Main.projPet[Type] = true;
+        }
+
+        public override void SetDefaults()
+        {      
+            Projectile.CloneDefaults(ProjectileID.BlackCat);
+            AIType = ProjectileID.BlackCat;
+            Projectile.width = 38;
+            Projectile.height = 32;       
+            Projectile.penetrate = -1;
+            Projectile.netImportant = true;
+            Projectile.timeLeft *= 5;
+            Projectile.friendly = true;
+            //Projectile.hide = true;
+            Projectile.ignoreWater = true;
+        }
+
+        int realFrameCounter;
+        int realFrame;
+
+        public override void AI()
+        {
+            base.AI();
+            Projectile.rotation = 0;
+            Player owner = Main.player[Projectile.owner];
+            Projectile.spriteDirection = Projectile.Center.X >= owner.Center.X ? -1 : 1;
+
+            if (!owner.active)
+            {
+                Projectile.active = false;
+                return;
+            }
+            if (!owner.dead && owner.HasBuff(ModContent.BuffType<FungoidBuff>()))
+            {
+                Projectile.timeLeft = 2;
+            }
+
+
+            if (Projectile.velocity == new Vector2(0, 0.4f))
+            {
+                realFrame = 0;
+            }
+            else if (++realFrameCounter >= 8 && Projectile.tileCollide)
+            {
+                realFrame++;
+                realFrameCounter = 0;
+                if (realFrame >= 5)
+                {
+                    realFrame = 0;
+                }
+            }
+            else if (++realFrameCounter >= 8 && !Projectile.tileCollide)
+            {
+                if (realFrame < 5)
+                    realFrame = 5;
+
+                realFrame++;
+                realFrameCounter = 0;
+                if (realFrame >= Main.projFrames[Type])
+                    realFrame = 5;
+            }
+
+            Projectile.frame = realFrame;
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return false;
+        }
+    }
+}

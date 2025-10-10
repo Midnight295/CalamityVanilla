@@ -22,3 +22,8 @@ StomachBugBuff: {
 	DisplayName: Stomach Bug
 	Description: Don't let this bug ya!
 }
+
+FungoidBuff: {
+	DisplayName: Fungoid
+	Description: It's a bit shy
+}

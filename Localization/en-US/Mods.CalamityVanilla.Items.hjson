@@ -338,3 +338,12 @@ HalfDigestedBrisket: {
 		‘It eats what you eat!'
 		'''
 }
+
+FungiDish: {
+	DisplayName: Fungi Dish
+	Tooltip:
+		'''
+		Summons a Fungoid
+		'Your very own lab-grown pet…'
+		'''
+}
