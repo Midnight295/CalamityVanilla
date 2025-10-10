@@ -27,3 +27,18 @@ FungoidBuff: {
 	DisplayName: Fungoid
 	Description: It's a bit shy
 }
+
+MajorBottomFeederBuff: {
+	DisplayName: Bottom Feeder
+	Description: Major improvements to all stats
+}
+
+MediumBottomFeederBuff: {
+	DisplayName: Bottom Feeder
+	Description: Medium improvements to all stats
+}
+
+MinorBottomFeederBuff: {
+	DisplayName: Bottom Feeder
+	Description: Minor improvements to all stats
+}

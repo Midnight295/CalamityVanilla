@@ -347,3 +347,23 @@ FungiDish: {
 		'Your very own lab-grown pet…'
 		'''
 }
+
+TapewormWhipItem: {
+	DisplayName: Tapeworm Whip
+	Tooltip: ""
+}
+
+TapewormWhipGiblet1: {
+	DisplayName: Giblet
+	Tooltip: ""
+}
+
+TapewormWhipGiblet2: {
+	DisplayName: Giblet
+	Tooltip: ""
+}
+
+TapewormWhipGiblet3: {
+	DisplayName: Giblet
+	Tooltip: ""
+}
