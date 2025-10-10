@@ -88,8 +88,16 @@ namespace CalamityVanilla.Content.Items.Pets
 
             if (!Projectile.tileCollide)
             {
-                if (Main.rand.Next(3) == 1)
-                    Dust.NewDust(Projectile.Center, 2, 2, DustID.Corruption, -Projectile.velocity.X * 0.3f, -Projectile.velocity.Y * 0.3f, 1, Color.White, 1f);
+                //Main.NewText(Projectile.velocity.Length());
+                int dustAmount = 13;
+                if (Projectile.velocity.Length() > 7.5f) dustAmount = 3;
+                if (Main.rand.NextBool(dustAmount))
+                {
+                    int d = Dust.NewDust(Projectile.Center, 2, 2, DustID.Corruption, -Projectile.velocity.X * 0.3f, -Projectile.velocity.Y * 0.3f, 1, Color.White, 1f);
+                    Main.dust[d].scale = Main.rand.NextFloat(0.75f, 1f);
+                    Main.dust[d].velocity *= 0.8f;
+                    if (Projectile.velocity.Length() < 7.5f) Main.dust[d].velocity *= 0.7f;
+                }
                 if (owner.velocity.Y != 0)
                     Projectile.velocity.Y += 0.13f;
 
@@ -97,6 +105,16 @@ namespace CalamityVanilla.Content.Items.Pets
             }
             else
             {
+                //Main.NewText(Projectile.velocity.Length());
+                int dustAmount = 75;
+                if (Projectile.velocity.Length() > 4f) dustAmount = 10;
+                if (Main.rand.NextBool(dustAmount))
+                {
+                    int d = Dust.NewDust(Projectile.Center, 2, 2, DustID.Corruption, -Projectile.velocity.X * 0.3f, -Projectile.velocity.Y * 0.3f, 1, Color.White, 1f);
+                    Main.dust[d].scale = Main.rand.NextFloat(0.75f, 1f);
+                    Main.dust[d].velocity *= 0.8f;
+                }
+
                 Projectile.rotation = 0;
             }
 
@@ -106,7 +124,7 @@ namespace CalamityVanilla.Content.Items.Pets
             {
                 realFrame = 0;
             }
-            else if (++realFrameCounter >= 8 && Projectile.tileCollide)
+            else if (++realFrameCounter >= (8 / (Projectile.velocity.Length()/1.5f)) && Projectile.tileCollide)
             {
                 realFrame++;
                 realFrameCounter = 0;
@@ -115,7 +133,7 @@ namespace CalamityVanilla.Content.Items.Pets
                     realFrame = 0;
                 }
             }
-            else if (++realFrameCounter >= 8 && !Projectile.tileCollide)
+            else if (++realFrameCounter >= 12 && !Projectile.tileCollide)
             {
                 if (realFrame < 5)
                     realFrame = 5;
