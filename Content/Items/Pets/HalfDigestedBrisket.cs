@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,8 +68,22 @@ namespace CalamityVanilla.Content.Items.Pets
 
         public Vector2 Nextposition;
 
-        public override void OnSpawn(IEntitySource source)
+        public override void SendExtraAI(BinaryWriter writer)
         {
+            base.SendExtraAI(writer);
+
+            writer.WriteVector2(Nextposition);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            base.ReceiveExtraAI(reader);
+            Nextposition = reader.ReadVector2();
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {   
+          
             Player owner = Main.player[Projectile.owner];
             Nextposition = owner.Center;
         }
@@ -98,24 +113,22 @@ namespace CalamityVanilla.Content.Items.Pets
             if (Projectile.Distance(Nextposition) <= 40)
             {
                 Projectile.ai[0]++;
-                Projectile.ai[0] += (Projectile.Distance(owner.Center) * 0.01f);
+                Projectile.ai[0] += (owner.Distance(Projectile.Center) / 30f) * 0.1f;
             }
-
+            Projectile.spriteDirection = Projectile.Center.X >= owner.Center.X ? -1 : 1;
             Main.NewText(Projectile.ai[0]);
-            Main.NewText(Projectile.Distance(owner.Center) * 0.01f);
-            if (Projectile.ai[0] >= 55)
+            Main.NewText(owner.Distance(Projectile.Center) / 90f);
+            if (Projectile.ai[0] >= 65)
             {
                 Projectile.ai[0] = 0;
                 Nextposition = 
-                    owner.position +
-                    (Main.rand.NextVector2Circular(75, 75) 
-                    * ((Projectile.Distance(owner.Center) * 0.01f) + 1));
+                    owner.position +                   
+                    new Vector2((owner.direction == -1? 70: -70), 0) +
+                    (Main.rand.NextVector2Circular(55, 35) * ((Projectile.Distance(owner.Center) * 0.01f) + 1));
             }
 
             Vector2 position = Nextposition;
-
-            Projectile.spriteDirection = Projectile.Center.X >= owner.Center.X? -1 : 1;
-
+      
             Projectile.velocity = Projectile.DirectionTo(position) * MathHelper.Lerp(0, 5, Projectile.Distance(Nextposition) * 0.02f);
             Projectile.velocity = Projectile.velocity.LengthClamp(22);
             Projectile.rotation = Projectile.velocity.Length() / 30f * Projectile.direction;
