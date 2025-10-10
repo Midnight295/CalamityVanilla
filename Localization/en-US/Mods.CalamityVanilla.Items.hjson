@@ -251,7 +251,7 @@ SinisterIncubator: {
 	Tooltip:
 		'''
 		Summons a Fungusmite to fight for you
-		Fungusmites react to aggression, firing biomass at their target each time you deal damage to an enemy directly
+		Fungusmites react to aggression, firing biomass as you damage an enemy
 		'They love sharks'
 		'''
 }

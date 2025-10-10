@@ -173,7 +173,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 Projectile.ai[1] = 20;
                 NPC target = owner.GetModPlayer<SinisterIncubatorPlayer>().NPCHit;
                 push = -Projectile.Center.DirectionTo(target.Center) * 0.75f;
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.Center.DirectionTo(target.Center) * 10f, ModContent.ProjectileType<FungusmiteProjectile>(), Projectile.damage, Projectile.knockBack, owner.whoAmI);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.Center.DirectionTo(target.Center) * 14f, ModContent.ProjectileType<FungusmiteProjectile>(), Projectile.damage, Projectile.knockBack, owner.whoAmI);
             }
 
             push *= 0.9f;
@@ -214,8 +214,11 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Summon;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 60;
+            Projectile.extraUpdates = 2;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+            //Projectile.penetrate = -1;
+            //Projectile.timeLeft = 80;
         }
 
         public override bool? CanCutTiles() => false;
@@ -223,7 +226,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            if (Projectile.ai[0] > 25) Projectile.velocity.Y = MathHelper.Clamp(Projectile.velocity.Y + 0.1f, -16f, 16f);
+            if (Projectile.ai[0] > 25) Projectile.velocity.Y = MathHelper.Clamp(Projectile.velocity.Y + 0.03f, -24f, 24f);
             Projectile.ai[0]++;
         }
 
@@ -260,7 +263,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
         {
             for (int i = 0; i < 6; i++)
             {
-                Dust.NewDust(Projectile.Center, 4, 4, DustID.FungiHit, Projectile.velocity.X * 0.3f + Main.rand.NextFloat(-1f, 1f), Projectile.velocity.Y * 0.3f + Main.rand.NextFloat(-1f, 1f));
+                Dust.NewDust(Projectile.Center, 4, 4, DustID.Sand, Projectile.velocity.X * 0.3f + Main.rand.NextFloat(-1f, 1f), Projectile.velocity.Y * 0.3f + Main.rand.NextFloat(-1f, 1f));
             }
         }
     }

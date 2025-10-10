@@ -125,6 +125,8 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
             ProjectileID.Sets.MinionSacrificable[Projectile.type] = true;
             ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
+
+            Main.projFrames[Projectile.type] = 3; // nunber of skins
         }
 
         public override void SetDefaults()
@@ -165,8 +167,12 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
 
         public int timeAfterEmpty = 10;
         public bool countingAfterEmpty = true;
+
+        public int chooseSkin = Main.rand.Next(3);
         public override void AI()
         {
+            Projectile.frame = chooseSkin;
+
             Player owner = Main.player[Projectile.owner];
             float distFromOwner = Projectile.Center.Distance(owner.Center);
             if (!CheckAlive(owner)) return;
@@ -323,7 +329,7 @@ namespace CalamityVanilla.Content.Items.Weapons.Summon
                 Dust d = Dust.NewDustDirect(Projectile.Center + new Vector2(-16,0).RotatedBy(Projectile.rotation) + new Vector2(-4, -4), 1, 1, DustID.Torch);
                 d.noGravity = true;
                 d.scale = Main.rand.NextFloat(0.15f, 0.55f) + MathHelper.Clamp((Projectile.velocity.Length() / 12f), 0.1f, 1.6f);
-                //d.scale *= 0.9f;
+                //d.scale *= 0.8f;
                 d.velocity += Projectile.velocity.RotatedBy(MathHelper.Pi)/12f * Main.rand.NextFloat(0.01f, 1.5f);
             }
 
