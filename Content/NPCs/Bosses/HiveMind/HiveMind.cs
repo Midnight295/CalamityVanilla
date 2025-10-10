@@ -1,6 +1,7 @@
 ﻿using CalamityVanilla.Common;
 using CalamityVanilla.Content.Items.Consumable;
 using CalamityVanilla.Content.Items.Equipment.Vanity;
+using CalamityVanilla.Content.Items.Pets;
 using CalamityVanilla.Content.Items.Weapons.Magic;
 using CalamityVanilla.Content.Items.Weapons.Melee;
 using CalamityVanilla.Content.Items.Weapons.Ranged;
@@ -234,7 +235,7 @@ namespace CalamityVanilla.Content.NPCs.Bosses.HiveMind
             npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<HiveMindRelic>()));
 
             // ItemDropRule.MasterModeDropOnAllPlayers for the pet
-            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ItemID.BrainOfCthulhuPetItem, 4));
+            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<FungiDish>(), 4));
         }
 
         public override void OnKill()

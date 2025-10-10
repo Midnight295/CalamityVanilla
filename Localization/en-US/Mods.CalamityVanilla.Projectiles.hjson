@@ -62,7 +62,7 @@ Pyrobat.DisplayName: Pyrobat
 PyrobatStaffHeldProjectile.DisplayName: Pyrobat Staff Held
 Pyrobat2.DisplayName: Silly Pyrobat
 PyrobatFlame.DisplayName: Pyrobat Flame
-MagicChiselPet.DisplayName: Magic Chisel Pet
+MagicChiselPet.DisplayName: Microgen
 CryogenIceBlockInvisible.DisplayName: Cryogen Ice Block Invisible
 PermafrostHookProjectile.DisplayName: Permafrost Hook Projectile
 CarnageFlailProjectile.DisplayName: Carnage Flail Projectile
@@ -72,4 +72,5 @@ PrismPiercerStar.DisplayName: Prism Piercer Star
 WindowPainShard.DisplayName: Window Pain Shard
 PrismPiercerShard.DisplayName: Prism Piercer Shard
 PrismPiercerStarShard.DisplayName: Prism Piercer Star Shard
-StomachBugPet.DisplayName: Stomach Bug Pet
+StomachBugPet.DisplayName: Stomach Bug
+FungoidPet.DisplayName: Fungoid
