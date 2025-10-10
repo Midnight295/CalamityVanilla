@@ -104,6 +104,7 @@ namespace CalamityVanilla.Content.Items.Pets
             if (Projectile.Center.Distance(owner.Center) > 2000)
             {
                 Projectile.Center = owner.Center;
+                Nextposition = owner.Center;
             }
 
             if (Projectile.velocity.HasNaNs())
