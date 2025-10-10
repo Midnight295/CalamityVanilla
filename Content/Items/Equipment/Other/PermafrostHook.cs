@@ -132,7 +132,7 @@ public class PermafrostHookProjectile : ModProjectile
 
     public override void GrapplePullSpeed(Player player, ref float speed)
     {
-        Projectile? iceBlock = Main.projectile.FirstOrDefault(projectile => projectile.active && 
+        Projectile? iceBlock = Main.projectile.FirstOrDefault(projectile => projectile.active &&
                                                                             projectile.type == ModContent.ProjectileType<PermafrostHookIceBlock>() &&
                                                                             projectile.owner == player.whoAmI);
 
@@ -195,11 +195,12 @@ public class PermafrostHookIceBlock : ModProjectile
         Player owner = Main.player[Projectile.owner];
         bool isGrappling = owner.grapCount > 0;
 
-        if (owner.active && (owner.controlLeft || owner.controlRight || owner.controlUp || owner.controlDown || owner.controlJump)) {
+        if (owner.active && (owner.controlLeft || owner.controlRight || owner.controlUp || owner.controlDown || owner.controlJump))
+        {
             Projectile.Kill();
             return;
         }
-        
+
         if (isGrappling)
         {
             Projectile.Center = owner.Center;
@@ -234,7 +235,7 @@ public class PermafrostHookIceBlock : ModProjectile
         Player owner = Main.player[Projectile.owner];
 
         SoundEngine.PlaySound(SoundID.Item27, Projectile.Center);
-            
+
         for (int i = 0; i < 32; i++)
         {
             Dust dust = Dust.NewDustDirect(
@@ -244,7 +245,7 @@ public class PermafrostHookIceBlock : ModProjectile
             );
             //dust.noGravity = true;
             dust.velocity *= 0.5f;
-        }    
+        }
 
         owner.SetImmuneTimeForAllTypes(owner.longInvince ? 120 : 60);
     }

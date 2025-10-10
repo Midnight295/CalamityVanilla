@@ -15,91 +15,90 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.Utilities;
 
-namespace CalamityVanilla.Common
-{
-    public class BaseMusicBox
-    {
-        public abstract class MusicBoxItem : ModItem
-        {   
-            /// <summary>
-            /// The music box tile associated with this item.
-            /// </summary>
-            public virtual int TileType => 0;
-            public override void SetStaticDefaults()
-            {
-                ItemID.Sets.CanGetPrefixes[Type] = false;
-                ItemID.Sets.ShimmerTransformToItem[Type] = ItemID.MusicBox;
-                Terraria.GameContent.Creative.CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-            }
+namespace CalamityVanilla.Common;
 
-            public override void SetDefaults()
-            {
-                Item.DefaultToMusicBox(TileType, 0);
-            }
+public class BaseMusicBox
+{
+    public abstract class MusicBoxItem : ModItem
+    {
+        /// <summary>
+        /// The music box tile associated with this item.
+        /// </summary>
+        public virtual int TileType => 0;
+        public override void SetStaticDefaults()
+        {
+            ItemID.Sets.CanGetPrefixes[Type] = false;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ItemID.MusicBox;
+            Terraria.GameContent.Creative.CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
-        public abstract class MusicBoxTile : ModTile
+        public override void SetDefaults()
         {
-            public override void SetStaticDefaults()
+            Item.DefaultToMusicBox(TileType, 0);
+        }
+    }
+
+    public abstract class MusicBoxTile : ModTile
+    {
+        public override void SetStaticDefaults()
+        {
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            TileID.Sets.HasOutlines[Type] = true;
+            Main.tileFrameImportant[Type] = true;
+            Main.tileObsidianKill[Type] = true;
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            TileObjectData.newTile.Origin = new Point16(0, 1);
+            TileObjectData.newTile.LavaDeath = false;
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.StyleLineSkip = 2;
+            //TileLoader.GetItemDropFromTypeAndStyle(Type, 1);
+            TileObjectData.addTile(Type);
+            AddMapEntry(new Color(191, 142, 111), Language.GetText("ItemName.MusicBox"));
+
+        }
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type);
+        }
+
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+        {
+            return true;
+        }
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        {
+            // This code spawns the music notes when the music box is open.
+            if (Lighting.UpdateEveryFrame && new FastRandom(Main.TileFrameSeed).WithModifier(i, j).Next(4) != 0)
             {
-                TileID.Sets.DisableSmartCursor[Type] = true;
-                TileID.Sets.HasOutlines[Type] = true;
-                Main.tileFrameImportant[Type] = true;
-                Main.tileObsidianKill[Type] = true;
-                TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-                TileObjectData.newTile.Origin = new Point16(0, 1);
-                TileObjectData.newTile.LavaDeath = false;
-                TileObjectData.newTile.DrawYOffset = 2;
-                TileObjectData.newTile.StyleLineSkip = 2;
-                //TileLoader.GetItemDropFromTypeAndStyle(Type, 1);
-                TileObjectData.addTile(Type);
-                AddMapEntry(new Color(191, 142, 111), Language.GetText("ItemName.MusicBox"));
-
+                return;
             }
-            public override void MouseOver(int i, int j)
+
+            Tile tile = Main.tile[i, j];
+
+            if (!TileDrawing.IsVisible(tile) || tile.TileFrameX != 36 || tile.TileFrameY % 36 != 0 || (int)Main.timeForVisualEffects % 7 != 0 || !Main.rand.NextBool(3))
             {
-                Player player = Main.LocalPlayer;
-                player.noThrow = 2;
-                player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type);
+                return;
             }
 
-            public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+            int MusicNote = Main.rand.Next(570, 573);
+            Vector2 SpawnPosition = new Vector2(i * 16 + 8, j * 16 - 8);
+            Vector2 NoteMovement = new Vector2(Main.WindForVisuals * 2f, -0.5f);
+            NoteMovement.X *= Main.rand.NextFloat(0.5f, 1.5f);
+            NoteMovement.Y *= Main.rand.NextFloat(0.5f, 1.5f);
+            switch (MusicNote)
             {
-                return true;
+                case 572:
+                    SpawnPosition.X -= 8f;
+                    break;
+                case 571:
+                    SpawnPosition.X -= 4f;
+                    break;
             }
-            public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
-            {
-                // This code spawns the music notes when the music box is open.
-                if (Lighting.UpdateEveryFrame && new FastRandom(Main.TileFrameSeed).WithModifier(i, j).Next(4) != 0)
-                {
-                    return;
-                }
 
-                Tile tile = Main.tile[i, j];
-
-                if (!TileDrawing.IsVisible(tile) || tile.TileFrameX != 36 || tile.TileFrameY % 36 != 0 || (int)Main.timeForVisualEffects % 7 != 0 || !Main.rand.NextBool(3))
-                {
-                    return;
-                }
-
-                int MusicNote = Main.rand.Next(570, 573);
-                Vector2 SpawnPosition = new Vector2(i * 16 + 8, j * 16 - 8);
-                Vector2 NoteMovement = new Vector2(Main.WindForVisuals * 2f, -0.5f);
-                NoteMovement.X *= Main.rand.NextFloat(0.5f, 1.5f);
-                NoteMovement.Y *= Main.rand.NextFloat(0.5f, 1.5f);
-                switch (MusicNote)
-                {
-                    case 572:
-                        SpawnPosition.X -= 8f;
-                        break;
-                    case 571:
-                        SpawnPosition.X -= 4f;
-                        break;
-                }
-
-                Gore.NewGore(new EntitySource_TileUpdate(i, j), SpawnPosition, NoteMovement, MusicNote, 0.8f);
-            }
+            Gore.NewGore(new EntitySource_TileUpdate(i, j), SpawnPosition, NoteMovement, MusicNote, 0.8f);
         }
     }
 }

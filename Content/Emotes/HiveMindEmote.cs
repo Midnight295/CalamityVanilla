@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Emotes
+namespace CalamityVanilla.Content.Emotes;
+
+public class HiveMindEmote : ModEmoteBubble
 {
-    public class HiveMindEmote : ModEmoteBubble
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            AddToCategory(EmoteID.Category.Dangers);
-        }
-        public override bool IsUnlocked()
-        {
-            return BossDownedSystem.DownedHiveMind;
-        }
+        AddToCategory(EmoteID.Category.Dangers);
+    }
+    public override bool IsUnlocked()
+    {
+        return BossDownedSystem.DownedHiveMind;
     }
 }

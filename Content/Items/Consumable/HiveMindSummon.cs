@@ -1,85 +1,84 @@
-﻿using Terraria;
+﻿using CalamityVanilla.Content.NPCs.Bosses.HiveMind;
+using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using CalamityVanilla.Content.NPCs.Bosses.HiveMind;
 
-namespace CalamityVanilla.Content.Items.Consumable
+namespace CalamityVanilla.Content.Items.Consumable;
+
+public class HiveMindSummon : ModItem
 {
-    public class HiveMindSummon : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
+        Item.ResearchUnlockCount = 3;
+        ItemID.Sets.SortingPriorityBossSpawns[Type] = 12; // This helps sort inventory know that this is a boss summoning Item.
+
+        // If this would be for a vanilla boss that has no summon item, you would have to include this line here:
+        // NPCID.Sets.MPAllowedEnemies[NPCID.Plantera] = true;
+
+        // Otherwise the UseItem code to spawn it will not work in multiplayer
+    }
+
+    public override void SetDefaults()
+    {
+        Item.width = 38;
+        Item.height = 36;
+        Item.maxStack = Item.CommonMaxStack;
+        Item.value = 100;
+        Item.rare = ItemRarityID.LightPurple;
+        Item.useAnimation = 30;
+        Item.useTime = 30;
+        Item.useStyle = ItemUseStyleID.HoldUp;
+        Item.consumable = true;
+    }
+
+    public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
+    {
+        itemGroup = ContentSamples.CreativeHelper.ItemGroup.BossSpawners;
+    }
+
+    public override bool CanUseItem(Player player)
+    {
+        // If you decide to use the below UseItem code, you have to include !NPC.AnyNPCs(id), as this is also the check the server does when receiving MessageID.SpawnBoss.
+        // If you want more constraints for the summon item, combine them as boolean expressions:
+        //    return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<MinionBossBody>()); would mean "not daytime and no MinionBossBody currently alive"
+        return !NPC.AnyNPCs(ModContent.NPCType<HiveMind>());
+    }
+
+    public override bool? UseItem(Player player)
+    {
+        if (player.whoAmI == Main.myPlayer)
         {
-            Item.ResearchUnlockCount = 3;
-            ItemID.Sets.SortingPriorityBossSpawns[Type] = 12; // This helps sort inventory know that this is a boss summoning Item.
+            // If the player using the item is the client
+            // (explicitly excluded serverside here)
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
 
-            // If this would be for a vanilla boss that has no summon item, you would have to include this line here:
-            // NPCID.Sets.MPAllowedEnemies[NPCID.Plantera] = true;
+            int type = ModContent.NPCType<HiveMind>();
 
-            // Otherwise the UseItem code to spawn it will not work in multiplayer
-        }
-
-        public override void SetDefaults()
-        {
-            Item.width = 38;
-            Item.height = 36;
-            Item.maxStack = Item.CommonMaxStack;
-            Item.value = 100;
-            Item.rare = ItemRarityID.LightPurple;
-            Item.useAnimation = 30;
-            Item.useTime = 30;
-            Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.consumable = true;
-        }
-
-        public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)
-        {
-            itemGroup = ContentSamples.CreativeHelper.ItemGroup.BossSpawners;
-        }
-
-        public override bool CanUseItem(Player player)
-        {
-            // If you decide to use the below UseItem code, you have to include !NPC.AnyNPCs(id), as this is also the check the server does when receiving MessageID.SpawnBoss.
-            // If you want more constraints for the summon item, combine them as boolean expressions:
-            //    return !Main.dayTime && !NPC.AnyNPCs(ModContent.NPCType<MinionBossBody>()); would mean "not daytime and no MinionBossBody currently alive"
-            return !NPC.AnyNPCs(ModContent.NPCType<HiveMind>());
-        }
-
-        public override bool? UseItem(Player player)
-        {
-            if (player.whoAmI == Main.myPlayer)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                // If the player using the item is the client
-                // (explicitly excluded serverside here)
-                SoundEngine.PlaySound(SoundID.Roar, player.position);
-
-                int type = ModContent.NPCType<HiveMind>();
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    // If the player is not in multiplayer, spawn directly
-                    NPC.SpawnOnPlayer(player.whoAmI, type);
-                }
-                else
-                {
-                    // If the player is in multiplayer, request a spawn
-                    // This will only work if NPCID.Sets.MPAllowedEnemies[type] is true, which we set in MinionBossBody
-                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: type);
-                }
+                // If the player is not in multiplayer, spawn directly
+                NPC.SpawnOnPlayer(player.whoAmI, type);
             }
-
-            return true;
+            else
+            {
+                // If the player is in multiplayer, request a spawn
+                // This will only work if NPCID.Sets.MPAllowedEnemies[type] is true, which we set in MinionBossBody
+                NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: type);
+            }
         }
 
-        // Please see Content/ExampleRecipes.cs for a detailed explanation of recipe creation.
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.VileMushroom, 3)
-                .AddIngredient(ItemID.ShadowScale, 15)
-                .AddIngredient(ItemID.SoulofNight, 5)
-                .AddTile(TileID.DemonAltar)
-                .Register();
-        }
+        return true;
+    }
+
+    // Please see Content/ExampleRecipes.cs for a detailed explanation of recipe creation.
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.VileMushroom, 3)
+            .AddIngredient(ItemID.ShadowScale, 15)
+            .AddIngredient(ItemID.SoulofNight, 5)
+            .AddTile(TileID.DemonAltar)
+            .Register();
     }
 }

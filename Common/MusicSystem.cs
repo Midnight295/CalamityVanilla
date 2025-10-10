@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Common
+namespace CalamityVanilla.Common;
+
+public class MusicSystem : ModSystem
 {
-    public class MusicSystem : ModSystem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            MusicID.Sets.SkipsVolumeRemap[MusicLoader.GetMusicSlot(Mod, "Assets/Music/HiveMind")] = true;
-            MusicID.Sets.SkipsVolumeRemap[MusicLoader.GetMusicSlot(Mod, "Assets/Music/Cryogen")] = true;
-        }
+        MusicID.Sets.SkipsVolumeRemap[MusicLoader.GetMusicSlot(Mod, "Assets/Music/HiveMind")] = true;
+        MusicID.Sets.SkipsVolumeRemap[MusicLoader.GetMusicSlot(Mod, "Assets/Music/Cryogen")] = true;
     }
 }

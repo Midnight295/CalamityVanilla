@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 
-namespace CalamityVanilla.Content.Emotes
+namespace CalamityVanilla.Content.Emotes;
+
+public class GutofCthulhuEmote : ModEmoteBubble
 {
-    public class GutofCthulhuEmote : ModEmoteBubble
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            AddToCategory(EmoteID.Category.Dangers);
-        }
-        public override bool IsUnlocked()
-        {
-            return BossDownedSystem.DownedGutOfCthulhu;
-        }
+        AddToCategory(EmoteID.Category.Dangers);
+    }
+    public override bool IsUnlocked()
+    {
+        return BossDownedSystem.DownedGutOfCthulhu;
     }
 }

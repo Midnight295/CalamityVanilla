@@ -9,17 +9,16 @@ using Terraria.GameContent.NetModules;
 using Terraria.Graphics.Renderers;
 using Terraria.Net;
 
-namespace CalamityVanilla.Common
-{
-    // this is just a class that takes some stuff from vanillas particle orchestrator to use its particles
-    public class CVParticleOrchestrator
-    {
-        public static PrettySparkleParticle RequestPrettySparkleParticle()
-        {
-            return _poolPrettySparkle.RequestParticle();
-        }
+namespace CalamityVanilla.Common;
 
-        private static PrettySparkleParticle GetNewPrettySparkleParticle() => new PrettySparkleParticle();
-        private static ParticlePool<PrettySparkleParticle> _poolPrettySparkle = new ParticlePool<PrettySparkleParticle>(200, new ParticlePool<PrettySparkleParticle>.ParticleInstantiator(GetNewPrettySparkleParticle));
+// this is just a class that takes some stuff from vanillas particle orchestrator to use its particles
+public class CVParticleOrchestrator
+{
+    public static PrettySparkleParticle RequestPrettySparkleParticle()
+    {
+        return _poolPrettySparkle.RequestParticle();
     }
+
+    private static PrettySparkleParticle GetNewPrettySparkleParticle() => new PrettySparkleParticle();
+    private static ParticlePool<PrettySparkleParticle> _poolPrettySparkle = new ParticlePool<PrettySparkleParticle>(200, new ParticlePool<PrettySparkleParticle>.ParticleInstantiator(GetNewPrettySparkleParticle));
 }

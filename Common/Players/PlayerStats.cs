@@ -1,14 +1,13 @@
 ﻿using Terraria.ModLoader;
 
-namespace CalamityVanilla.Common.Players
-{
-    public class PlayerStats : ModPlayer
-    {
-        public int TimeInWorld;
+namespace CalamityVanilla.Common.Players;
 
-        public override void PreUpdate()
-        {
-            TimeInWorld++;
-        }
+public class PlayerStats : ModPlayer
+{
+    public int TimeInWorld;
+
+    public override void PreUpdate()
+    {
+        TimeInWorld++;
     }
 }
