@@ -72,7 +72,7 @@ namespace CalamityVanilla.Content.Items.Pets
         public override void AI()
         {
             base.AI();
-            Projectile.rotation = 0;
+            
             Player owner = Main.player[Projectile.owner];
             Projectile.spriteDirection = Projectile.Center.X >= owner.Center.X ? -1 : 1;
 
@@ -85,6 +85,21 @@ namespace CalamityVanilla.Content.Items.Pets
             {
                 Projectile.timeLeft = 2;
             }
+
+            if (!Projectile.tileCollide)
+            {
+                if (Main.rand.Next(3) == 1)
+                    Dust.NewDust(Projectile.Center, 2, 2, DustID.Corruption, -Projectile.velocity.X * 0.3f, -Projectile.velocity.Y * 0.3f, 1, Color.White, 1f);
+                if (owner.velocity.Y != 0)
+                    Projectile.velocity.Y += 0.13f;
+
+                Projectile.rotation = Projectile.velocity.Length() / 30f * Projectile.spriteDirection;
+            }
+            else
+            {
+                Projectile.rotation = 0;
+            }
+
 
 
             if (Projectile.velocity == new Vector2(0, 0.4f))
